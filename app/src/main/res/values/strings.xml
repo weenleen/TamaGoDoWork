@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">TamaGoDoWork</string>
+    <string name="title_taskList">Tasks</string>
+    <string name="title_pet">Pet</string>
+    <string name="title_schedule">Schedule</string>
+</resources>

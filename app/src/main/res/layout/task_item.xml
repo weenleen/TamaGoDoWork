@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/taskItem"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp" >
+
+    <!-- Name and Desc -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/taskName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Testing"
+            android:textSize="30dp" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/taskDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description testing."
+            android:textSize="20dp" >
+        </TextView>
+    </LinearLayout>
+
+    <!-- Deadline. -->
+    <TextView
+        android:id="@+id/taskDeadline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="3 days"
+        android:textSize="20dp"
+        android:gravity="right">
+    </TextView>
+</LinearLayout>

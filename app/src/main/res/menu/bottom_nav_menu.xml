@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_taskList"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="@string/title_taskList" />
+
+    <item
+        android:id="@+id/navigation_pet"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="@string/title_pet" />
+
+    <item
+        android:id="@+id/navigation_schedule"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="@string/title_schedule" />
+
+</menu>
