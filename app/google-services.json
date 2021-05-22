@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "531664787181",
-    "project_id": "tamagodowork",
-    "firebase_url": "https://tamagodowork-default-rtdb.asia-southeast1.firebasedatabase.app/",
-    "storage_bucket": "tamagodowork.appspot.com"
+    "project_number": "110009145632",
+    "firebase_url": "https://tamagodowork-2021-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "tamagodowork-2021",
+    "storage_bucket": "tamagodowork-2021.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:531664787181:android:0e8ae7a09bd56a5f2a9ee4",
+        "mobilesdk_app_id": "1:110009145632:android:69d3ae9255a2498bca9f45",
         "android_client_info": {
           "package_name": "com.example.tamagodowork"
         }
       },
       "oauth_client": [
         {
-          "client_id": "531664787181-qp07k79c5b7dam1rsodsv5a28f8bdlkr.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.tamagodowork",
-            "certificate_hash": "6594b8d357222995727b8deff3a5423126b96ded"
-          }
-        },
-        {
-          "client_id": "531664787181-vo9qv6549ch9rcgjihhfl4vf02q45osu.apps.googleusercontent.com",
+          "client_id": "110009145632-t7p4q5iovddc2shv7rs2qcbpohd394tt.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCMy76Vut_YoHZHFnDnsn2SbCSz8UWO_So"
+          "current_key": "AIzaSyCa8N1fjqMEiLb500aBv4Hemkzu8h6pHNU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "531664787181-vo9qv6549ch9rcgjihhfl4vf02q45osu.apps.googleusercontent.com",
+              "client_id": "110009145632-t7p4q5iovddc2shv7rs2qcbpohd394tt.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
