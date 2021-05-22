@@ -6,7 +6,9 @@ package com.example.tamagodowork;
 public class Task {
 
     public String taskName, taskDesc, taskDeadline;
+    public Task() {
 
+    }
     public Task(String taskName, String taskDesc, String deadline) {
         this.taskName = taskName;
         this.taskDesc = taskDesc;

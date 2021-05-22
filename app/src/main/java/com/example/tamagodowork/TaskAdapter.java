@@ -10,22 +10,28 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-/**
- * For the Recycler View thing??
- */
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> {
 
-    private ArrayList<Task> taskList;
-
+    Context context;
+    ArrayList<Task> taskList;
+    /*
     public TaskAdapter(ArrayList<Task> taskList) {
+        this.context = context;
         this.taskList = taskList;
     }
+    */
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public TaskAdapter(Context context, ArrayList<Task> taskList) {
+        this.taskList = taskList;
+        this.context = context;
+    }
+
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView taskName, taskDesc, taskDeadline;
 
-        public ViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             this.taskName = itemView.findViewById(R.id.taskName);
             this.taskDesc = itemView.findViewById(R.id.taskDesc);
@@ -33,20 +39,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         }
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return R.layout.task_item;
-    }
-
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
-        return new ViewHolder(view);
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new MyViewHolder(
+                LayoutInflater.from(this.context).inflate(R.layout.task_item, parent, false)
+                );
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.taskName.setText(taskList.get(position).taskName);
         holder.taskDesc.setText(taskList.get(position).taskDesc);
         holder.taskDeadline.setText(taskList.get(position).taskDeadline);
@@ -56,4 +58,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public int getItemCount() {
         return taskList.size();
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.tamagodowork;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.FirebaseError;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,32 +25,48 @@ import java.util.ArrayList;
 public class TaskListFrag extends Fragment {
 
     RecyclerView taskListView;
-    TaskAdapter adapter;
     DatabaseReference reference;
+    TaskAdapter adapter;
+    ArrayList<Task> list;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //initFBStorage();
+    }
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        ArrayList<Task> stuff = new ArrayList<>();
+
 
         View view =  inflater.inflate(R.layout.task_list_frag, container, false);
-        this.taskListView = getView().findViewById(R.id.taskListView);
+        this.taskListView = view.findViewById(R.id.taskListView);
+        this.taskListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         // get data from firebase
-        reference = FirebaseDatabase.getInstance().getReference().child("DoesApp");
+        list = new ArrayList<>();
+        reference = FirebaseDatabase.getInstance().getReference().child("TamaGoDoWork");
+        //System.out.println(reference);
+        Log.v(getTag(), "boob");
+        Log.v(getTag(),reference.toString());
+        adapter = new TaskAdapter(getActivity(), this.list);
+        taskListView.setAdapter(adapter);
+
         reference.addValueEventListener(new ValueEventListener() {
+
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // set code to retrieve data and replace layout
-                for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren())
+                for(DataSnapshot dataSnapshot: snapshot.getChildren())
                 {
-                    Task t = dataSnapshot1.getValue(Task.class);
-                    stuff.add(t);
+                    Task t = dataSnapshot.getValue(Task.class);
+                    list.add(t);
                 }
-                adapter = new TaskAdapter(stuff);
-                taskListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
 
@@ -59,7 +77,10 @@ public class TaskListFrag extends Fragment {
             }
         });
 
-        this.taskListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+
         return view;
     }
+
+
+
 }
