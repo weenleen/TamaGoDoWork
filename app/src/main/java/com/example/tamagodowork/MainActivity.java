@@ -23,14 +23,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Floating Action Button to add new tasks
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddNewTask.newInstance().show(getSupportFragmentManager() , AddNewTask.TAG);
-            }
-        });
+//        // Floating Action Button to add new tasks
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                AddNewTask.newInstance().show(getSupportFragmentManager() , AddNewTask.TAG);
+//            }
+//        });
 
         // Correct stuff
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);

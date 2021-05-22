@@ -9,5 +9,20 @@
         android:id="@+id/taskListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="50dp" />
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp" />
+
+    <!-- Add FAB (floating action button) to add new tasks-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:backgroundTint="@color/white"
+        android:clickable="true"
+        android:id="@+id/fab"
+        android:src="@drawable/ic_baseline_add_24" />
 </RelativeLayout>

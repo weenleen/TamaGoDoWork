@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,6 +55,7 @@ public class TaskListFrag extends Fragment {
                     Task t = dataSnapshot.getValue(Task.class);
                     list.add(t);
                 }
+
                 adapter.notifyDataSetChanged();
             }
 
@@ -61,6 +63,15 @@ public class TaskListFrag extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // set code to show an error
                 Toast.makeText(view.getContext(), "No Data", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Floating Action Button to add new tasks
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddNewTask.newInstance().show(getParentFragmentManager() , AddNewTask.TAG);
             }
         });
 

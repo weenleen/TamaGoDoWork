@@ -6,7 +6,9 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp" >
+    android:paddingBottom="10dp"
+    android:background="@drawable/bg_task_item"
+    android:layout_marginBottom="20dp" >
 
     <!-- Name and Desc -->
     <LinearLayout
