@@ -15,6 +15,29 @@ public class Task {
         this.taskDeadline = deadline;
     }
 
-    // TODO
-    // I think supposed to put a load of getters and setters or something here
+    // added getters
+    public String getTaskName() {
+        return this.taskName;
+    }
+
+    public String getTaskDesc() {
+        return this.taskDesc;
+    }
+
+    public String getTaskDeadline() {
+        return this.taskDeadline;
+    }
+
+    // added setters
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public void setTaskDeadline(String taskDeadline) {
+        this.taskDeadline = taskDeadline;
+    }
+
+    public void setTaskDesc(String taskDesc) {
+        this.taskDesc = taskDesc;
+    }
 }

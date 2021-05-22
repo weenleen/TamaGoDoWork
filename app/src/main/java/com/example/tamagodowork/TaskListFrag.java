@@ -51,9 +51,6 @@ public class TaskListFrag extends Fragment {
         // get data from firebase
         list = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference().child("TamaGoDoWork");
-        //System.out.println(reference);
-        Log.v(getTag(), "boob");
-        Log.v(getTag(),reference.toString());
         adapter = new TaskAdapter(getActivity(), this.list);
         taskListView.setAdapter(adapter);
 
