@@ -1,9 +1,11 @@
 package com.example.tamagodowork;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,12 +30,12 @@ public class TaskListFrag extends Fragment {
     TaskAdapter adapter;
     ArrayList<Task> list;
 
+    FloatingActionButton fab;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-
 
         View view =  inflater.inflate(R.layout.task_list_frag, container, false);
         this.taskListView = view.findViewById(R.id.taskListView);
@@ -66,18 +68,18 @@ public class TaskListFrag extends Fragment {
             }
         });
 
-        // Floating Action Button to add new tasks
-        FloatingActionButton fab = view.findViewById(R.id.fab);
+        /**
+         * Floating Action Button to add new tasks
+         */
+        fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddNewTask.newInstance().show(getParentFragmentManager() , AddNewTask.TAG);
+                AddNewTaskDial dialog = new AddNewTaskDial();
+                dialog.show(getParentFragmentManager(), "");
             }
         });
 
         return view;
     }
-
-
-
 }
