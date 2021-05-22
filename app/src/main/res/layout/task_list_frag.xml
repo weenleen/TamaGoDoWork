@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/purple_200" >
 
+    <!-- Supposed to be the list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/taskListView"
         android:layout_width="match_parent"

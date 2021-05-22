@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "60092154259",
+    "project_id": "tamagodowork-1318b",
+    "storage_bucket": "tamagodowork-1318b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60092154259:android:5e7fbc59538c460152e866",
+        "android_client_info": {
+          "package_name": "com.example.tamagodowork"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60092154259-d979skah5en9i4m1i5jmqq4mmclh2v7k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3LJ7fbuRWXhQpB7P7H3x2zrS8wvvEjtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "60092154259-d979skah5en9i4m1i5jmqq4mmclh2v7k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

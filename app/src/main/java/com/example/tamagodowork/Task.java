@@ -1,22 +1,18 @@
 package com.example.tamagodowork;
 
-import java.util.Date;
-
+/**
+ * Supposed to be the logic of each task in the task list
+ */
 public class Task {
 
-    public String taskName, taskDesc;
-    public Date deadline;
+    public String taskName, taskDesc, taskDeadline;
 
-    public Task() {
-    }
-
-    public Task(String taskName, String taskDesc, Date deadline) {
+    public Task(String taskName, String taskDesc, String deadline) {
         this.taskName = taskName;
         this.taskDesc = taskDesc;
-        this.deadline = deadline;
+        this.taskDeadline = deadline;
     }
 
-    public String getDeadline() {
-        return this.deadline.toString();
-    }
+    // TODO
+    // I think supposed to put a load of getters and setters or something here
 }
