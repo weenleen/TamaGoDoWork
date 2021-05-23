@@ -1,6 +1,7 @@
 package com.example.tamagodowork;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,9 @@ public class TaskListFrag extends Fragment {
         this.taskListView = view.findViewById(R.id.taskListView);
         this.taskListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        // get data from firebase
+        /**
+         * Retrieving data from firebase
+         */
         list = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference().child("TamaGoDoWork");
         adapter = new TaskAdapter(getActivity(), this.list);
@@ -75,8 +78,8 @@ public class TaskListFrag extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddNewTaskDial dialog = new AddNewTaskDial();
-                dialog.show(getParentFragmentManager(), "");
+                Intent intent = new Intent(getContext(), AddTaskAct.class);
+                startActivity(intent);
             }
         });
 

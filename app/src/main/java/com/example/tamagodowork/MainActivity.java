@@ -23,17 +23,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Correct stuff
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
-        // Set default frag to the TaskListFrag
-        // TODO
-        // idk why it goes to the schedule frag
+
+        // Set default fragment to the task list fragment
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new TaskListFrag()).commit();
     }
 
-    // Correct ish stuff
+    /**
+     * Bottom Navigation Bar
+     */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
