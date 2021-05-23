@@ -34,6 +34,7 @@ public class AddTaskAct extends AppCompatActivity {
             public void onClick(View v) {
                 // TODO
                 insertData();
+                goBack();
             }
 
             public void insertData() {
@@ -47,16 +48,17 @@ public class AddTaskAct extends AppCompatActivity {
         });
 
 
-
-
-
         this.cancelBtn = findViewById(R.id.cancel_button);
         this.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AddTaskAct.this, MainActivity.class);
-                startActivity(intent);
+                goBack();
             }
         });
+    }
+
+    private void goBack() {
+        Intent intent = new Intent(AddTaskAct.this, MainActivity.class);
+        startActivity(intent);
     }
 }
