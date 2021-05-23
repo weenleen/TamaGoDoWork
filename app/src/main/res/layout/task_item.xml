@@ -20,8 +20,8 @@
             android:id="@+id/taskName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Testing"
-            android:textSize="30dp" >
+            android:textColor="@color/peach"
+            android:textSize="25dp" >
         </TextView>
 
         <TextView

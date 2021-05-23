@@ -1,10 +1,12 @@
 package com.example.tamagodowork;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.content.Intent;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -12,20 +14,13 @@ import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> {
 
-    Context context;
-    ArrayList<Task> taskList;
-    /*
-    public TaskAdapter(ArrayList<Task> taskList) {
-        this.context = context;
-        this.taskList = taskList;
-    }
-    */
+    private Context context;
+    private ArrayList<Task> taskList;
 
     public TaskAdapter(Context context, ArrayList<Task> taskList) {
         this.taskList = taskList;
         this.context = context;
     }
-
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -52,11 +47,24 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         holder.taskName.setText(taskList.get(position).taskName);
         holder.taskDesc.setText(taskList.get(position).taskDesc);
         holder.taskDeadline.setText(taskList.get(position).taskDeadline);
+
+        /**
+         * The task details pop up is shown when an item in the list is selected
+         */
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO
+                TaskDetailsDial dialog = new TaskDetailsDial();
+                dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
+                        "Show task details");
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return taskList.size();
+        return this.taskList.size();
     }
 
 

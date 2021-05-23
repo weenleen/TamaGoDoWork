@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@color/purple_200"
+    android:background="@color/peach"
     tools:context=".SplashActivity">
 
     <!-- icon - can replace with our own logo later not so impt for now-->

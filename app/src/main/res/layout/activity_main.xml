@@ -14,15 +14,18 @@
         android:paddingRight="30dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:background="@color/purple_200" >
+        android:background="@color/peach" >
 
         <!-- text that says your level -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
             android:id="@+id/levelDisplay"
+            android:textColor="@color/white"
             android:text="Level Something"
-            android:textSize="20dp" />
+            android:textSize="25dp"
+            android:textStyle="bold" />
 
         <!-- xp bar -->
         <ProgressBar
