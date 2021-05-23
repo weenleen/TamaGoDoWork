@@ -42,7 +42,9 @@ public class TaskListFrag extends Fragment {
         this.taskListView = view.findViewById(R.id.taskListView);
         this.taskListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        // get data from firebase
+        /**
+         * Retrieving data from firebase
+         */
         list = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference().child("TamaGoDoWork");
         adapter = new TaskAdapter(getActivity(), this.list);
