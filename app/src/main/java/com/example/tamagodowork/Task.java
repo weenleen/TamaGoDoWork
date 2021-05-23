@@ -5,14 +5,16 @@ package com.example.tamagodowork;
  */
 public class Task {
 
-    public String taskName, taskDesc, taskDeadline;
-    public Task() {
+    private String taskName, taskDeadline, taskDesc;
+    private String key;
 
-    }
-    public Task(String taskName, String taskDesc, String deadline) {
+    public Task() { }
+
+    public Task(String taskName, String deadline, String taskDesc, String key) {
         this.taskName = taskName;
-        this.taskDesc = taskDesc;
         this.taskDeadline = deadline;
+        this.taskDesc = taskDesc;
+        this.key = key;
     }
 
     // added getters
@@ -28,6 +30,8 @@ public class Task {
         return this.taskDeadline;
     }
 
+    public String getKey() { return key; }
+
     // added setters
     public void setTaskName(String taskName) {
         this.taskName = taskName;
@@ -40,4 +44,6 @@ public class Task {
     public void setTaskDesc(String taskDesc) {
         this.taskDesc = taskDesc;
     }
+
+    public void setKey(String key) { this.key = key; }
 }

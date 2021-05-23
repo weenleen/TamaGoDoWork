@@ -39,24 +39,27 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MyViewHolder(
-                LayoutInflater.from(this.context).inflate(R.layout.task_item, parent, false)
-                );
+                LayoutInflater.from(this.context).inflate(R.layout.task_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.taskName.setText(taskList.get(position).taskName);
-        holder.taskDesc.setText(taskList.get(position).taskDesc);
-        holder.taskDeadline.setText(taskList.get(position).taskDeadline);
 
-        /**
-         * The task details pop up is shown when an item in the list is selected
-         */
+        final String key = taskList.get(position).getKey();
+        final String name = taskList.get(position).getTaskName();
+        final String deadline = taskList.get(position).getTaskDeadline();
+        final String desc = taskList.get(position).getTaskDesc();
+
+        holder.taskName.setText(name);
+        holder.taskDeadline.setText(deadline);
+        holder.taskDesc.setText(desc);
+
+        /** The task details pop up is shown when an item in the list is selected */
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO
-                TaskDetailsDial dialog = new TaskDetailsDial();
+                TaskDetailsDial dialog = new TaskDetailsDial(name, deadline, desc, key);
                 dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
                         "Show task details");
             }

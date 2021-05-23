@@ -8,9 +8,12 @@ import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.solver.state.Reference;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Random;
 
 public class AddTaskAct extends AppCompatActivity {
 
@@ -32,23 +35,23 @@ public class AddTaskAct extends AppCompatActivity {
         this.createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
                 insertData();
                 goBack();
             }
 
             public void insertData() {
                 String name = addName.getText().toString();
-                String desc = addDesc.getText().toString();
                 String deadline = addDeadline.getText().toString();
-                Task newTask = new Task(name, desc, deadline);
-                // use push method to generate new unique id so the data won't be overrided
-                reference.push().setValue(newTask);
+                String desc = addDesc.getText().toString();
+                DatabaseReference refKey = reference.push();
+                Task newTask = new Task(name, deadline, desc, refKey.getKey());
+                // use push method to generate new unique id so the data won't be overridden
+                refKey.setValue(newTask);
             }
         });
 
 
-        this.cancelBtn = findViewById(R.id.cancel_button);
+        this.cancelBtn = findViewById(R.id.cancel_add_button);
         this.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

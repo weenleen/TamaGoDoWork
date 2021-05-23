@@ -18,45 +18,38 @@
         android:paddingRight="20dp"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Create New Task"
-            android:textSize="25sp">
-        </TextView>
-
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Name"
-            android:id="@+id/addName">
+            android:id="@+id/editName">
         </EditText>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Deadline"
-            android:id="@+id/addDeadline">
+            android:id="@+id/editDeadline">
         </EditText>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Description"
-            android:id="@+id/addDesc">
+            android:id="@+id/editDesc">
         </EditText>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/create_button"
-            android:text="Create" >
+            android:id="@+id/save_button"
+            android:text="Save Changes" >
         </Button>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/cancel_add_button"
+            android:id="@+id/cancel_edit_button"
             android:text="Cancel" >
         </Button>
 
