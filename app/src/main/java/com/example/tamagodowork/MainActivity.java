@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -18,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Button resetButton;
     private ProgressBar xpBar;
     private TextView levelView;
     private static Long xp;
@@ -43,6 +46,20 @@ public class MainActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                // reset button to reset the level to level 1
+                resetButton = findViewById(R.id.reset_button);
+                resetButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        xp = 0L;
+                        reference.setValue(0);
+                        xpBar.setProgress(0);
+                        levelView.setText("Level " + 1);
+                    }
+                });
+
+
                 xp = (Long) snapshot.getValue();
 
                 if (xp == null) {

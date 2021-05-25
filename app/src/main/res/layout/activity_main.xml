@@ -18,6 +18,7 @@
         android:orientation="vertical">
 
         <!-- text that says your level -->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,12 +29,24 @@
             android:textSize="25sp"
             android:textStyle="bold" />
 
+
+        <!-- reset button -->
+        <Button
+            android:backgroundTint="@color/purple_200"
+            android:id="@+id/reset_button"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="reset" />
+
         <!-- xp bar -->
         <ProgressBar
             android:id="@+id/xpBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="20dp" />
+
+        <!-- button -->
+
 
     </LinearLayout>
 
@@ -44,7 +57,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/levelContainer"
-        android:layout_above="@id/nav_view" />
+        android:layout_above="@id/nav_view" >
+    </FrameLayout>
 
     <!-- Navigation bar -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

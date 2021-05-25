@@ -45,6 +45,9 @@ public class AddTaskAct extends AppCompatActivity {
                 Task newTask = new Task(name, deadline, desc, refKey.getKey());
                 // use push method to generate new unique id so the data won't be overridden
                 refKey.setValue(newTask);
+
+
+
             }
         });
 
