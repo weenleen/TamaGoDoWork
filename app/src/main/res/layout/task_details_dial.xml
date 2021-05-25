@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="400dp"
     android:background="@drawable/bg_task_item"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp" >
+    android:paddingBottom="10dp"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="310dp"
         android:orientation="vertical">
 
         <TextView
@@ -18,45 +19,46 @@
             android:layout_height="wrap_content"
             android:id="@+id/taskName"
             android:text="Task Name"
-            android:textSize="25sp" >
+            android:textSize="25sp"
+            android:paddingBottom="10dp" >
         </TextView>
-
-        <TextView
-            android:id='@+id/taskDesc'
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Task Description"
-            android:textSize="20sp" />
 
         <TextView
             android:id='@+id/taskDeadline'
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Task Deadline"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:paddingBottom="10dp"/>
 
-        <LinearLayout
+        <TextView
+            android:id='@+id/taskDesc'
             android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:text="Task Description"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="10dp">
+
+        <Button
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:padding="10dp">
+            android:id="@+id/edit_button"
+            android:text="Edit" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/edit_button"
-                android:text="Edit" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/delete_button"
-                android:text="Delete"
-                android:layout_marginLeft="20dp"/>
-
-        </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/delete_button"
+            android:text="Delete"
+            android:layout_marginLeft="20dp"/>
 
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

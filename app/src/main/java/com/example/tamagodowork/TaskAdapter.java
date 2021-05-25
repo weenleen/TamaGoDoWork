@@ -7,7 +7,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -40,6 +46,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 LayoutInflater.from(this.context).inflate(R.layout.task_item, parent, false));
     }
 
+
+    private Long currXP;
+
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
@@ -60,6 +69,29 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 TaskDetailsDial dialog = new TaskDetailsDial(name, deadline, desc, key);
                 dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
                         "Show task details");
+            }
+        });
+
+        CheckBox checkBox = holder.itemView.findViewById(R.id.taskCheckBox);
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+                // remove the task
+                reference.child("TamaGoDoWork").child(key)
+                        .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // add xp
+                            reference.child("XP").setValue(MainActivity.getXP() + 10L);
+
+                        } else {
+                            Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
     }

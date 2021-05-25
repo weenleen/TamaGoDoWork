@@ -6,10 +6,21 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ProgressBar xpBar;
+    private TextView levelView;
+    private static Long xp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +34,29 @@ public class MainActivity extends AppCompatActivity {
         // Set default fragment to the task list fragment
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new TaskListFrag()).commit();
+
+        // Store xp values in firebase
+        this.xpBar = findViewById(R.id.xpBar);
+        this.levelView = findViewById(R.id.levelDisplay);
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("XP");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                xp = (Long) snapshot.getValue();
+
+                if (xp == null) {
+                    reference.setValue(0);
+                    xp = 0L;
+                }
+
+                levelView.setText("Level " + (xp.intValue()/100 + 1));
+                xpBar.setProgress(xp.intValue() % 100);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
     }
 
     /**
@@ -52,4 +86,9 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             };
+
+
+    public static Long getXP() {
+        return xp;
+    }
 }
