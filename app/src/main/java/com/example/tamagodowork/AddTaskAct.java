@@ -9,6 +9,7 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -32,7 +33,7 @@ public class AddTaskAct extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                DocumentReference ref = db.collection("Tasks").document();
+                DocumentReference ref = MainActivity.userDoc.collection("Tasks").document();
 
                 String name = addName.getText().toString();
                 String deadline = addDeadline.getText().toString();

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -45,27 +46,32 @@ public class TaskListFrag extends Fragment {
         adapter = new TaskAdapter(getActivity(), this.list);
         taskListView.setAdapter(adapter);
 
+        // get user info
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        String userID = firebaseAuth.getCurrentUser().getUid();
+
         // Read data from Firestore
         db = FirebaseFirestore.getInstance();
-        db.collection("Tasks").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    // error
-                    Toast.makeText(view.getContext(), "No Data", Toast.LENGTH_SHORT).show();
-                }
+        db.collection("Users").document(userID).collection("Tasks")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error != null) {
+                            // error
+                            Toast.makeText(view.getContext(), "No Data", Toast.LENGTH_SHORT).show();
+                        }
 
-                list.clear();
+                        list.clear();
 
-                for (QueryDocumentSnapshot doc : value) {
-                    list.add(new Task(doc.getString("taskName"),
-                            doc.getString("taskDeadline"),
-                            doc.getString("taskDesc"),
-                            doc.getId()));
-                }
+                        for (QueryDocumentSnapshot doc : value) {
+                            list.add(new Task(doc.getString("taskName"),
+                                    doc.getString("taskDeadline"),
+                                    doc.getString("taskDesc"),
+                                    doc.getId()));
+                        }
 
-                adapter.notifyDataSetChanged();
-            }
+                        adapter.notifyDataSetChanged();
+                    }
         });
 
         /**

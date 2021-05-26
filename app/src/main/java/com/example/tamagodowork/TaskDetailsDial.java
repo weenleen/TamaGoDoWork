@@ -7,14 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 
 public class TaskDetailsDial extends BottomSheetDialogFragment {
 
@@ -48,22 +45,20 @@ public class TaskDetailsDial extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), EditTaskAct.class);
-                intent.putExtra("key", key);
                 intent.putExtra("name", name);
                 intent.putExtra("deadline", deadline);
                 intent.putExtra("desc", desc);
+                intent.putExtra("key", key);
                 startActivity(intent);
             }
         });
 
-        // TODO
         // delete button
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         Button delBtn = view.findViewById(R.id.delete_button);
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db.collection("Tasks").document(key).delete();
+                MainActivity.userDoc.collection("Tasks").document(key).delete();
                 dismiss();
             }
         });

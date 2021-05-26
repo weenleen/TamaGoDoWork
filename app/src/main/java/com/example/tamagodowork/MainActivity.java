@@ -5,14 +5,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,9 +24,11 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button resetButton;
+    private Button resetButton, logoutButton;
     private ProgressBar xpBar;
     private TextView levelView;
+    public static DocumentReference userDoc;
+    public static Integer xp = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,55 +47,53 @@ public class MainActivity extends AppCompatActivity {
         this.xpBar = findViewById(R.id.xpBar);
         this.levelView = findViewById(R.id.levelDisplay);
 
-        // firestore
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//        db.collection("Pet").document("XP")
-//                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-//                if (error != null) {
-//                    // error
-//                    Toast.makeText(getApplicationContext(), "No XP Data", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                Number xp = (Number) value.get("XP");
-//                if (xp == null) {
-//                    db.collection("Pet").document("XP");
-//                }
-//            }
-//        });
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        // check if logged in
+        if (firebaseAuth.getCurrentUser() == null) {
+            startActivity(new Intent(getApplicationContext(), RegisterAct.class));
+            finish();
+        }
 
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("XP");
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                xp = (Long) snapshot.getValue();
-//
-//                if (xp == null) {
-//                    reference.setValue(0);
-//                    xp = 0L;
-//                }
-//
-//                levelView.setText("Level " + (xp.intValue()/100 + 1));
-//                xpBar.setProgress(xp.intValue() % 100);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) { }
-//        });
-//
-//        // reset button to reset the level to level 1
-//        resetButton = findViewById(R.id.reset_button);
-//        resetButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                xp = 0L;
-//                reference.setValue(0);
-//                xpBar.setProgress(0);
-//                levelView.setText("Level " + 1);
-//            }
-//        });
+        // Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        this.userDoc = db.collection("Users").document(firebaseAuth.getCurrentUser().getUid());
+
+        // XP stuff
+        this.userDoc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Toast.makeText(getApplicationContext(), "XP error", Toast.LENGTH_SHORT).show();
+                }
+
+                xp = ((Long) value.get("XP")).intValue();
+
+                levelView.setText("Level " + (int)(xp/100 + 1));
+                xpBar.setProgress(xp % 100);
+            }
+        });
+
+
+        // reset button to reset the level to level 1
+        resetButton = findViewById(R.id.reset_button);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                xp = 0;
+                userDoc.update("XP", 0);
+            }
+        });
+
+        // logout button
+        logoutButton = findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAuth.signOut();
+                startActivity(new Intent(getApplicationContext(), LoginAct.class));
+                finish();
+            }
+        });
     }
 
     /**

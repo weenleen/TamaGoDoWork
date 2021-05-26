@@ -5,8 +5,7 @@ package com.example.tamagodowork;
  */
 public class Task {
 
-    private String taskName, taskDeadline, taskDesc;
-    private String key;
+    private String taskName, taskDeadline, taskDesc, key;
 
     public Task() { }
 

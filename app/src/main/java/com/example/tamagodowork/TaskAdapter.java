@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> {
@@ -63,35 +65,31 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO
                 TaskDetailsDial dialog = new TaskDetailsDial(name, deadline, desc, key);
                 dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
                         "Show task details");
             }
         });
 
-//        CheckBox checkBox = holder.itemView.findViewById(R.id.taskCheckBox);
-//        checkBox.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-//
-//                // remove the task
-//                reference.child("TamaGoDoWork").child(key)
-//                        .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
-//                        if (task.isSuccessful()) {
-//                            // add xp
-//                            reference.child("XP").setValue(MainActivity.getXP() + 10L);
-//
-//                        } else {
-//                            Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-//            }
-//        });
+        // check box
+        CheckBox checkBox = holder.itemView.findViewById(R.id.taskCheckBox);
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.userDoc.collection("Tasks").document(key).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull com.google.android.gms.tasks.Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // add xp
+                            MainActivity.userDoc.update("XP", MainActivity.xp + 10);
+
+                        } else {
+                            Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override

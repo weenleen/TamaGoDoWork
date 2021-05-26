@@ -41,20 +41,16 @@ public class EditTaskAct extends AppCompatActivity {
         this.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("Tasks").document(key)
-                        .set(new Task(
-                                editName.getText().toString(),
-                                editDeadline.getText().toString(),
-                                editDesc.getText().toString(),
-                                key))
+                MainActivity.userDoc.collection("Tasks").document(key)
+                        .update("taskName", editName.getText().toString(),
+                                "taskDeadline", editDeadline.getText().toString(),
+                                "taskDesc", editDesc.getText().toString())
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Toast.makeText(getApplicationContext(), "Save Failed", Toast.LENGTH_SHORT).show();
                             }
                         });
-
                 goBack();
             }
         });
