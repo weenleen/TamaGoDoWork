@@ -1,24 +1,28 @@
 package com.example.tamagodowork;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button resetButton;
     private ProgressBar xpBar;
     private TextView levelView;
-    private static Long xp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,23 @@ public class MainActivity extends AppCompatActivity {
         this.levelView = findViewById(R.id.levelDisplay);
 
         // firestore
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//
+//        db.collection("Pet").document("XP")
+//                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+//                if (error != null) {
+//                    // error
+//                    Toast.makeText(getApplicationContext(), "No XP Data", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                Number xp = (Number) value.get("XP");
+//                if (xp == null) {
+//                    db.collection("Pet").document("XP");
+//                }
+//            }
+//        });
 
 //        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("XP");
 //        reference.addValueEventListener(new ValueEventListener() {
@@ -98,9 +119,4 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             };
-
-
-    public static Long getXP() {
-        return xp;
-    }
 }

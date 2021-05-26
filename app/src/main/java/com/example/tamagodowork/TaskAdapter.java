@@ -45,7 +45,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
     }
 
 
-    private Long currXP;
+    // private Long currXP;
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {

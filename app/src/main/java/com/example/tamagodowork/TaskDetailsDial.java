@@ -12,13 +12,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class TaskDetailsDial extends BottomSheetDialogFragment {
 
-    // private DatabaseReference reference;
     private final String name, deadline, desc, key;
 
     public TaskDetailsDial(String name, String deadline, String desc, String key) {
@@ -44,42 +43,30 @@ public class TaskDetailsDial extends BottomSheetDialogFragment {
         deadlineView.setText(deadline);
         descView.setText(desc);
 
-//        // Get data from firebase
-//        this.reference = FirebaseDatabase.getInstance().getReference()
-//                .child("TamaGoDoWork").child(this.key);
-//
-//        // edit button
-//        Button editBtn = view.findViewById(R.id.edit_button);
-//        editBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getContext(), EditTaskAct.class);
-//                intent.putExtra("key", key);
-//                intent.putExtra("name", name);
-//                intent.putExtra("deadline", deadline);
-//                intent.putExtra("desc", desc);
-//                startActivity(intent);
-//            }
-//        });
+        Button editBtn = view.findViewById(R.id.edit_button);
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), EditTaskAct.class);
+                intent.putExtra("key", key);
+                intent.putExtra("name", name);
+                intent.putExtra("deadline", deadline);
+                intent.putExtra("desc", desc);
+                startActivity(intent);
+            }
+        });
 
         // TODO
         // delete button
-//        Button delBtn = view.findViewById(R.id.delete_button);
-//        delBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                reference.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
-//                        if (task.isSuccessful()) {
-//                            dismiss();
-//                        } else {
-//                            Toast.makeText(getContext(), "Delete Failed", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-//            }
-//        });
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Button delBtn = view.findViewById(R.id.delete_button);
+        delBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.collection("Tasks").document(key).delete();
+                dismiss();
+            }
+        });
 
         builder.setView(view);
         return builder.create();
