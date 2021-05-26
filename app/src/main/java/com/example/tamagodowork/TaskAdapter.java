@@ -12,8 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -72,28 +70,28 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
             }
         });
 
-        CheckBox checkBox = holder.itemView.findViewById(R.id.taskCheckBox);
-        checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-
-                // remove the task
-                reference.child("TamaGoDoWork").child(key)
-                        .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            // add xp
-                            reference.child("XP").setValue(MainActivity.getXP() + 10L);
-
-                        } else {
-                            Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        });
+//        CheckBox checkBox = holder.itemView.findViewById(R.id.taskCheckBox);
+//        checkBox.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+//
+//                // remove the task
+//                reference.child("TamaGoDoWork").child(key)
+//                        .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+//                        if (task.isSuccessful()) {
+//                            // add xp
+//                            reference.child("XP").setValue(MainActivity.getXP() + 10L);
+//
+//                        } else {
+//                            Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
+//            }
+//        });
     }
 
     @Override

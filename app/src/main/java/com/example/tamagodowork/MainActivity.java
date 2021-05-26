@@ -12,11 +12,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,38 +37,38 @@ public class MainActivity extends AppCompatActivity {
         this.xpBar = findViewById(R.id.xpBar);
         this.levelView = findViewById(R.id.levelDisplay);
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("XP");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+        // firestore
 
-                // reset button to reset the level to level 1
-                resetButton = findViewById(R.id.reset_button);
-                resetButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        xp = 0L;
-                        reference.setValue(0);
-                        xpBar.setProgress(0);
-                        levelView.setText("Level " + 1);
-                    }
-                });
-
-
-                xp = (Long) snapshot.getValue();
-
-                if (xp == null) {
-                    reference.setValue(0);
-                    xp = 0L;
-                }
-
-                levelView.setText("Level " + (xp.intValue()/100 + 1));
-                xpBar.setProgress(xp.intValue() % 100);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
-        });
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("XP");
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                xp = (Long) snapshot.getValue();
+//
+//                if (xp == null) {
+//                    reference.setValue(0);
+//                    xp = 0L;
+//                }
+//
+//                levelView.setText("Level " + (xp.intValue()/100 + 1));
+//                xpBar.setProgress(xp.intValue() % 100);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) { }
+//        });
+//
+//        // reset button to reset the level to level 1
+//        resetButton = findViewById(R.id.reset_button);
+//        resetButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                xp = 0L;
+//                reference.setValue(0);
+//                xpBar.setProgress(0);
+//                levelView.setText("Level " + 1);
+//            }
+//        });
     }
 
     /**

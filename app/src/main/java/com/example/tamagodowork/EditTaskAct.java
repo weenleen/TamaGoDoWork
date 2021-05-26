@@ -9,19 +9,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class EditTaskAct extends AppCompatActivity {
 
     private EditText editName, editDeadline, editDesc;
     private Button saveBtn, cancelBtn;
-    private DatabaseReference reference;
+    // private DatabaseReference reference;
     private String key;
 
     @Override
@@ -41,33 +34,33 @@ public class EditTaskAct extends AppCompatActivity {
 
         this.key = getIntent().getStringExtra("key");
 
-        // retrieve data
-        reference = FirebaseDatabase.getInstance().getReference()
-                .child("TamaGoDoWork").child(this.key);
-
-        // Save Button
-        this.saveBtn = findViewById(R.id.save_button);
-        this.saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                reference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        snapshot.getRef().child("taskName").setValue(editName.getText().toString());
-                        snapshot.getRef().child("taskDeadline").setValue(editDeadline.getText().toString());
-                        snapshot.getRef().child("taskDesc").setValue(editDesc.getText().toString());
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(getApplicationContext(), "Save Failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                goBack();
-            }
-        });
+//        // retrieve data
+//        reference = FirebaseDatabase.getInstance().getReference()
+//                .child("TamaGoDoWork").child(this.key);
+//
+//        // Save Button
+//        this.saveBtn = findViewById(R.id.save_button);
+//        this.saveBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                reference.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        snapshot.getRef().child("taskName").setValue(editName.getText().toString());
+//                        snapshot.getRef().child("taskDeadline").setValue(editDeadline.getText().toString());
+//                        snapshot.getRef().child("taskDesc").setValue(editDesc.getText().toString());
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        Toast.makeText(getApplicationContext(), "Save Failed", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//
+//                goBack();
+//            }
+//        });
 
         // Cancel Button
         this.cancelBtn = findViewById(R.id.cancel_edit_button);

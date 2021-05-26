@@ -2,6 +2,7 @@ package com.example.tamagodowork;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,23 +14,26 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 public class TaskListFrag extends Fragment {
 
     RecyclerView taskListView;
-    DatabaseReference reference;
     TaskAdapter adapter;
     ArrayList<Task> list;
 
     FloatingActionButton fab;
+
+    // firestore
+    FirebaseFirestore db;
 
     @Nullable
     @Override
@@ -44,33 +48,61 @@ public class TaskListFrag extends Fragment {
          * Retrieving data from firebase
          */
         list = new ArrayList<>();
-        reference = FirebaseDatabase.getInstance().getReference().child("TamaGoDoWork");
+        //reference = FirebaseDatabase.getInstance().getReference().child("TamaGoDoWork");
         adapter = new TaskAdapter(getActivity(), this.list);
         taskListView.setAdapter(adapter);
 
-        reference.addValueEventListener(new ValueEventListener() {
-
+        // TODO
+        db = FirebaseFirestore.getInstance();
+        db.collection("Tasks").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onComplete(@NonNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
 
-                list.clear();
+                    list.clear();
 
-                // set code to retrieve data and replace layout
-                for(DataSnapshot dataSnapshot: snapshot.getChildren())
-                {
-                    Task t = dataSnapshot.getValue(Task.class);
-                    list.add(t);
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        list.add(new Task(document.getString("taskName"),
+                                document.getString("taskDeadline"),
+                                document.getString("taskDesc"),
+                                document.getId()));
+                    }
+
+                    adapter.notifyDataSetChanged();
+
+                } else {
+                    Toast.makeText(view.getContext(), "No Data", Toast.LENGTH_SHORT).show();
                 }
-
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // set code to show an error
-                Toast.makeText(view.getContext(), "No Data", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
+
+
+//        reference.addValueEventListener(new ValueEventListener() {
+//
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                list.clear();
+//
+//                // set code to retrieve data and replace layout
+//                for(DataSnapshot dataSnapshot: snapshot.getChildren())
+//                {
+//                    Task t = dataSnapshot.getValue(Task.class);
+//                    list.add(t);
+//                }
+//
+//                adapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                // set code to show an error
+//                Toast.makeText(view.getContext(), "No Data", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         /**
          * Floating Action Button to add new tasks
