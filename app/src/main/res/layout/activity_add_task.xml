@@ -27,20 +27,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Name"
-            android:id="@+id/addName">
+            android:textSize="25sp"
+            android:id="@+id/addName"
+            android:layout_marginBottom="40dp">
         </EditText>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_baseline_access_time_24"
+            android:drawableTint="@color/peach"
+            android:id="@+id/addDeadline"
+            android:drawablePadding="20dp"
             android:hint="Deadline"
-            android:id="@+id/addDeadline">
+            android:textSize="20sp"
+            android:editable="false"
+            android:focusable="false"
+            android:cursorVisible="false"
+            android:layout_marginBottom="20dp">
         </EditText>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_baseline_assignment_24"
+            android:drawableTint="@color/peach"
+            android:drawablePadding="20dp"
             android:hint="Description"
+            android:textSize="20sp"
             android:id="@+id/addDesc">
         </EditText>
 

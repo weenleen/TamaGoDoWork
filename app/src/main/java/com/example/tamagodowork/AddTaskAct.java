@@ -2,8 +2,6 @@ package com.example.tamagodowork;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,9 +12,7 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
 
@@ -56,6 +52,8 @@ public class AddTaskAct extends AppCompatActivity {
                 month = month + 1;
                 deadline = dayOfMonth + "/" + month + "/" + year;
                 addDeadline.setText(deadline);
+//                LocalDate.of(year, Month.of(month), dayOfMonth);
+//                LocalDate.of(year, month, dayOfMonth);
             }
         };
 
