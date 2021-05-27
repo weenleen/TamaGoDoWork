@@ -43,14 +43,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/save_button"
-            android:text="Save Changes" >
+            android:text="Save Changes"
+            android:backgroundTint="@color/peach">
         </Button>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/cancel_edit_button"
-            android:text="Cancel" >
+            android:text="Cancel"
+            android:textColor="@color/peach"
+            android:backgroundTint="@color/off_white">
         </Button>
 
     </LinearLayout>

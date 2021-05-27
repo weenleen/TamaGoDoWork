@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button resetButton, logoutButton;
+    private ImageView settings;
     private ProgressBar xpBar;
     private TextView levelView;
     public static DocumentReference userDoc;
@@ -73,27 +74,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        // reset button to reset the level to level 1
-        resetButton = findViewById(R.id.reset_button);
-        resetButton.setOnClickListener(new View.OnClickListener() {
+        // settings
+        this.settings = findViewById(R.id.settings_icon);
+        this.settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                xp = 0;
-                userDoc.update("XP", 0);
-            }
-        });
-
-        // logout button
-        logoutButton = findViewById(R.id.logout_button);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseAuth.signOut();
-                startActivity(new Intent(getApplicationContext(), LoginAct.class));
+                startActivity(new Intent(getApplicationContext(), SettingsAct.class));
                 finish();
             }
         });
+
+
+//        // reset button to reset the level to level 1
+//        resetButton = findViewById(R.id.reset_button);
+//        resetButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                xp = 0;
+//                userDoc.update("XP", 0);
+//            }
+//        });
+//
+//        // logout button
+//        logoutButton = findViewById(R.id.logout_button);
+//        logoutButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                firebaseAuth.signOut();
+//                startActivity(new Intent(getApplicationContext(), LoginAct.class));
+//                finish();
+//            }
+//        });
     }
 
     /**

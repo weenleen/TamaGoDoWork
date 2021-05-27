@@ -17,13 +17,13 @@
         android:background="@color/peach"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <!-- text that says your level -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
                 android:id="@+id/levelDisplay"
@@ -32,24 +32,15 @@
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
-
-            <!-- reset button -->
-            <Button
-                android:backgroundTint="@color/purple_200"
-                android:id="@+id/reset_button"
+            <ImageView
+                android:id="@+id/settings_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="reset" />
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_settings_24"
+                android:layout_alignParentRight="true">
+            </ImageView>
 
-            <!-- logout button -->
-            <Button
-                android:backgroundTint="@color/purple_200"
-                android:id="@+id/logout_button"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="log out" />
-
-        </LinearLayout>
+        </RelativeLayout>
 
         <!-- xp bar -->
         <ProgressBar
@@ -57,10 +48,6 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="20dp" />
-
-        <!-- button -->
-
-
     </LinearLayout>
 
     <!-- Middle body part where the fragments will be -->
@@ -79,7 +66,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="?android:attr/windowBackground"
+        android:background="@drawable/bg_bottom_nav"
+        app:itemIconTint="@color/bottom_nav_item"
+        app:itemTextColor="@color/bottom_nav_item"
+        app:itemBackground="@android:color/transparent"
         app:menu="@menu/bottom_nav_menu" />
-
 </RelativeLayout>
