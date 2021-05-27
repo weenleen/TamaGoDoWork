@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,10 +42,22 @@ public class EditTaskAct extends AppCompatActivity {
         this.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String name = editName.getText().toString();
+                String deadline = editDeadline.getText().toString();
+                String desc = editDesc.getText().toString();
+
+                if (TextUtils.isEmpty(name)) {
+                    editName.setError("Please enter a name");
+                    return;
+                } else if (TextUtils.isEmpty(deadline)) {
+                    editDeadline.setError("Please enter a deadline");
+                    return;
+                }
+
                 MainActivity.userDoc.collection("Tasks").document(key)
-                        .update("taskName", editName.getText().toString(),
-                                "taskDeadline", editDeadline.getText().toString(),
-                                "taskDesc", editDesc.getText().toString())
+                        .update("taskName", name,
+                                "taskDeadline", deadline,
+                                "taskDesc", desc)
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {

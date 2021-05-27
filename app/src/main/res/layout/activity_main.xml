@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
                 android:id="@+id/levelDisplay"
-                android:textColor="@color/white"
+                android:textColor="@android:color/white"
                 android:text="Level 1"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_baseline_settings_24"
-                android:layout_alignParentRight="true">
+                android:layout_alignParentEnd="true">
             </ImageView>
 
         </RelativeLayout>
@@ -47,7 +47,8 @@
             android:id="@+id/xpBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_height="20dp"
+            android:progressTint="@android:color/white" />
     </LinearLayout>
 
     <!-- Middle body part where the fragments will be -->

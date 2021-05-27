@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class TaskDetailsDial extends BottomSheetDialogFragment {
 
     private final String name, deadline, desc, key;
+    private Button editBtn, delBtn;
+    private ImageView closeIcon;
 
     public TaskDetailsDial(String name, String deadline, String desc, String key) {
         this.name = name;
@@ -40,8 +43,8 @@ public class TaskDetailsDial extends BottomSheetDialogFragment {
         deadlineView.setText(deadline);
         descView.setText(desc);
 
-        Button editBtn = view.findViewById(R.id.edit_button);
-        editBtn.setOnClickListener(new View.OnClickListener() {
+        this.editBtn = view.findViewById(R.id.edit_button);
+        this.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), EditTaskAct.class);
@@ -54,11 +57,20 @@ public class TaskDetailsDial extends BottomSheetDialogFragment {
         });
 
         // delete button
-        Button delBtn = view.findViewById(R.id.delete_button);
-        delBtn.setOnClickListener(new View.OnClickListener() {
+        this.delBtn = view.findViewById(R.id.delete_button);
+        this.delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity.userDoc.collection("Tasks").document(key).delete();
+                dismiss();
+            }
+        });
+
+        // close
+        this.closeIcon = view.findViewById(R.id.close_icon);
+        closeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 dismiss();
             }
         });

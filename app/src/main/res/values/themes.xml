@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@android:color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
@@ -12,5 +12,27 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:fontFamily">@font/quicksand_regular</item>
+        <item name="fontFamily">@font/quicksand_regular</item>
+        <item name="android:textViewStyle">@style/QuicksandTextViewStyle</item>
+        <item name="android:buttonStyle">@style/ButtonDarkStyle</item>
+    </style>
+
+    <!-- Text View Style. -->
+    <style name="QuicksandTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/quicksand_regular</item>
+    </style>
+
+    <!-- Button Styles. -->
+    <style name="ButtonDarkStyle" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">@font/quicksand_bold</item>
+        <item name="colorButtonNormal">@color/peach</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ButtonLightStyle" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">@font/quicksand_bold</item>
+        <item name="colorButtonNormal">@color/light_pink</item>
+        <item name="android:textColor">@color/peach</item>
     </style>
 </resources>

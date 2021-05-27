@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -21,7 +22,8 @@ import org.jetbrains.annotations.NotNull;
 public class LoginAct extends AppCompatActivity {
 
     EditText editEmail, editPassword;
-    Button loginBtn, registerGoToBtn;
+    Button loginBtn;
+    TextView registerLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +69,8 @@ public class LoginAct extends AppCompatActivity {
             }
         });
 
-        registerGoToBtn = findViewById(R.id.btn_go_to_register);
-        registerGoToBtn.setOnClickListener(new View.OnClickListener() {
+        registerLink = findViewById(R.id.register_link);
+        registerLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), RegisterAct.class));

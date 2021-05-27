@@ -2,6 +2,7 @@ package com.example.tamagodowork;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,13 +33,20 @@ public class AddTaskAct extends AppCompatActivity {
         this.createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
                 DocumentReference ref = MainActivity.userDoc.collection("Tasks").document();
 
                 String name = addName.getText().toString();
                 String deadline = addDeadline.getText().toString();
                 String desc = addDesc.getText().toString();
                 String key = ref.getId();
+
+                if (TextUtils.isEmpty(name)) {
+                    addName.setError("Please enter a name");
+                    return;
+                } else if (TextUtils.isEmpty(deadline)) {
+                    addDeadline.setError("Please enter a deadline");
+                    return;
+                }
 
                 ref.set(new Task(name, deadline, desc, key));
 

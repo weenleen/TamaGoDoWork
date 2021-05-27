@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,7 +27,8 @@ import java.util.HashMap;
 public class RegisterAct extends AppCompatActivity {
 
     EditText editName, editEmail, editPassword1, editPassword2;
-    Button loginGoToBtn, registerBtn;
+    Button registerBtn;
+    TextView loginLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +102,8 @@ public class RegisterAct extends AppCompatActivity {
             }
         });
 
-        loginGoToBtn = findViewById(R.id.btn_go_to_login);
-        loginGoToBtn.setOnClickListener(new View.OnClickListener() {
+        loginLink = findViewById(R.id.login_link);
+        loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), LoginAct.class));

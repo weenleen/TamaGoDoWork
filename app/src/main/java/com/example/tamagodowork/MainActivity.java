@@ -57,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        this.userDoc = db.collection("Users").document(firebaseAuth.getCurrentUser().getUid());
+        userDoc = db.collection("Users").document(firebaseAuth.getCurrentUser().getUid());
 
         // XP stuff
-        this.userDoc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        userDoc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 if (error != null) {
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
                 xp = ((Long) value.get("XP")).intValue();
 
-                levelView.setText("Level " + (int)(xp/100 + 1));
+                levelView.setText("Level " + (xp/100 + 1));
                 xpBar.setProgress(xp % 100);
             }
         });
@@ -83,28 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
-//        // reset button to reset the level to level 1
-//        resetButton = findViewById(R.id.reset_button);
-//        resetButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                xp = 0;
-//                userDoc.update("XP", 0);
-//            }
-//        });
-//
-//        // logout button
-//        logoutButton = findViewById(R.id.logout_button);
-//        logoutButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                firebaseAuth.signOut();
-//                startActivity(new Intent(getApplicationContext(), LoginAct.class));
-//                finish();
-//            }
-//        });
     }
 
     /**
