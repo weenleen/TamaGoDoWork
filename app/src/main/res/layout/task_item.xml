@@ -11,19 +11,23 @@
     android:layout_marginBottom="20dp"
     android:orientation="horizontal" >
 
-    <!-- Name and Desc -->
+    <!-- Details -->
     <LinearLayout
-        android:layout_width="280dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
+        <!-- Name. -->
         <TextView
             android:id="@+id/taskName"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/peach"
             android:text="Title testing"
-            android:textSize="25sp" >
+            android:textSize="25sp"
+            android:maxLines="1"
+            android:ellipsize="end" >
         </TextView>
 
         <!-- Deadline. -->
@@ -32,15 +36,26 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="3 days"
-            android:textSize="20sp">
+            android:textSize="20sp"
+            android:drawableLeft="@drawable/ic_baseline_access_time_24"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/peach"
+            android:maxLines="1"
+            android:ellipsize="end" >
         </TextView>
 
+        <!-- Desc. -->
         <TextView
             android:id="@+id/taskDesc"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Description testing."
-            android:textSize="20sp" >
+            android:textSize="20sp"
+            android:drawableLeft="@drawable/ic_baseline_assignment_24"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/peach"
+            android:maxLines="1"
+            android:ellipsize="end" >
         </TextView>
     </LinearLayout>
 

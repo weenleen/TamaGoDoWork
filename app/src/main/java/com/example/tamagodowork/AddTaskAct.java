@@ -79,6 +79,7 @@ public class AddTaskAct extends AppCompatActivity {
                     return;
                 } else if (TextUtils.isEmpty(addDeadline.getText().toString())) {
                     addDeadline.setError("Please enter a deadline");
+                    return;
                 }
 
                 ref.set(new Task(name, deadline, desc, key));

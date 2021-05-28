@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.TimeZone;
+import java.time.temporal.ChronoUnit;
 
 /**
  * Supposed to be the logic of each task in the task list
@@ -54,6 +54,10 @@ public class Task {
     public void setKey(String key) { this.key = key; }
 
     // others
+    public LocalDateTime getDateTime() {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(this.taskDeadline), ZoneOffset.UTC);
+    }
+
     public static String getDeadlineString(long milli) {
         LocalDateTime tmp = LocalDateTime.ofInstant(Instant.ofEpochMilli(milli), ZoneOffset.UTC);
         return tmp.format(formatter);
@@ -61,5 +65,27 @@ public class Task {
 
     public String getDeadlineString() {
         return getDeadlineString(this.taskDeadline);
+    }
+
+    public String getTimeLeft() {
+        LocalDateTime fromDate = LocalDateTime.now();
+        LocalDateTime toDate = this.getDateTime();
+
+        int years = (int) ChronoUnit.YEARS.between(fromDate, toDate);
+        int months = (int) ChronoUnit.MONTHS.between(fromDate, toDate);
+        int days = (int) ChronoUnit.DAYS.between(fromDate, toDate);
+        int hours = (int) ChronoUnit.HOURS.between(fromDate, toDate);
+
+        if (years >= 1) {
+            return years + " years";
+        } else if (months >= 1) {
+            return months + " months";
+        } else if (days >= 1) {
+            return days + " days";
+        } else if (hours >= 1) {
+            return hours + " hours";
+        } else {
+            return "less than 1 hour";
+        }
     }
 }

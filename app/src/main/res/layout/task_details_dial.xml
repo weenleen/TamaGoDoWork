@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="350dp"
     android:background="@drawable/bg_task_item"
-    android:padding="30dp"
+    android:padding="20dp"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:id="@+id/close_icon"
+        android:layout_gravity="right"
+        android:src="@drawable/ic_baseline_close_24"
+        android:background="@android:color/transparent">
+    </ImageView>
 
-        <RelativeLayout
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="40dp">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
@@ -23,48 +32,38 @@
                 android:id="@+id/taskName"
                 android:text="Task Name"
                 android:textColor="@color/peach"
-                android:textSize="25sp">
+                android:textSize="25sp"
+                android:layout_marginBottom="20dp" >
             </TextView>
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <TextView
+                android:id='@+id/taskDeadline'
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/close_icon"
-                android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_baseline_close_24"
-                android:background="@android:color/transparent">
-            </ImageView>
-        </RelativeLayout>
+                android:text="Task Deadline"
+                android:drawablePadding="20dp"
+                android:textSize="20sp"
+                android:layout_marginBottom="20dp"
+                app:drawableStartCompat="@drawable/ic_baseline_access_time_24"
+                app:drawableTint="@color/peach" />
 
-
-        <TextView
-            android:id='@+id/taskDeadline'
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Task Deadline"
-            android:drawablePadding="20dp"
-            android:textSize="20sp"
-            android:layout_marginBottom="20dp"
-            app:drawableStartCompat="@drawable/ic_baseline_access_time_24"
-            app:drawableTint="@color/peach" />
-
-        <TextView
-            android:id='@+id/taskDesc'
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Task Description"
-            android:drawablePadding="20dp"
-            android:textSize="20sp"
-            app:drawableTint="@color/peach"
-            app:drawableStartCompat="@drawable/ic_baseline_assignment_24" />
-    </LinearLayout>
+            <TextView
+                android:id='@+id/taskDesc'
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Task Description"
+                android:drawablePadding="20dp"
+                android:textSize="20sp"
+                app:drawableTint="@color/peach"
+                app:drawableStartCompat="@drawable/ic_baseline_assignment_24" />
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_alignParentBottom="true">
+        android:gravity="center" >
 
         <Button
             android:layout_width="122dp"
@@ -87,5 +86,4 @@
             android:drawableTint="@color/peach" />
 
     </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>
