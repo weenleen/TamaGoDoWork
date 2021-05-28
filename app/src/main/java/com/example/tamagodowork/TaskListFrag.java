@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class TaskListFrag extends Fragment {
@@ -65,7 +66,7 @@ public class TaskListFrag extends Fragment {
 
                         for (QueryDocumentSnapshot doc : value) {
                             list.add(new Task(doc.getString("taskName"),
-                                    doc.getString("taskDeadline"),
+                                    (long) doc.get("taskDeadline"),
                                     doc.getString("taskDesc"),
                                     doc.getId()));
                         }

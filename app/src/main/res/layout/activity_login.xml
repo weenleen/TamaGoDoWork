@@ -26,7 +26,8 @@
         android:background="@color/light_pink"
         android:hint="Email Address"
         android:inputType="textEmailAddress"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/login_password"
@@ -37,7 +38,8 @@
         android:background="@color/light_pink"
         android:inputType="textPassword"
         android:textSize="15sp"
-        android:hint="Password" />
+        android:hint="Password"
+        android:importantForAutofill="no" />
 
 
     <LinearLayout

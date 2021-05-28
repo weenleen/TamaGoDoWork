@@ -1,15 +1,24 @@
 package com.example.tamagodowork;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
+
 /**
  * Supposed to be the logic of each task in the task list
  */
 public class Task {
 
-    private String taskName, taskDeadline, taskDesc, key;
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+    private String taskName, taskDesc, key;
+    private long taskDeadline;
 
     public Task() { }
 
-    public Task(String taskName, String deadline, String taskDesc, String key) {
+    public Task(String taskName, long deadline, String taskDesc, String key) {
         this.taskName = taskName;
         this.taskDeadline = deadline;
         this.taskDesc = taskDesc;
@@ -25,9 +34,7 @@ public class Task {
         return this.taskDesc;
     }
 
-    public String getTaskDeadline() {
-        return this.taskDeadline;
-    }
+    public long getTaskDeadline() { return this.taskDeadline; }
 
     public String getKey() { return key; }
 
@@ -36,7 +43,7 @@ public class Task {
         this.taskName = taskName;
     }
 
-    public void setTaskDeadline(String taskDeadline) {
+    public void setTaskDeadline(long taskDeadline) {
         this.taskDeadline = taskDeadline;
     }
 
@@ -45,4 +52,14 @@ public class Task {
     }
 
     public void setKey(String key) { this.key = key; }
+
+    // others
+    public static String getDeadlineString(long milli) {
+        LocalDateTime tmp = LocalDateTime.ofInstant(Instant.ofEpochMilli(milli), ZoneOffset.UTC);
+        return tmp.format(formatter);
+    }
+
+    public String getDeadlineString() {
+        return getDeadlineString(this.taskDeadline);
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.tamagodowork;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,12 +9,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.DocumentReference;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 
 
@@ -21,8 +28,7 @@ public class AddTaskAct extends AppCompatActivity {
 
     private EditText addName, addDeadline, addDesc;
     private Button createBtn, cancelBtn;
-    private DatePickerDialog.OnDateSetListener DateSetListener;
-    private String deadline;
+    private long deadline;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,29 +41,28 @@ public class AddTaskAct extends AppCompatActivity {
         this.addDeadline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar cal = Calendar.getInstance();
-                int year = cal.get(Calendar.YEAR);
-                int month = cal.get(Calendar.MONTH);
-                int day = cal.get(Calendar.DAY_OF_MONTH);
+                final View dialogView = View.inflate(getApplicationContext(), R.layout.date_time_picker, null);
+                final AlertDialog alertDialog = new AlertDialog.Builder(AddTaskAct.this).create();
 
-                DatePickerDialog dialog = new DatePickerDialog(AddTaskAct.this, android.R.style.Theme_DeviceDefault_Dialog_MinWidth, DateSetListener, year , month, day);
-                //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
+                Button setDateTimeBtn = dialogView.findViewById(R.id.date_time_set_btn);
+                setDateTimeBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DatePicker datePicker = dialogView.findViewById(R.id.date_picker);
+                        TimePicker timePicker = dialogView.findViewById(R.id.time_picker);
+
+                        deadline = LocalDateTime.of(
+                                datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth(),
+                                timePicker.getCurrentHour(), timePicker.getCurrentMinute()).atZone(ZoneOffset.UTC).toInstant().toEpochMilli();;
+                        addDeadline.setText(Task.getDeadlineString(deadline));
+                        alertDialog.dismiss();
+                    }
+                });
+
+                alertDialog.setView(dialogView);
+                alertDialog.show();
             }
         });
-
-        DateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month + 1;
-                deadline = dayOfMonth + "/" + month + "/" + year;
-                addDeadline.setText(deadline);
-//                LocalDate.of(year, Month.of(month), dayOfMonth);
-//                LocalDate.of(year, month, dayOfMonth);
-            }
-        };
-
-
 
         this.createBtn = findViewById(R.id.create_button);
         this.createBtn.setOnClickListener(new View.OnClickListener() {
@@ -69,14 +74,11 @@ public class AddTaskAct extends AppCompatActivity {
                 String desc = addDesc.getText().toString();
                 String key = ref.getId();
 
-
-
                 if (TextUtils.isEmpty(name)) {
                     addName.setError("Please enter a name");
                     return;
-                } else if (TextUtils.isEmpty(deadline)) {
+                } else if (TextUtils.isEmpty(addDeadline.getText().toString())) {
                     addDeadline.setError("Please enter a deadline");
-                    return;
                 }
 
                 ref.set(new Task(name, deadline, desc, key));

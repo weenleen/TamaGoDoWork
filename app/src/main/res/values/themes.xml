@@ -17,7 +17,7 @@
         <item name="android:textViewStyle">@style/QuicksandTextViewStyle</item>
         <item name="android:buttonStyle">@style/ButtonDarkStyle</item>
         <item name="colorAccent">@color/peach</item>
-        <item name="android:datePickerStyle">@style/MyDatePickerDialogTheme</item>
+        <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
     </style>
 
     <!-- Text View Style. -->

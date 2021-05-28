@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +13,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 
 public class EditTaskAct extends AppCompatActivity {
@@ -23,8 +27,7 @@ public class EditTaskAct extends AppCompatActivity {
     private EditText editName, editDeadline, editDesc;
     private Button saveBtn, cancelBtn;
     private String key;
-    private DatePickerDialog.OnDateSetListener DateSetListener;
-    private String deadline;
+    private long deadline;
 
 
     @Override
@@ -39,24 +42,28 @@ public class EditTaskAct extends AppCompatActivity {
         this.editDeadline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar cal = Calendar.getInstance();
-                int year = cal.get(Calendar.YEAR);
-                int month = cal.get(Calendar.MONTH);
-                int day = cal.get(Calendar.DAY_OF_MONTH);
+                final View dialogView = View.inflate(getApplicationContext(), R.layout.date_time_picker, null);
+                final AlertDialog alertDialog = new AlertDialog.Builder(EditTaskAct.this).create();
 
-                DatePickerDialog dialog = new DatePickerDialog(EditTaskAct.this, android.R.style.Theme_DeviceDefault_Dialog_MinWidth, DateSetListener, year , month, day);
-                dialog.show();
+                Button setDateTimeBtn = dialogView.findViewById(R.id.date_time_set_btn);
+                setDateTimeBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DatePicker datePicker = dialogView.findViewById(R.id.date_picker);
+                        TimePicker timePicker = dialogView.findViewById(R.id.time_picker);
+
+                        deadline = LocalDateTime.of(
+                                datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth(),
+                                timePicker.getCurrentHour(), timePicker.getCurrentMinute()).atZone(ZoneOffset.UTC).toInstant().toEpochMilli();;
+                        editDeadline.setText(Task.getDeadlineString(deadline));
+                        alertDialog.dismiss();
+                    }
+                });
+
+                alertDialog.setView(dialogView);
+                alertDialog.show();
             }
         });
-
-        DateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month + 1;
-                deadline = dayOfMonth + "/" + month + "/" + year;
-                editDeadline.setText(deadline);
-            }
-        };
 
         // set the text in the views
         this.editName.setText(getIntent().getStringExtra("name"));
@@ -75,7 +82,7 @@ public class EditTaskAct extends AppCompatActivity {
                 if (TextUtils.isEmpty(name)) {
                     editName.setError("Please enter a name");
                     return;
-                } else if (TextUtils.isEmpty(deadline)) {
+                } else if (TextUtils.isEmpty(editDesc.getText().toString())) {
                     editDeadline.setError("Please enter a deadline");
                     return;
                 }

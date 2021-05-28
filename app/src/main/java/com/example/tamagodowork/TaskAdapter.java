@@ -15,6 +15,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> {
@@ -54,12 +56,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
         final String key = taskList.get(position).getKey();
         final String name = taskList.get(position).getTaskName();
-        final String deadline = taskList.get(position).getTaskDeadline();
+        final String deadline = taskList.get(position).getDeadlineString();
         final String desc = taskList.get(position).getTaskDesc();
 
         holder.taskName.setText(name);
-        holder.taskDeadline.setText(deadline);
         holder.taskDesc.setText(desc);
+        holder.taskDeadline.setText(deadline);
 
         /** The task details pop up is shown when an item in the list is selected */
         holder.itemView.setOnClickListener(new View.OnClickListener() {
