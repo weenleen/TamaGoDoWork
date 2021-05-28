@@ -1,5 +1,6 @@
 package com.example.tamagodowork;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -9,12 +10,12 @@ import java.time.temporal.ChronoUnit;
 /**
  * Supposed to be the logic of each task in the task list
  */
-public class Task {
+public class Task implements Comparable<Task> {
 
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private String taskName, taskDesc, key;
-    private long taskDeadline;
+    private Long taskDeadline;
 
     public Task() { }
 
@@ -54,6 +55,11 @@ public class Task {
     public void setKey(String key) { this.key = key; }
 
     // others
+    @Override
+    public int compareTo(Task o) {
+        return Long.compare(this.getTaskDeadline(), o.getTaskDeadline());
+    }
+
     public LocalDateTime getDateTime() {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(this.taskDeadline), ZoneOffset.UTC);
     }

@@ -23,6 +23,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class TaskListFrag extends Fragment {
 
@@ -70,6 +71,9 @@ public class TaskListFrag extends Fragment {
                                     doc.getString("taskDesc"),
                                     doc.getId()));
                         }
+
+                        // might want to change to SortedList for more efficiency
+                        Collections.sort(list);
 
                         adapter.notifyDataSetChanged();
                     }
