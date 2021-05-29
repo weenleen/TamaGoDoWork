@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -31,8 +30,6 @@ public class EditTaskAct extends AppCompatActivity {
     private String key;
     private long deadline;
 
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,22 +39,44 @@ public class EditTaskAct extends AppCompatActivity {
         this.editName = findViewById(R.id.editName);
         this.editDesc = findViewById(R.id.editDesc);
         this.editDeadline = findViewById(R.id.editDeadline);
+
+        this.key = getIntent().getStringExtra("key");
+        final String deadlineStr = getIntent().getStringExtra("deadline");
+
+        // set the text in the views
+        this.editName.setText(getIntent().getStringExtra("name"));
+        this.editDeadline.setText(deadlineStr);
+        this.editDesc.setText(getIntent().getStringExtra("desc"));
+
+        // set deadline to previous deadline
+        LocalDateTime prevDate = LocalDateTime.parse(deadlineStr,
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm") );
+        deadline = prevDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
+
+        // change deadline
         this.editDeadline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final View dialogView = View.inflate(getApplicationContext(), R.layout.date_time_picker, null);
                 final AlertDialog alertDialog = new AlertDialog.Builder(EditTaskAct.this).create();
 
+                DatePicker datePicker = dialogView.findViewById(R.id.date_picker);
+                TimePicker timePicker = dialogView.findViewById(R.id.time_picker);
+
+                // make pickers display previous deadline
+                datePicker.updateDate(prevDate.getYear(), prevDate.getMonthValue() - 1, prevDate.getDayOfMonth());
+                timePicker.setCurrentHour(prevDate.getHour());
+                timePicker.setCurrentMinute(prevDate.getMinute());
+
+                // set date button
                 Button setDateTimeBtn = dialogView.findViewById(R.id.date_time_set_btn);
                 setDateTimeBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DatePicker datePicker = dialogView.findViewById(R.id.date_picker);
-                        TimePicker timePicker = dialogView.findViewById(R.id.time_picker);
-
                         deadline = LocalDateTime.of(
                                 datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth(),
-                                timePicker.getCurrentHour(), timePicker.getCurrentMinute()).atZone(ZoneOffset.UTC).toInstant().toEpochMilli();;
+                                timePicker.getCurrentHour(), timePicker.getCurrentMinute())
+                                .atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
                         editDeadline.setText(Task.getDeadlineString(deadline));
                         alertDialog.dismiss();
                     }
@@ -68,27 +87,13 @@ public class EditTaskAct extends AppCompatActivity {
             }
         });
 
-        // set the text in the views
-        this.editName.setText(getIntent().getStringExtra("name"));
-        this.editDeadline.setText(getIntent().getStringExtra("deadline"));
-        this.editDesc.setText(getIntent().getStringExtra("desc"));
-
-        this.key = getIntent().getStringExtra("key");
-
+        // save button
         this.saveBtn = findViewById(R.id.save_button);
         this.saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = editName.getText().toString();
                 String desc = editDesc.getText().toString();
-                String deadlineString = editDeadline.getText().toString();
-
-                LocalDateTime localDateTime = LocalDateTime.parse(deadlineString,
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm") );
-                deadline = localDateTime
-                        .atZone(ZoneOffset.UTC)
-                        .toInstant().toEpochMilli();
-
 
                 if (TextUtils.isEmpty(name)) {
                     editName.setError("Please enter a name");

@@ -8,11 +8,12 @@
 
     <DatePicker
         android:id="@+id/date_picker"
-        style="@style/MyDatePickerDialogTheme"
+        android:backgroundTint="@color/peach"
+        android:headerBackground="@color/peach"
         android:layout_width="match_parent"
         android:calendarViewShown="true"
         android:spinnersShown="false"
-        android:layout_weight="6"
+        android:layout_weight="7"
         android:layout_height="0dp" />
 
     <TimePicker
@@ -28,6 +29,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_width="match_parent"
-        android:text="Set" />
+        android:text="Set"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>
