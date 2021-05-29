@@ -44,13 +44,13 @@ This requires us to:
 - Develop features for pet interaction and animate pet behaviour. 
 - Add pet customization features to act as rewards for the user's progress.
 
-We plan to make use of the OpenGL ES APIs to implement many of the features int he virtual pet system.
+We plan to make use of the OpenGL ES APIs to implement many of the features in the virtual pet system.
 
 ## Future plans
 Once our team is done developing our virtual pet system, we plan to work on the **weekly planner feature** in our application.
 
 This requires us to:
-- 
+- hahhhhhh
 
 > We may also add some mini-games or online features into our application if time permits! 
 
