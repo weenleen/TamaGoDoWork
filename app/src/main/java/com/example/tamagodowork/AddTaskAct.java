@@ -53,7 +53,7 @@ public class AddTaskAct extends AppCompatActivity {
 
                         deadline = LocalDateTime.of(
                                 datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth(),
-                                timePicker.getCurrentHour(), timePicker.getCurrentMinute()).atZone(ZoneOffset.UTC).toInstant().toEpochMilli();;
+                                timePicker.getCurrentHour(), timePicker.getCurrentMinute()).atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
                         addDeadline.setText(Task.getDeadlineString(deadline));
                         alertDialog.dismiss();
                     }

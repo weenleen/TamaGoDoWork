@@ -20,7 +20,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Calendar;
+import java.time.format.DateTimeFormatter;
+
+
 
 public class EditTaskAct extends AppCompatActivity {
 
@@ -28,6 +30,7 @@ public class EditTaskAct extends AppCompatActivity {
     private Button saveBtn, cancelBtn;
     private String key;
     private long deadline;
+
 
 
     @Override
@@ -78,11 +81,19 @@ public class EditTaskAct extends AppCompatActivity {
             public void onClick(View v) {
                 String name = editName.getText().toString();
                 String desc = editDesc.getText().toString();
+                String deadlineString = editDeadline.getText().toString();
+
+                LocalDateTime localDateTime = LocalDateTime.parse(deadlineString,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm") );
+                deadline = localDateTime
+                        .atZone(ZoneOffset.UTC)
+                        .toInstant().toEpochMilli();
+
 
                 if (TextUtils.isEmpty(name)) {
                     editName.setError("Please enter a name");
                     return;
-                } else if (TextUtils.isEmpty(editDesc.getText().toString())) {
+                } else if (TextUtils.isEmpty(editDeadline.getText().toString())) {
                     editDeadline.setError("Please enter a deadline");
                     return;
                 }
