@@ -15,7 +15,7 @@
         android:text="Login"
         android:layout_gravity="center"
         android:textColor="@color/peach"
-        android:textSize="55sp" />
+        android:textSize="50sp" />
 
     <EditText
         android:id="@+id/login_email"

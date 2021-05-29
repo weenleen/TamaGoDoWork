@@ -77,8 +77,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                     public void onComplete(@NonNull @NotNull com.google.android.gms.tasks.Task<Void> task) {
                         if (task.isSuccessful()) {
                             // add xp
-                            MainActivity.userDoc.update("XP", MainActivity.xp + 10);
-
+                            MainActivity.incrXP();
                         } else {
                             Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show();
                         }

@@ -17,7 +17,7 @@
         android:text="Register"
         android:layout_gravity="center"
         android:textColor="@color/peach"
-        android:textSize="55sp" />
+        android:textSize="50sp" />
 
     <EditText
         android:id="@+id/register_name"

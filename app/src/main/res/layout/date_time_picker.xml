@@ -8,6 +8,7 @@
 
     <DatePicker
         android:id="@+id/date_picker"
+        style="@style/MyDatePickerDialogTheme"
         android:layout_width="match_parent"
         android:calendarViewShown="true"
         android:spinnersShown="false"
@@ -16,12 +17,14 @@
 
     <TimePicker
         android:id="@+id/time_picker"
-        android:layout_weight="6"
+        android:timePickerMode="spinner"
+        android:layout_weight="3"
         android:layout_width="match_parent"
         android:layout_height="0dp" />
 
     <Button
         android:id="@+id/date_time_set_btn"
+        android:backgroundTint="@color/peach"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_width="match_parent"

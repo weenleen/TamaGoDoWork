@@ -22,8 +22,7 @@ public class SettingsAct extends AppCompatActivity {
         this.resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.xp = 0;
-                MainActivity.userDoc.update("XP", 0);
+                MainActivity.setXP(0);
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 finish();
             }

@@ -27,7 +27,6 @@
 
     <!-- Button Styles. -->
     <style name="ButtonDarkStyle" parent="android:Widget.Holo.Button">
-        <item name="android:fontFamily">@font/quicksand_bold</item>
         <item name="colorButtonNormal">@color/peach</item>
         <item name="android:textColor">@android:color/white</item>
     </style>

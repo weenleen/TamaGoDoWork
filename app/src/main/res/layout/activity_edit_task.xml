@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Edit"
-            android:textSize="40sp"
+            android:textSize="30sp"
             android:textColor="@color/peach"
             android:gravity="center"
             android:paddingBottom="30dp">
@@ -28,37 +28,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Name"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:id="@+id/editName"
-            android:maxLines="4"
-            android:layout_marginBottom="40dp">
+            android:maxLines="3"
+            android:layout_marginBottom="40dp"
+            android:inputType="text">
         </EditText>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_baseline_access_time_24"
+            android:drawableStart="@drawable/ic_baseline_access_time_24"
             android:drawableTint="@color/peach"
             android:id="@+id/editDeadline"
             android:drawablePadding="20dp"
             android:hint="Deadline"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:editable="false"
             android:focusable="false"
             android:cursorVisible="false"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="20dp"
+            android:inputType="text">
         </EditText>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_baseline_assignment_24"
+            android:drawableStart="@drawable/ic_baseline_assignment_24"
             android:drawableTint="@color/peach"
             android:drawablePadding="20dp"
             android:hint="Description"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:id="@+id/editDesc"
-            android:maxLines="9" >
+            android:maxLines="8"
+            android:inputType="text">
         </EditText>
 
         <LinearLayout
@@ -85,7 +88,5 @@
                 android:backgroundTint="@color/off_white">
             </Button>
         </LinearLayout>
-
     </LinearLayout>
-
 </RelativeLayout>

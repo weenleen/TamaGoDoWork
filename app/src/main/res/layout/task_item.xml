@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Layout for each item in the Recycler View -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="120dp"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+    android:paddingVertical="10dp"
+    android:paddingHorizontal="20dp"
     android:background="@drawable/bg_task_item"
     android:layout_marginBottom="20dp"
     android:orientation="horizontal" >
@@ -15,17 +14,17 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical" >
 
         <!-- Name. -->
         <TextView
             android:id="@+id/taskName"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/peach"
             android:text="Title testing"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:maxLines="1"
             android:ellipsize="end" >
         </TextView>
@@ -33,29 +32,29 @@
         <!-- Deadline. -->
         <TextView
             android:id="@+id/taskDeadline"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="3 days"
-            android:textSize="20sp"
-            android:drawableLeft="@drawable/ic_baseline_access_time_24"
+            android:textSize="15sp"
             android:drawablePadding="10dp"
-            android:drawableTint="@color/peach"
             android:maxLines="1"
-            android:ellipsize="end" >
+            android:ellipsize="end"
+            app:drawableTint="@color/peach"
+            app:drawableStartCompat="@drawable/ic_baseline_access_time_24">
         </TextView>
 
         <!-- Desc. -->
         <TextView
             android:id="@+id/taskDesc"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Description testing."
-            android:textSize="20sp"
-            android:drawableLeft="@drawable/ic_baseline_assignment_24"
+            android:textSize="15sp"
             android:drawablePadding="10dp"
-            android:drawableTint="@color/peach"
             android:maxLines="1"
-            android:ellipsize="end" >
+            android:ellipsize="end"
+            app:drawableTint="@color/peach"
+            app:drawableStartCompat="@drawable/ic_baseline_assignment_24">
         </TextView>
     </LinearLayout>
 

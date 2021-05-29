@@ -24,24 +24,29 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static DocumentReference userDoc;
+    private static Integer xp = 0;
+
     private ImageView settings;
     private ProgressBar xpBar;
     private TextView levelView;
-    public static DocumentReference userDoc;
-    public static Integer xp = 0;
+    private Fragment taskListFrag, petFrag, scheduleFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
+        this.taskListFrag = new TaskListFrag();
+        this.petFrag = new PetFrag();
+        this.scheduleFrag = new ScheduleFrag();
+
         // Set default fragment to the task list fragment
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new TaskListFrag()).commit();
+                this.taskListFrag).commit();
 
         // Store xp values in firebase
         this.xpBar = findViewById(R.id.xpBar);
@@ -64,16 +69,23 @@ public class MainActivity extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 if (error != null) {
                     Toast.makeText(getApplicationContext(), "XP error", Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
-                xp = ((Long) value.get("XP")).intValue();
+                Long tmp = (Long) value.get("XP");
+                if (tmp == null) {
+                    MainActivity.setXP(0);
+                    return;
+                }
+
+                xp = tmp.intValue();
 
                 levelView.setText("Level " + (xp/100 + 1));
                 xpBar.setProgress(xp % 100);
             }
         });
 
-        // settings
+        /** Settings */
         this.settings = findViewById(R.id.settings_icon);
         this.settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,24 +96,22 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Bottom Navigation Bar
-     */
+    /** Bottom Navigation Bar */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment selectedFrag = null;
+                    Fragment selectedFrag = taskListFrag;
 
                     switch (item.getItemId()) {
                         case R.id.navigation_taskList:
-                            selectedFrag = new TaskListFrag();
+                            selectedFrag = taskListFrag;
                             break;
                         case R.id.navigation_pet:
-                            selectedFrag = new PetFrag();
+                            selectedFrag = petFrag;
                             break;
                         case R.id.navigation_schedule:
-                            selectedFrag = new ScheduleFrag();
+                            selectedFrag = scheduleFrag;
                             break;
                     }
 
@@ -111,4 +121,24 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             };
+
+    /**
+     * A method that updates the amount of xp locally and in Firestore.
+     *
+     * @param newXP The new value of xp.
+     */
+    public static void setXP(int newXP) {
+        xp = newXP;
+        userDoc.update("XP", newXP);
+    }
+
+    /**
+     * A method that increments the amount of xp locally and in Firestore
+     * after a task is completed. We can adjust this method if we ever want to
+     * change how XP is calculated.
+     */
+    public static void incrXP() {
+        xp += 10;
+        userDoc.update("XP", xp);
+    }
 }

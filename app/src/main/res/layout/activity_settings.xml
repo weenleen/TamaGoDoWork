@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:text="Settings"
         android:textSize="50sp"
+        android:textColor="@color/peach"
         android:gravity="center"
         android:layout_marginBottom="30dp">
     </TextView>
@@ -26,7 +27,6 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/peach"
         android:text="Reset"
-        android:layout_centerInParent="true"
         android:textColor="@android:color/white" />
 
     <Button
@@ -35,7 +35,6 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/peach"
         android:text="Themes"
-        android:layout_centerInParent="true"
         android:textColor="@android:color/white" />
 
     <Button
@@ -44,7 +43,6 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/peach"
         android:text="Log out"
-        android:layout_centerInParent="true"
         android:textColor="@android:color/white" />
 
     <Button
@@ -53,7 +51,6 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/off_white"
         android:text="back"
-        android:layout_centerInParent="true"
         android:textColor="@color/peach" />
 
 </LinearLayout>

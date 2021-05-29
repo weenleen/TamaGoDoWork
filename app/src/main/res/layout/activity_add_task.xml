@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Create"
-            android:textSize="40sp"
+            android:textSize="30sp"
             android:textColor="@color/peach"
             android:gravity="center"
             android:paddingBottom="30dp">
@@ -27,9 +27,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Name"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:id="@+id/addName"
-            android:maxLines="4"
+            android:maxLines="3"
             android:layout_marginBottom="40dp">
         </EditText>
 
@@ -41,7 +41,7 @@
             android:id="@+id/addDeadline"
             android:drawablePadding="20dp"
             android:hint="Deadline"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:editable="false"
             android:focusable="false"
             android:cursorVisible="false"
@@ -55,9 +55,9 @@
             android:drawableTint="@color/peach"
             android:drawablePadding="20dp"
             android:hint="Description"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:id="@+id/addDesc"
-            android:maxLines="9" >
+            android:maxLines="8" >
         </EditText>
 
         <LinearLayout
