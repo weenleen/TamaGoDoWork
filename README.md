@@ -7,10 +7,10 @@ As students check off more daily tasks, they gain experience points which allows
 Additionally, TamaGoDoWork uses cloud storage to store data, so that you can sync your activities across multiple devices!
 
 ## User Stories
-- As a student, I want to be able to keep track of my schedule and tasks on my phone, and modify it easily
-- As a student, I would like to have a visualisation of my progress, and feel a sense of achievement when I meet my goals
-- As a student, I would like more motivation and incentives to stay on task, and to feel rewarded for my efforts
-- As a student, I would like to lessen the boredom that comes with creating to-do lists and carrying out my tasks, and maybe add an element of fun to it instead.
+- As a student, I want to be able to keep track of my schedule and tasks on my phone so that I can remain organized while completing my tasks.
+- As a student, I would like to have a visualisation of my progress so that I will be motivated to do more work and complete more tasks.
+- As a student, I would like more motivation and incentives to stay on task, and to feel rewarded for my efforts so that I can complete more work. 
+- As a student, I would like to lessen the boredom that comes with creating to-do lists and carrying out my tasks, so that I can have fun while completing my work. 
 
 ## Specifications
 TamaGoDoWork is an application that is built specifically for Android devices only. 
@@ -39,10 +39,10 @@ We plan to expand on these features by implementing the following:
 In the next phase, our team will work on developing the **virtual pet system**. 
 
 This requires us to: 
-- Plan and design different stages of the virtual pet's growth.
-- Incorporate virtual pet growth into the current XP system. 
-- Develop features for pet interaction and animate pet behaviour. 
-- Add pet customization features to act as rewards for the user's progress.
+- Plan and design different stages of the virtual pet's growth
+- Incorporate virtual pet growth into the current XP system
+- Develop features for pet interaction and animate pet behaviour
+- Add pet customization features to act as rewards for the user's progress
 
 We plan to make use of the OpenGL ES APIs to implement many of the features in the virtual pet system.
 
@@ -50,8 +50,9 @@ We plan to make use of the OpenGL ES APIs to implement many of the features in t
 Once our team is done developing our virtual pet system, we plan to work on the **weekly planner feature** in our application.
 
 This requires us to:
-- hahhhhhh
-
+- Implement a table layout consisting of all the days of the week and various times of the day 
+- Implement a scrolling layout to fit all the days and times onto the screen 
+- Add dialog views for each period so that students can insert their schedules into the weekly planner 
 > We may also add some mini-games or online features into our application if time permits! 
 
 
