@@ -55,4 +55,40 @@ This requires us to:
 - Add dialog views for each period so that students can insert their schedules into the weekly planner 
 > We may also add some mini-games or online features into our application if time permits! 
 
+## Screenshots
+
+### Register Page
+![register.txt](https://github.com/weenleen/TamaGoDoWork/files/6565130/register.txt)
+
+### Login Page
+![login](https://user-images.githubusercontent.com/69782911/120079990-34c26480-c0e9-11eb-86ac-01749944828a.jpg)
+
+### Settings Page
+![settings](https://user-images.githubusercontent.com/69782911/120080005-5e7b8b80-c0e9-11eb-9638-9e16e3524cc9.jpg)
+
+### TaskList Page
+![tasklist](https://user-images.githubusercontent.com/69782911/120080010-6a674d80-c0e9-11eb-8142-4264c603f210.jpg)
+
+### Edit Page
+![edit](https://user-images.githubusercontent.com/69782911/120080022-7bb05a00-c0e9-11eb-88ad-1877f0cf66ba.jpg)
+
+### DatePicker
+![datepicker](https://user-images.githubusercontent.com/69782911/120080050-a7334480-c0e9-11eb-92de-2abb622239cc.jpg)
+
+### TaskDetails Dialog
+![edittask](https://user-images.githubusercontent.com/69782911/120080056-b4e8ca00-c0e9-11eb-911d-225c7dd1348a.jpg)
+
+### CreateTasks Page
+![createtasks](https://user-images.githubusercontent.com/69782911/120080060-bdd99b80-c0e9-11eb-9c62-cd91af376f1e.jpg)
+
+
+
+
+
+
+
+
+
+
+
 
