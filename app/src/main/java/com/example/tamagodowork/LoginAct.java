@@ -3,6 +3,8 @@ package com.example.tamagodowork;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,7 +25,7 @@ public class LoginAct extends AppCompatActivity {
 
     EditText editEmail, editPassword;
     Button loginBtn;
-    TextView registerLink;
+    TextView registerLink, resetPwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,50 @@ public class LoginAct extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), RegisterAct.class));
+            }
+        });
+
+        resetPwd = findViewById(R.id.reset_link);
+        resetPwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText reset = new EditText(v.getContext());
+                final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
+                passwordResetDialog.setTitle("Reset Password");
+                passwordResetDialog.setMessage("Enter your email:");
+                passwordResetDialog.setView(reset);
+
+
+                passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String email = reset.getText().toString();
+
+
+                        firebaseAuth.sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(LoginAct.this, "Reset Link has been sent to your email", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull @NotNull Exception e) {
+                                Toast.makeText(LoginAct.this, "Reset attempt unsuccessful.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }
+                });
+
+                passwordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(getApplicationContext(), LoginAct.class));
+                    }
+                });
+
+                passwordResetDialog.show();
             }
         });
 
