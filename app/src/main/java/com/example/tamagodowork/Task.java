@@ -1,6 +1,5 @@
 package com.example.tamagodowork;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -12,7 +11,7 @@ import java.time.temporal.ChronoUnit;
  */
 public class Task implements Comparable<Task> {
 
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private String taskName, taskDesc, key;
     private Long taskDeadline;
@@ -93,5 +92,9 @@ public class Task implements Comparable<Task> {
         } else {
             return "less than 1 hour";
         }
+    }
+
+    public boolean isOverdue() {
+        return this.taskDeadline - System.currentTimeMillis() <= 0;
     }
 }
