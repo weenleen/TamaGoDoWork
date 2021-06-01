@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsAct extends AppCompatActivity {
 
-    Button resetBtn, themesBtn, logoutBtn, backBtn;
+    Button resetBtn, themesBtn, logoutBtn, backBtn, chgPwdBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +36,16 @@ public class SettingsAct extends AppCompatActivity {
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getApplicationContext(), LoginAct.class));
+                finish();
+            }
+        });
+
+        // change pwd button
+        this.chgPwdBtn = findViewById(R.id.change_pwd);
+        this.chgPwdBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ChangePasswordAct.class));
                 finish();
             }
         });

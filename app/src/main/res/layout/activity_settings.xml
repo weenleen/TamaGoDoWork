@@ -30,6 +30,14 @@
         android:textColor="@android:color/white" />
 
     <Button
+        android:id="@+id/change_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/peach"
+        android:text="Change Password"
+        android:textColor="@android:color/white" />
+
+    <Button
         android:id="@+id/btn_themes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

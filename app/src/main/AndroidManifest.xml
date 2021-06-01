@@ -10,11 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TamaGoDoWork">
         <activity android:name=".SettingsAct"></activity>
+        <activity android:name=".ChangePasswordAct" />
         <activity android:name=".RegisterAct" />
         <activity android:name=".LoginAct" />
         <activity android:name=".EditTaskAct" />
         <activity android:name=".AddTaskAct" />
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
