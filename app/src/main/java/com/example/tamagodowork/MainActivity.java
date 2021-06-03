@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /** Bottom Navigation Bar */
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+    private final BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {

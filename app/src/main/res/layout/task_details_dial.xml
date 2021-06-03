@@ -50,6 +50,19 @@
                 app:drawableTint="@color/peach" />
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Reminders"
+                android:textColor="@color/peach"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="test"
+                android:layout_marginBottom="15dp"/>
+
+            <TextView
                 android:id='@+id/taskDesc'
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -7,8 +7,12 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CheckedTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
@@ -22,6 +26,8 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneOffset;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class AddTaskAct extends AppCompatActivity {
@@ -64,6 +70,9 @@ public class AddTaskAct extends AppCompatActivity {
             }
         });
 
+        // Reminders Checkboxes
+        LinearLayout remLayout = findViewById(R.id.reminders);
+
         this.createBtn = findViewById(R.id.create_button);
         this.createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +83,7 @@ public class AddTaskAct extends AppCompatActivity {
                 String desc = addDesc.getText().toString();
                 String key = ref.getId();
 
+                // check if name and deadline are filled in
                 if (TextUtils.isEmpty(name)) {
                     addName.setError("Please enter a name");
                     return;
@@ -82,6 +92,21 @@ public class AddTaskAct extends AppCompatActivity {
                     return;
                 }
 
+                // reminders
+                Map<String, Object> tmp = new HashMap<>();
+                for (int i = 0; i < remLayout.getChildCount(); i++) {
+                    CheckBox child = (CheckBox) remLayout.getChildAt(i);
+
+                    if (child.isChecked()) {
+                        tmp.put(String.valueOf(i), "yes");
+                    }
+                }
+
+                if (!tmp.isEmpty()) {
+                    MainActivity.userDoc.collection("Reminders").document(key).set(tmp);
+                }
+
+                // create document in Firestore
                 ref.set(new Task(name, deadline, desc, key));
 
                 goBack();
