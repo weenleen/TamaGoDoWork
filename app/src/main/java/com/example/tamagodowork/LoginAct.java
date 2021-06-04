@@ -95,7 +95,6 @@ public class LoginAct extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String email = reset.getText().toString();
 
-
                         firebaseAuth.sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
@@ -109,13 +108,14 @@ public class LoginAct extends AppCompatActivity {
                             }
                         });
 
+                        dialog.dismiss();
                     }
                 });
 
                 passwordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(getApplicationContext(), LoginAct.class));
+                        dialog.dismiss();
                     }
                 });
 

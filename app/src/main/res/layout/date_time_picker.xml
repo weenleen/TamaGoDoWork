@@ -8,7 +8,6 @@
 
     <DatePicker
         android:id="@+id/date_picker"
-        android:backgroundTint="@color/peach"
         android:headerBackground="@color/peach"
         android:layout_width="match_parent"
         android:calendarViewShown="true"

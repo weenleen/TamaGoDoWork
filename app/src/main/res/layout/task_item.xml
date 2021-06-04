@@ -22,7 +22,7 @@
             android:id="@+id/taskName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/peach"
+            android:textColor="?attr/colorPrimary"
             android:text="Title testing"
             android:textSize="20sp"
             android:maxLines="1"
@@ -39,7 +39,7 @@
             android:drawablePadding="10dp"
             android:maxLines="1"
             android:ellipsize="end"
-            app:drawableTint="@color/peach"
+            app:drawableTint="?attr/colorPrimary"
             app:drawableStartCompat="@drawable/ic_baseline_access_time_24">
         </TextView>
 
@@ -53,7 +53,7 @@
             android:drawablePadding="10dp"
             android:maxLines="1"
             android:ellipsize="end"
-            app:drawableTint="@color/peach"
+            app:drawableTint="?attr/colorPrimary"
             app:drawableStartCompat="@drawable/ic_baseline_assignment_24">
         </TextView>
     </LinearLayout>

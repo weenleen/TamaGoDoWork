@@ -1,49 +1,51 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.TamaGoDoWork" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/peach</item>
-        <item name="colorPrimaryVariant">@color/peach</item>
-        <item name="colorOnPrimary">@android:color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/light_pink</item>
-        <item name="colorSecondaryVariant">@color/light_pink</item>
-        <item name="colorOnSecondary">@color/peach</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <!-- fonts and others -->
         <item name="android:fontFamily">@font/quicksand_regular</item>
         <item name="fontFamily">@font/quicksand_regular</item>
-        <item name="android:textViewStyle">@style/QuicksandTextViewStyle</item>
-        <item name="android:buttonStyle">@style/ButtonDarkStyle</item>
         <item name="colorAccent">@color/peach</item>
         <item name="android:colorAccent">@color/peach</item>
-    </style>
 
-    <!-- Text View Style. -->
-    <style name="QuicksandTextViewStyle" parent="android:Widget.TextView">
-        <item name="android:fontFamily">@font/quicksand_regular</item>
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/peach</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+
+        <item name="colorPrimaryVariant">@color/off_white</item>
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/light_pink</item>
+        <item name="colorOnSecondary">@color/peach</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+
+        <!-- Customize your theme here. -->
+        <item name="android:buttonStyle">@style/ButtonDarkStyle</item>
+        <item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
+        <item name="android:timePickerStyle">@style/MyTimePickerStyle</item>
     </style>
 
     <!-- Button Styles. -->
     <style name="ButtonDarkStyle" parent="android:Widget.Holo.Button">
-        <item name="colorButtonNormal">@color/peach</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="colorButtonNormal">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
     <style name="ButtonLightStyle" parent="android:Widget.Holo.Button">
-        <item name="android:fontFamily">@font/quicksand_bold</item>
-        <item name="colorButtonNormal">@color/light_pink</item>
-        <item name="android:textColor">@color/peach</item>
-    </style>
-
-    <!-- DatePickerDialog Theme. -->
-    <style name="MyDatePickerDialogTheme" parent="android:Theme.Holo.Light.Dialog">
-        <item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
+        <item name="colorButtonNormal">?attr/colorSecondary</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
     </style>
 
     <!-- DatePickerStyle Theme. -->
-    <style name="MyDatePickerStyle" parent="android:Widget.DatePicker">
-        <item name="android:headerBackground">@color/peach</item>
+    <style name="MyDatePickerStyle" parent="android:Widget.Material.Light.DatePicker">
+        <item name="android:headerBackground">?attr/colorPrimary</item>
+        <item name="android:colorAccent">?attr/colorPrimary</item>
+    </style>
+
+    <!-- TimePickerStyle Theme. -->
+    <style name="MyTimePickerStyle" parent="android:Widget.Material.Light.TimePicker">
+        <item name="android:timePickerMode">spinner</item>
+        <item name="android:colorAccent">@color/peach</item>
     </style>
 </resources>

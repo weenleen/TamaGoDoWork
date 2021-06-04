@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="Edit"
             android:textSize="30sp"
-            android:textColor="@color/peach"
+            android:textColor="?attr/colorPrimary"
             android:gravity="center" >
         </TextView>
 

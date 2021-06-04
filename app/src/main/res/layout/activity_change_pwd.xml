@@ -63,8 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/pwd_save_button"
-                android:text="Save Changes"
-                android:backgroundTint="@color/peach">
+                android:text="Save Changes" >
             </Button>
 
             <Button

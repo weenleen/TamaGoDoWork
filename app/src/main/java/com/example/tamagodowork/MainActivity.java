@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -140,5 +141,14 @@ public class MainActivity extends AppCompatActivity {
     public static void incrXP() {
         xp += 10;
         userDoc.update("XP", xp);
+    }
+
+    /**
+     * Use this to go back to MainActivity
+     *
+     * @param context Context from which we are going back to MainActivity.
+     */
+    public static void backToMain(Context context) {
+        context.startActivity(new Intent(context, MainActivity.class));
     }
 }

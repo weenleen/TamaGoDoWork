@@ -22,7 +22,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
-        app:backgroundTint="@android:color/white"
+        app:backgroundTint="@color/white"
         android:clickable="true"
         android:id="@+id/fab"
         android:src="@drawable/ic_baseline_add_24"

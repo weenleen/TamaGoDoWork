@@ -15,7 +15,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class OverdueDetailsDial extends BottomSheetDialogFragment {
 
     private final String name, deadline, desc;
-    private ImageButton closeIcon;
 
     public OverdueDetailsDial(String name, String deadline, String desc) {
         this.name = name;
@@ -40,7 +39,7 @@ public class OverdueDetailsDial extends BottomSheetDialogFragment {
         descView.setText(desc);
 
         // close
-        this.closeIcon = view.findViewById(R.id.close_icon);
+        ImageButton closeIcon = view.findViewById(R.id.close_icon);
         closeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

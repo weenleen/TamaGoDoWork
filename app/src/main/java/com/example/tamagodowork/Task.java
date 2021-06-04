@@ -1,10 +1,13 @@
 package com.example.tamagodowork;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Supposed to be the logic of each task in the task list
@@ -15,6 +18,11 @@ public class Task implements Comparable<Task> {
 
     private String taskName, taskDesc, key;
     private Long taskDeadline;
+
+    public static final List<String> alarmMessages = List.of(
+            "is due in 1 hour",
+            "is due in 1 day",
+            "is due in 2 days");
 
     public Task() { }
 
@@ -72,6 +80,35 @@ public class Task implements Comparable<Task> {
         return getDeadlineString(this.taskDeadline);
     }
 
+    /**
+     * Returns the time at which the alarm for this task should ring
+     *
+     * @param type The type of alarm (1 hour before, 1 day etc).
+     * @return The time in millis in which the alarm should ring.
+     */
+    public long getAlarmTime(int type) {
+        long alarmTime = this.taskDeadline;
+
+        switch (type) {
+            case 0: // 1 hour
+                alarmTime += Duration.ofHours(1).toMillis();
+                break;
+            case 1: // 1 day
+                alarmTime += Duration.ofDays(1).toMillis();
+                break;
+            case 2: // 2 days
+                alarmTime += Duration.ofDays(2).toMillis();
+                break;
+        }
+
+        return alarmTime;
+    }
+
+    /**
+     * Returns the string stating the amount of time left to complete a non-overdue task.
+     *
+     * @return Returns the string stating the amount of time left to complete a non-overdue task.
+     */
     public String getTimeLeft() {
         LocalDateTime fromDate = LocalDateTime.now();
         LocalDateTime toDate = this.getDateTime();

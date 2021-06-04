@@ -43,7 +43,6 @@ public class ChangePasswordAct extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 updatePassword();
-
             }
         });
  
@@ -51,15 +50,10 @@ public class ChangePasswordAct extends AppCompatActivity {
         this.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goBack();
+                MainActivity.backToMain(ChangePasswordAct.this);
             }
         });
 
-    }
-
-    private void goBack() {
-        Intent intent = new Intent(ChangePasswordAct.this, MainActivity.class);
-        startActivity(intent);
     }
 
     public void updatePassword() {
@@ -67,7 +61,6 @@ public class ChangePasswordAct extends AppCompatActivity {
         final String email = user.getEmail();
         String newPassword = newPwd.getText().toString();
         AuthCredential credential = EmailAuthProvider.getCredential(email, oldPwd.getText().toString());
-
 
 
         user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -85,19 +78,16 @@ public class ChangePasswordAct extends AppCompatActivity {
                                         finish();
                                     } else {
                                         Toast.makeText(ChangePasswordAct.this, "Failed to update password!", Toast.LENGTH_LONG).show();
-                                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                        MainActivity.backToMain(ChangePasswordAct.this);
                                     }
                                 }});
 
                 } else {
                     Toast.makeText(ChangePasswordAct.this, "Authentication Failed!", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    MainActivity.backToMain(ChangePasswordAct.this);
                 }
             }
         });
-
-
-
     }
 }
 

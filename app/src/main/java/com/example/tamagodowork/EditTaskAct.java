@@ -5,13 +5,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CheckedTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -20,13 +18,18 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.ZoneOffset;
+import java.time.chrono.ChronoPeriod;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,22 +67,33 @@ public class EditTaskAct extends AppCompatActivity {
 
         // Check reminders Checkboxes
         LinearLayout remLayout = findViewById(R.id.reminders);
-        DocumentReference remRef = MainActivity.userDoc.collection("Reminders").document(key);
-        remRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        CollectionReference remRef = MainActivity.userDoc.collection("Tasks")
+                .document(key).collection("Reminders");
+        remRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull @NotNull com.google.android.gms.tasks.Task<DocumentSnapshot> task) {
+            public void onComplete(@NonNull @NotNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
                 if (!task.isSuccessful()) return;
 
-                Map<String, Object> data = task.getResult().getData();
-                if (data == null) return;
-
-                for (int i = 0; i < remLayout.getChildCount(); i++) {
-                    if (data.get(String.valueOf(i)) != null) { // if there is an alarm
-                        ((CheckBox) remLayout.getChildAt(i)).setChecked(true);
-                    }
+                for (QueryDocumentSnapshot doc : task.getResult()) {
+                    ((CheckBox) remLayout.getChildAt(Integer.parseInt(doc.getId()))).setChecked(true);
                 }
             }
         });
+//        remRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull @NotNull com.google.android.gms.tasks.Task<DocumentSnapshot> task) {
+//                if (!task.isSuccessful()) return;
+//
+//                Map<String, Object> data = task.getResult().getData();
+//                if (data == null) return;
+//
+//                for (int i = 0; i < remLayout.getChildCount(); i++) {
+//                    if (data.get(String.valueOf(i)) != null) { // if there is an alarm
+//                        ((CheckBox) remLayout.getChildAt(i)).setChecked(true);
+//                    }
+//                }
+//            }
+//        });
 
 
         // change deadline
@@ -132,16 +146,17 @@ public class EditTaskAct extends AppCompatActivity {
                     return;
                 }
 
-                // update alarms
-                remRef.delete();
-                Map<String, Object> tmp = new HashMap<>();
+                // update alarms in Firestore
                 for (int i = 0; i < remLayout.getChildCount(); i++) {
                     CheckBox child = (CheckBox) remLayout.getChildAt(i);
                     if (child.isChecked()) {
-                        tmp.put(String.valueOf(i), "edit alarm");
+                        remRef.document(String.valueOf(i)).set(
+                                Map.of("alarmTime",
+                                        new Task("", deadline, "", "").getAlarmTime(i)));
+                    } else {
+                        remRef.document(String.valueOf(i)).delete();
                     }
                 }
-                if (!tmp.isEmpty()) remRef.set(tmp);
 
                 // update tasks in Firestore
                 MainActivity.userDoc.collection("Tasks").document(key)
@@ -154,7 +169,7 @@ public class EditTaskAct extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Save Failed", Toast.LENGTH_SHORT).show();
                             }
                         });
-                goBack();
+                MainActivity.backToMain(EditTaskAct.this);
             }
         });
 
@@ -163,13 +178,8 @@ public class EditTaskAct extends AppCompatActivity {
         this.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goBack();
+                MainActivity.backToMain(EditTaskAct.this);
             }
         });
-    }
-
-    private void goBack() {
-        Intent intent = new Intent(EditTaskAct.this, MainActivity.class);
-        startActivity(intent);
     }
 }
