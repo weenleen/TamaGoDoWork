@@ -27,6 +27,7 @@
             android:layout_weight="3"
             android:gravity="center"
             android:text="Current Date"
+            android:id="@+id/currentDate"
             android:textColor="@color/peach"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -118,17 +119,13 @@
             android:text="Sun"
             android:textStyle="bold" />
 
-
     </LinearLayout>
 
     <GridView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/gridView"
-        android:numColumns="7">
-    </GridView>
-
-
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numColumns="7" />
 
 </LinearLayout>
 

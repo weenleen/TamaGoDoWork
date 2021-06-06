@@ -27,6 +27,7 @@ public class ScheduleFrag extends Fragment {
     ImageButton NextButton, PreviousButton;
     TextView CurrentDate;
     GridView gridView;
+    View view;
     private static final int MAX_CALENDAR_DAY = 42;
     Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
     Context context;
@@ -37,10 +38,43 @@ public class ScheduleFrag extends Fragment {
     List<Date> dates = new ArrayList<>();
     List<Events> eventsList = new ArrayList<>();
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.schedule_frag, container, false);
+
+        view = inflater.inflate(R.layout.schedule_frag, container, false);
+
+        NextButton = view.findViewById(R.id.month_navigation_next);
+        PreviousButton = view.findViewById(R.id.month_navigation_previous);
+        CurrentDate = view.findViewById(R.id.currentDate);
+        gridView = view.findViewById(R.id.gridView);
+
+        // gridView.setAdapter();
+
+        PreviousButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendar.add(Calendar.MONTH, -1);
+                SetUpCalendar();
+            }
+        });
+
+        NextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calendar.add(Calendar.MONTH, 1);
+                SetUpCalendar();
+            }
+        });
+
+        return view;
+
+    }
+
+    private void SetUpCalendar() {
+        String currentDate = dateFormat.format(calendar.getTime());
+        CurrentDate.setText(currentDate);
     }
 }
