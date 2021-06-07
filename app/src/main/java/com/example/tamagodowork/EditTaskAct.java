@@ -74,26 +74,13 @@ public class EditTaskAct extends AppCompatActivity {
             public void onComplete(@NonNull @NotNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
                 if (!task.isSuccessful()) return;
 
+                // TODO
+                // alarmId
                 for (QueryDocumentSnapshot doc : task.getResult()) {
                     ((CheckBox) remLayout.getChildAt(Integer.parseInt(doc.getId()))).setChecked(true);
                 }
             }
         });
-//        remRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull @NotNull com.google.android.gms.tasks.Task<DocumentSnapshot> task) {
-//                if (!task.isSuccessful()) return;
-//
-//                Map<String, Object> data = task.getResult().getData();
-//                if (data == null) return;
-//
-//                for (int i = 0; i < remLayout.getChildCount(); i++) {
-//                    if (data.get(String.valueOf(i)) != null) { // if there is an alarm
-//                        ((CheckBox) remLayout.getChildAt(i)).setChecked(true);
-//                    }
-//                }
-//            }
-//        });
 
 
         // change deadline
@@ -148,10 +135,12 @@ public class EditTaskAct extends AppCompatActivity {
 
                 // update alarms in Firestore
                 for (int i = 0; i < remLayout.getChildCount(); i++) {
+                    // TODO
+                    // alarmId
                     CheckBox child = (CheckBox) remLayout.getChildAt(i);
                     if (child.isChecked()) {
                         remRef.document(String.valueOf(i)).set(
-                                Map.of("alarmTime",
+                                Map.of("alarmId",
                                         new Task("", deadline, "", "").getAlarmTime(i)));
                     } else {
                         remRef.document(String.valueOf(i)).delete();

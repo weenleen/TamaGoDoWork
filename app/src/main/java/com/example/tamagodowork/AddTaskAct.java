@@ -1,13 +1,9 @@
 package com.example.tamagodowork;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -24,9 +20,6 @@ import com.google.firebase.firestore.DocumentReference;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class AddTaskAct extends AppCompatActivity {
 
@@ -82,7 +75,6 @@ public class AddTaskAct extends AppCompatActivity {
                 String key = ref.getId();
 
 
-
                 // check if name and deadline are filled in
                 if (TextUtils.isEmpty(name)) {
                     addName.setError("Please enter a name");
@@ -103,22 +95,17 @@ public class AddTaskAct extends AppCompatActivity {
 
                     // there are reminder alarms
                     if (child.isChecked()) {
+                        // time to ring
+                        long alarmTime = addedTask.getAlarmTime(i);
+
                         // set alarm intents
                         Intent alarmIntent = new Intent(AddTaskAct.this, AlarmReceiver.class);
                         alarmIntent.putExtra("key", key);
+                        alarmIntent.putExtra("taskName", name);
                         alarmIntent.putExtra("timeLeft", String.valueOf(i));
-                        PendingIntent pendingIntent = PendingIntent
-                                .getBroadcast(AddTaskAct.this, 0, alarmIntent, 0);
+                        alarmIntent.putExtra("alarmTime", alarmTime);
 
-                        // time to ring
-                        Long alarmTime = addedTask.getAlarmTime(i);
-
-                        // alarm manager
-                        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                        manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, alarmTime, pendingIntent);
-
-                        ref.collection("Reminders").document(String.valueOf(i))
-                                .set(Map.of("alarmTime", alarmTime));
+                        new AlarmReceiver().setAlarm(getApplicationContext(), alarmIntent);
                     }
                 }
 

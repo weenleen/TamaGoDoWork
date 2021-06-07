@@ -5,8 +5,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar xpBar;
     private TextView levelView;
     private Fragment taskListFrag, petFrag, scheduleFrag;
+
+    private NotificationChannel channel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +100,18 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // set a notification channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            this.channel = new NotificationChannel(
+                    "tamagodowork",
+                    "tamagodoworkReminderChannel",
+                    NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription("Reminder Channel");
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     /** Bottom Navigation Bar */

@@ -19,11 +19,6 @@ public class Task implements Comparable<Task> {
     private String taskName, taskDesc, key;
     private Long taskDeadline;
 
-    public static final List<String> alarmMessages = List.of(
-            "is due in 1 hour",
-            "is due in 1 day",
-            "is due in 2 days");
-
     public Task() { }
 
     public Task(String taskName, long deadline, String taskDesc, String key) {
@@ -91,13 +86,13 @@ public class Task implements Comparable<Task> {
 
         switch (type) {
             case 0: // 1 hour
-                alarmTime += Duration.ofHours(1).toMillis();
+                alarmTime -= Duration.ofHours(1).toMillis();
                 break;
             case 1: // 1 day
-                alarmTime += Duration.ofDays(1).toMillis();
+                alarmTime -= Duration.ofDays(1).toMillis();
                 break;
             case 2: // 2 days
-                alarmTime += Duration.ofDays(2).toMillis();
+                alarmTime -= Duration.ofDays(2).toMillis();
                 break;
         }
 
