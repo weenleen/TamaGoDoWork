@@ -19,19 +19,14 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.ZoneOffset;
-import java.time.chrono.ChronoPeriod;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -63,7 +58,7 @@ public class EditTaskAct extends AppCompatActivity {
         // set deadline to previous deadline
         LocalDateTime prevDate = LocalDateTime.parse(deadlineStr,
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm") );
-        deadline = prevDate.atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
+        deadline = prevDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
         // Check reminders Checkboxes
         LinearLayout remLayout = findViewById(R.id.reminders);
@@ -106,7 +101,7 @@ public class EditTaskAct extends AppCompatActivity {
                         deadline = LocalDateTime.of(
                                 datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth(),
                                 timePicker.getCurrentHour(), timePicker.getCurrentMinute())
-                                .atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
+                                .atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
                         editDeadline.setText(Task.getDeadlineString(deadline));
                         alertDialog.dismiss();
                     }

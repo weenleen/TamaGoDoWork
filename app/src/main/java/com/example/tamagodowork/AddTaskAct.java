@@ -19,7 +19,7 @@ import com.example.tamagodowork.alarm.AlarmReceiver;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 
 public class AddTaskAct extends AppCompatActivity {
 
@@ -50,7 +50,7 @@ public class AddTaskAct extends AppCompatActivity {
 
                         deadline = LocalDateTime.of(
                                 datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth(),
-                                timePicker.getCurrentHour(), timePicker.getCurrentMinute()).atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
+                                timePicker.getCurrentHour(), timePicker.getCurrentMinute()).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
                         addDeadline.setText(Task.getDeadlineString(deadline));
                         alertDialog.dismiss();
                     }

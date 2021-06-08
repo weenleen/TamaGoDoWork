@@ -3,11 +3,9 @@ package com.example.tamagodowork;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Supposed to be the logic of each task in the task list
@@ -63,11 +61,11 @@ public class Task implements Comparable<Task> {
     }
 
     public LocalDateTime getDateTime() {
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(this.taskDeadline), ZoneOffset.UTC);
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(this.taskDeadline), ZoneId.systemDefault());
     }
 
     public static String getDeadlineString(long milli) {
-        LocalDateTime tmp = LocalDateTime.ofInstant(Instant.ofEpochMilli(milli), ZoneOffset.UTC);
+        LocalDateTime tmp = LocalDateTime.ofInstant(Instant.ofEpochMilli(milli), ZoneId.systemDefault());
         return tmp.format(formatter);
     }
 

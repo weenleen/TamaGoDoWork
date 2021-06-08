@@ -9,7 +9,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
@@ -35,9 +34,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
 
-        Log.e("alarmReceive", "HERE ALARM RECEIVED");
-        Toast.makeText(context, "Alarm Received", Toast.LENGTH_LONG).show();
-
         String Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -47,6 +43,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         String taskName = intent.getStringExtra("taskName");
         String timeLeft = intent.getStringExtra("timeLeft");
         String message = alarmMessages.get(Integer.parseInt(timeLeft));
+
+        Log.e("alarmReceive", "HERE ALARM RECEIVED FOR " + timeLeft);
+        Log.e("taskName", taskName);
 
         // show the notification
         showNotification(context, taskName, message);
@@ -64,7 +63,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "tamagodowork")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(taskName)
-                .setContentText(message)
+                .setContentText(taskName + " " + message)
                 .setAutoCancel(true)
                 .setContentIntent(contentIntent)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
@@ -88,19 +87,25 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if (alarmTime - alarmId < 0) return;
 
+        String taskName = intent.getStringExtra("taskName");
+        String timeLeft = intent.getStringExtra("timeLeft");
+        String key = intent.getStringExtra("key");
+
         Intent i = new Intent(context, AlarmReceiver.class);
-        i.putExtra("key", intent.getStringExtra("key"));
-        i.putExtra("timeLeft", intent.getStringExtra("timeLeft"));
+        i.putExtra("taskName", taskName);
+        i.putExtra("key", key);
+        i.putExtra("timeLeft", timeLeft);
         PendingIntent pi = PendingIntent.getBroadcast(context,
                 (int) alarmId, i, PendingIntent.FLAG_ONE_SHOT);
 
-        am.set(AlarmManager.RTC_WAKEUP, alarmTime, pi);
+        am.setExact(AlarmManager.RTC_WAKEUP, alarmTime, pi);
 
-        Toast.makeText(context, "Alarm Set", Toast.LENGTH_LONG).show();
-        Log.e("alarmSet", "HERE ALARM SET");
+        Log.e("alarmSet", "HERE ALARM SET FOR " + timeLeft);
+        Log.e("taskName", taskName);
+        Log.e("alarmId", String.valueOf(alarmId));
 
-        DocumentReference ref = MainActivity.userDoc.collection("Tasks").document();
-        ref.collection("Reminders").document(intent.getStringExtra("timeLeft"))
+        DocumentReference ref = MainActivity.userDoc.collection("Tasks").document(key);
+        ref.collection("Reminders").document(timeLeft)
                 .set(Map.of("alarmId", alarmId));
     }
 
