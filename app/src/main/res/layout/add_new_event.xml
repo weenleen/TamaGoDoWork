@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/off_white"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="40dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/setEvent_container"
+        android:background="@drawable/bg_task_item"
+        android:padding="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Set Event "
+            android:textSize="30sp"
+            android:textColor="?attr/colorPrimary"
+            android:gravity="center"
+            android:paddingBottom="30dp">
+        </TextView>
+
+
+        <EditText
+            android:drawableLeft="@drawable/ic_baseline_event_24"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableTint="@color/peach"
+            android:drawablePadding="20dp"
+            android:hint="Event Name"
+            android:textSize="15sp"
+            android:id="@+id/setEvent"
+            android:maxLines="8"
+            android:inputType="text">
+        </EditText>
+
+        <EditText
+            android:drawableLeft="@drawable/ic_baseline_access_time_24"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableTint="@color/peach"
+            android:drawablePadding="20dp"
+            android:hint="Set Time"
+            android:textSize="15sp"
+            android:id="@+id/setTime"
+            android:maxLines="8"
+            android:inputType="text">
+        </EditText>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="bottom">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/add_new_evt_button"
+                android:text="Save Changes" >
+            </Button>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/cancel_button"
+                android:text="Cancel"
+                android:textColor="@color/peach"
+                android:backgroundTint="@color/off_white">
+            </Button>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
