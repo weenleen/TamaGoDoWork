@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:background="@color/off_white"
     android:layout_height="match_parent"
     android:id="@+id/schedule_layout">
 
@@ -48,6 +49,16 @@
         android:orientation="horizontal"
         android:paddingTop="1dp"
         android:paddingBottom="1dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1"
+            android:background="@color/peach"
+            android:gravity="center"
+            android:text="Sun"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -109,15 +120,6 @@
             android:text="Sat"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_weight="1"
-            android:background="@color/peach"
-            android:gravity="center"
-            android:text="Sun"
-            android:textStyle="bold" />
 
     </LinearLayout>
 

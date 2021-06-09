@@ -2,6 +2,7 @@ package com.example.tamagodowork;
 
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +37,7 @@ public class ScheduleFrag extends Fragment {
     TextView CurrentDate;
     GridView gridView;
     View view;
+    DBOpenHelper dbOpenHelper;
     private static final int MAX_CALENDAR_DAY = 42;
     Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
     Context context;
@@ -42,6 +45,7 @@ public class ScheduleFrag extends Fragment {
     SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
     SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.ENGLISH);
 
+    GridAdapter gridAdapter;
     AlertDialog alertDialog;
     List<Date> dates = new ArrayList<>();
     List<Events> eventsList = new ArrayList<>();
@@ -76,22 +80,23 @@ public class ScheduleFrag extends Fragment {
             }
         });
 
+        gridView.setAdapter(gridAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                 builder.setCancelable(true);
-                View addView = LayoutInflater.from(parent.getContext()).inflate(R.layout.add_new_event, null);
-                EditText EventName = addView.findViewById(R.id.setEvent);
-                EditText EventTime = addView.findViewById(R.id.setTime);
+                final View addView = LayoutInflater.from(parent.getContext()).inflate(R.layout.add_new_event, null);
+                EditText EventName = addView.findViewById(R.id.events_id);
+                ImageButton SetTime = addView.findViewById(R.id.setTime);
                 Button AddEvent = addView.findViewById(R.id.add_new_evt_button);
-                EventTime.setOnClickListener(new View.OnClickListener() {
+                SetTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Calendar calendar = Calendar.getInstance();
                         int hours = calendar.get(Calendar.HOUR_OF_DAY);
                         int minute = calendar.get(Calendar.MINUTE);
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(addView.getContext(), R.style.Theme_AppCompat_Light_Dialog,
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(addView.getContext(), R.style.Theme_AppCompat_Dialog,
                             new TimePickerDialog.OnTimeSetListener() {
                                 @Override
                                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -101,9 +106,6 @@ public class ScheduleFrag extends Fragment {
                                         c.setTimeZone(TimeZone.getDefault());
                                         SimpleDateFormat hourFormat = new SimpleDateFormat("K:mm a", Locale.ENGLISH);
                                         String event_Time = hourFormat.format(c.getTime());
-                                        EventTime.setText(event_Time);
-
-
 
                                 }
                             }, hours, minute, false);
@@ -112,15 +114,21 @@ public class ScheduleFrag extends Fragment {
                     }
                 });
 
+                String date = dateFormat.format(dates.get(position));
+                String month = monthFormat.format(dates.get(position));
+                String year = yearFormat.format(dates.get(position));
+
+                /*
                 AddEvent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        SaveEvent(EventName.getText().toString(),EventTime.getText().toString(),date, month, year);
+                        SetUpCalendar();
+                        alertDialog.dismiss();
 
                     }
                 });
-
-
-
+                */
 
             }
         });
@@ -129,14 +137,23 @@ public class ScheduleFrag extends Fragment {
 
     }
 
+    private void SaveEvent(String event, String time, String date, String month,  String year) {
+        dbOpenHelper = new DBOpenHelper(getContext());
+        SQLiteDatabase database = dbOpenHelper.getWritableDatabase();
+        dbOpenHelper.saveEvent(event, time, date, month, year, database);
+        dbOpenHelper.close();
+        Toast.makeText(getContext(), "Event Saved", Toast.LENGTH_LONG);
+    }
+
     private void SetUpCalendar() {
         String currentDate = dateFormat.format(calendar.getTime());
         CurrentDate.setText(currentDate);
         dates.clear();
+        // clones a month calendar
         Calendar monthCalendar = (Calendar) calendar.clone();
         // sets the values for the calendar fields, YEAR, MONTH, DAY_OF_MONTH, HOUR_OF_DAY, MINUTE & SECOND
         monthCalendar.set(Calendar.DAY_OF_MONTH,1);
-        int firstDayOfMonth = monthCalendar.get(Calendar.DAY_OF_MONTH) - 1;
+        int firstDayOfMonth = monthCalendar.get(Calendar.DAY_OF_WEEK) - 1;
         // adds or subtracts the specified amount of time to the given calendar field, based on the calendar rules
         // 2nd param : amount of time to be added to this field
         monthCalendar.add(Calendar.DAY_OF_MONTH, -firstDayOfMonth);
@@ -145,5 +162,8 @@ public class ScheduleFrag extends Fragment {
             dates.add(monthCalendar.getTime());
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
+
+        gridAdapter = new GridAdapter(getContext(), dates, calendar, eventsList);
+        gridView.setAdapter(gridAdapter);
     }
 }
