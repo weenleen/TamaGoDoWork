@@ -2,14 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white" >
+    android:id="@+id/pet_layout"
+    android:background="@android:color/white"
+    android:layout_gravity="center" >
 
-    <ImageButton
-        android:id="@+id/petButton"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/tamago"
-        android:contentDescription="Pet" />
-
+    <com.example.tamagodowork.pet.PetCanvas
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.example.tamagodowork.pet.PetCanvas>
 </RelativeLayout>

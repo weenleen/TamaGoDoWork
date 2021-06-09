@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private ImageView settings;
     private ProgressBar xpBar;
     private TextView levelView;
-    private Fragment taskListFrag, petFrag, scheduleFrag;
 
     private NotificationChannel channel;
 
@@ -46,13 +45,9 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
-        this.taskListFrag = new TaskListFrag();
-        this.petFrag = new PetFrag();
-        this.scheduleFrag = new ScheduleFrag();
-
         // Set default fragment to the task list fragment
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                this.taskListFrag).commit();
+                new TaskListFrag()).commit();
 
         // Store xp values in firebase
         this.xpBar = findViewById(R.id.xpBar);
@@ -119,17 +114,16 @@ public class MainActivity extends AppCompatActivity {
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment selectedFrag = taskListFrag;
+                    Fragment selectedFrag = new TaskListFrag();
 
                     switch (item.getItemId()) {
                         case R.id.navigation_taskList:
-                            selectedFrag = taskListFrag;
                             break;
                         case R.id.navigation_pet:
-                            selectedFrag = petFrag;
+                            selectedFrag = new PetFrag();
                             break;
                         case R.id.navigation_schedule:
-                            selectedFrag = scheduleFrag;
+                            selectedFrag = new ScheduleFrag();
                             break;
                     }
 
