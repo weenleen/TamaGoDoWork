@@ -14,6 +14,7 @@
     <color name="peach">#FF9595</color>
     <color name="light_pink">#FFD7DB</color>
     <color name="grey">#7E7D7D</color>
-    <color name="egg_beige">#F4AB7A</color>
+    <color name="egg_beige">#FFC096</color>
+    <color name="brown">#6E4A33</color>
     <color name="yellow">#FFD874</color>
 </resources>

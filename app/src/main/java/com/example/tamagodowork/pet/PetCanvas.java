@@ -2,13 +2,11 @@ package com.example.tamagodowork.pet;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -23,7 +21,11 @@ public class PetCanvas extends View {
     private final RectF ovalTop = new RectF();
     private final RectF ovalBottom = new RectF();
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Path path = new Path();
+    private final Path bodyPath = new Path();
+    private final Path mouthPath = new Path();
+
+    private final Paint eyePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mouthPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private float height_middle;
     private float width_middle;
@@ -37,32 +39,40 @@ public class PetCanvas extends View {
         @Override
         public void run() {
             index+= 0.1;
-            //if (index >= fps) index = 0f;
+            if (index >= 8) index = 0f;
             offset = (float) Math.sin((index/4) * Math.PI) * 20;
             postInvalidate();
             handler.postDelayed(this, 1000 / fps);
-            Log.e("offset", String.valueOf(offset));
         }
     };
 
     public PetCanvas(Context context) {
         super(context);
-        init(null);
+        init(null, 0);
     }
 
     public PetCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(attrs);
+        init(attrs, 0);
     }
 
     public PetCanvas(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs);
+        init(attrs, defStyleAttr);
     }
 
-    public void init(AttributeSet set) {
+    public void init(@Nullable AttributeSet attrs, int defStyleAttr) {
         this.paint.setColor(ContextCompat.getColor(getContext(), R.color.egg_beige));
         this.paint.setStyle(Paint.Style.FILL);
+
+        this.eyePaint.setColor(ContextCompat.getColor(getContext(), R.color.brown));
+        this.eyePaint.setStyle(Paint.Style.FILL);
+
+        this.mouthPaint.setColor(ContextCompat.getColor(getContext(), R.color.brown));
+        this.mouthPaint.setStyle(Paint.Style.STROKE);
+        this.mouthPaint.setStrokeCap(Paint.Cap.ROUND);
+        this.mouthPaint.setStrokeWidth(20f);
+
         this.petIdle.run();
     }
 
@@ -76,15 +86,13 @@ public class PetCanvas extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        path.reset();
+        bodyPath.reset();
+        mouthPath.reset();
 
+        // body
         float radius1 = 300f + offset;
         float radius2 = 450f - offset;
 
-        Log.e("radius1", String.valueOf(radius1));
-        Log.e("radius2", String.valueOf(radius2));
-
-        // left top right bottom
         float left = width_middle - radius1;
         float top = height_middle - radius2;
         float right = width_middle + radius1;
@@ -93,10 +101,23 @@ public class PetCanvas extends View {
         this.ovalTop.set(left, top, right, bottom);
         this.ovalBottom.set(left, height_middle - radius1, right, height_middle + radius1);
 
-        path.addArc(ovalTop, 180f, 180f);
-        path.addArc(ovalBottom, 0f, 180f);
-        path.close();
+        // body
+        bodyPath.addArc(ovalTop, 180f, 180f);
+        bodyPath.addArc(ovalBottom, 0f, 180f);
+        bodyPath.close();
+        canvas.drawPath(bodyPath, this.paint);
 
-        canvas.drawPath(path, this.paint);
+        // eyes
+        float cy = height_middle - 200f + offset;
+        float cx_right = width_middle - 100f - offset / 2f;
+        float cx_left = width_middle + 100f + offset / 2f;
+
+        canvas.drawCircle(cx_right, cy, 20f, eyePaint);
+        canvas.drawCircle(cx_left, cy, 20f, eyePaint);
+
+        // mouth
+        mouthPath.moveTo(cx_left, cy + 80f);
+        mouthPath.quadTo(width_middle, cy + 120f, cx_right, cy + 80f);
+        canvas.drawPath(mouthPath, mouthPaint);
     }
 }

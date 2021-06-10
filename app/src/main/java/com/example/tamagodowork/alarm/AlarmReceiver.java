@@ -36,16 +36,16 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         String Uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        DocumentReference ref = firebaseFirestore.collection("Users").document(Uid)
-                .collection("Tasks").document(intent.getStringExtra("key"));
-
+        String key = intent.getStringExtra("key");
         String taskName = intent.getStringExtra("taskName");
         String timeLeft = intent.getStringExtra("timeLeft");
         String message = alarmMessages.get(Integer.parseInt(timeLeft));
 
-        Log.e("alarmReceive", "HERE ALARM RECEIVED FOR " + timeLeft);
-        Log.e("taskName", taskName);
+        if (key == null || key.isEmpty()) return;
+
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        DocumentReference ref = firebaseFirestore.collection("Users").document(Uid)
+                .collection("Tasks").document(key);
 
         // show the notification
         showNotification(context, taskName, message);
@@ -71,8 +71,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(0, mBuilder.build());
-
-        Log.e("notif", "HERE notif sent");
     }
 
     // Intents should have the extras
@@ -99,10 +97,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 (int) alarmId, i, PendingIntent.FLAG_ONE_SHOT);
 
         am.setExact(AlarmManager.RTC_WAKEUP, alarmTime, pi);
-
-        Log.e("alarmSet", "HERE ALARM SET FOR " + timeLeft);
-        Log.e("taskName", taskName);
-        Log.e("alarmId", String.valueOf(alarmId));
 
         DocumentReference ref = MainActivity.userDoc.collection("Tasks").document(key);
         ref.collection("Reminders").document(timeLeft)

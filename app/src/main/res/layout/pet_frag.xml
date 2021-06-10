@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/pet_layout"
     android:background="@android:color/white"
-    android:layout_gravity="center" >
+    android:layout_gravity="center|bottom"
+    android:orientation="vertical" >
 
     <com.example.tamagodowork.pet.PetCanvas
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.example.tamagodowork.pet.PetCanvas>
-</RelativeLayout>
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="60dp"/>
+</LinearLayout>
