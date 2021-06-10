@@ -1,7 +1,10 @@
 package com.example.tamagodowork.pet;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
@@ -46,6 +49,10 @@ public class PetCanvas extends View {
         }
     };
 
+    // customisation
+    private Bitmap headCust;
+    private Bitmap eyeCust;
+
     public PetCanvas(Context context) {
         super(context);
         init(null, 0);
@@ -72,6 +79,9 @@ public class PetCanvas extends View {
         this.mouthPaint.setStyle(Paint.Style.STROKE);
         this.mouthPaint.setStrokeCap(Paint.Cap.ROUND);
         this.mouthPaint.setStrokeWidth(20f);
+
+        this.headCust = BitmapFactory.decodeResource(getResources(), R.mipmap.cust_head_yellow_ribbon);
+        this.eyeCust = BitmapFactory.decodeResource(getResources(), R.mipmap.cust_eyes_heart_glasses);
 
         this.petIdle.run();
     }
@@ -119,5 +129,38 @@ public class PetCanvas extends View {
         mouthPath.moveTo(cx_left, cy + 80f);
         mouthPath.quadTo(width_middle, cy + 120f, cx_right, cy + 80f);
         canvas.drawPath(mouthPath, mouthPaint);
+
+        // accessories
+        drawHeadCust(canvas);
+        drawEyeCust(canvas);
+    }
+
+    // 300 x 300 px
+    private void drawHeadCust(Canvas canvas) {
+        if (this.headCust == null) return;
+        canvas.drawBitmap(this.headCust,
+                width_middle + 125f + offset,
+                height_middle - 400f + offset,
+                null);
+    }
+
+    // 300 x 600 px
+    private void drawEyeCust(Canvas canvas) {
+        if (this.eyeCust == null) return;
+        canvas.drawBitmap(this.eyeCust,
+                width_middle - 210f,
+                height_middle - 300f + offset,
+                null);
+    }
+
+    public PetCanvas setDefault() {
+        this.headCust = null;
+        this.eyeCust = null;
+        this.paint.setColor(ContextCompat.getColor(getContext(), R.color.egg_beige));
+        return this;
+    }
+
+    public void setBodyColour(int color) {
+        this.paint.setColor(color);
     }
 }
