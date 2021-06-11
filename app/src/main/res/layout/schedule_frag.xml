@@ -127,6 +127,7 @@
         android:id="@+id/gridView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:descendantFocusability="blocksDescendants"
         android:numColumns="7" />
 
 </LinearLayout>
