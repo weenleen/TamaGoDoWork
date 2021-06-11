@@ -18,50 +18,51 @@ public class EditViewpagerModel {
 
     private final int type;
     private Context context;
-    public List<Bitmap> content;
+    public int[] content;
 
     public EditViewpagerModel(int type, Context context) {
         this.type = type;
         this.context = context;
-
-        this.content = new ArrayList<>();
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_head_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_eyes_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_head_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_eyes_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_head_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_eyes_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_head_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_eyes_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_head_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_eyes_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_head_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_eyes_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_head_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_eyes_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_head_1));
-        this.content.add(BitmapFactory.decodeResource(context.getResources(), R.mipmap.c_eyes_1));
+        setContent();
     }
 
     public int getType() {
         return type;
     }
 
-//    private void setContent() {
-//        this.content = new ArrayList<>();
-//        switch (this.type) {
-//            case HEAD:
-//                this.content.add(
-//                        BitmapFactory.decodeResource(Resources.getSystem(), R.mipmap.c_head_1));
-//                break;
-//            case EYE:
-//                this.content.add(
-//                        BitmapFactory.decodeResource(Resources.getSystem(), R.mipmap.c_eyes_1));
-//                break;
-//            default:
-//                this.content.add(
-//                        BitmapFactory.decodeResource(Resources.getSystem(), R.mipmap.c_head_1));
-//                break;
-//        }
-//    }
+    private void setContent() {
+        switch (this.type) {
+            case COLOUR:
+                this.content = new int[] {
+                        R.color.egg_beige,
+                        R.color.yellow,
+                        R.color.blue,
+                        R.color.peach,
+                        R.color.teal_200,
+                        R.color.grey,
+                        R.color.purple_200
+                };
+                break;
+            default:
+                this.content = new int[] {
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_eyes_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_eyes_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_eyes_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_eyes_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_eyes_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_eyes_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_eyes_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_eyes_1
+                };
+                break;
+        }
+    }
 }

@@ -19,14 +19,16 @@ import java.util.ArrayList;
 public class EditPetActivity extends AppCompatActivity {
 
     private static String[] categories = new String[] {
-            "COLOUR",
-            "HEAD",
-            "EYES"
+            "Colours",
+            "Head",
+            "Eyes"
     };
 
     private ViewPager viewPager;
     private ArrayList<EditViewpagerModel> lst;
     private EditViewpagerAdapter adapter;
+
+    public static PetCanvas petCanvas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public class EditPetActivity extends AppCompatActivity {
 
         // show the pet
         RelativeLayout petArea = findViewById(R.id.edit_pet_area);
-        PetCanvas petCanvas = new PetCanvas(getApplicationContext());
+        petCanvas = new PetCanvas(getApplicationContext());
         petArea.addView(petCanvas);
 
         // prev button
@@ -50,8 +52,9 @@ public class EditPetActivity extends AppCompatActivity {
             viewPager.setCurrentItem(position);
         });
 
-        // category name
+        // category name text
         TextView categoryName = findViewById(R.id.edit_content_name);
+        categoryName.setText(categories[viewPager.getCurrentItem()]);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }

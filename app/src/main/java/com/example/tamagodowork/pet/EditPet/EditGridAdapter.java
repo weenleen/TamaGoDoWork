@@ -1,43 +1,41 @@
 package com.example.tamagodowork.pet.EditPet;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.example.tamagodowork.R;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.tamagodowork.R;
 
 public class EditGridAdapter extends BaseAdapter {
 
     private final Context context;
-    private List<Bitmap> lst;
+    private final int[] arr;
+    private final int type;
 
     private LayoutInflater inflater;
 
-    public EditGridAdapter(Context context, List<Bitmap> lst) {
+    public EditGridAdapter(Context context, int[] arr, int type) {
         this.context = context;
-        this.lst = lst;
+        this.arr = arr;
+        this.type = type;
     }
 
     @Override
     public int getCount() {
-        return this.lst.size();
+        return this.arr.length;
     }
 
     @Override
     public Object getItem(int position) {
-        return this.lst.get(position);
+        return this.arr[position];
     }
 
     @Override
@@ -53,11 +51,31 @@ public class EditGridAdapter extends BaseAdapter {
         }
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.edit_pet_grid_item, null);
+            convertView = inflater.inflate(R.layout.edit_pet_grid_item, parent, false);
         }
 
         ImageView imageView = convertView.findViewById(R.id.grid_item_content);
-        imageView.setImageBitmap(this.lst.get(position));
+
+        if (this.type == 0) { // COLOUR
+            GradientDrawable tmp = (GradientDrawable) AppCompatResources
+                    .getDrawable(context, R.drawable.button_color_picker);
+            int colour = ContextCompat.getColor(context, this.arr[position]);
+            if (tmp == null) return convertView;
+            tmp.setColor(colour);
+            imageView.setImageDrawable(tmp);
+
+            // on click
+            convertView.setOnClickListener(v -> {
+                if (EditPetActivity.petCanvas == null) return;
+                EditPetActivity.petCanvas.setBodyColour(colour);
+            });
+
+        } else {
+            imageView.setImageBitmap(
+                    BitmapFactory.decodeResource(context.getResources(),this.arr[position]));
+        }
+
+
 
         return convertView;
     }

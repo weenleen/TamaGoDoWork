@@ -76,35 +76,29 @@ public class MainActivity extends AppCompatActivity {
         userDoc = db.collection("Users").document(firebaseAuth.getCurrentUser().getUid());
 
         // XP stuff
-        userDoc.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Toast.makeText(getApplicationContext(), "XP error", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Long tmp = (Long) value.get("XP");
-                if (tmp == null) {
-                    MainActivity.setXP(0);
-                    return;
-                }
-
-                xp = tmp.intValue();
-
-                levelView.setText("Level " + (xp/100 + 1));
-                xpBar.setProgress(xp % 100);
+        userDoc.addSnapshotListener((value, error) -> {
+            if (error != null) {
+                Toast.makeText(getApplicationContext(), "XP error", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            Long tmp = (Long) value.get("XP");
+            if (tmp == null) {
+                MainActivity.setXP(0);
+                return;
+            }
+
+            xp = tmp.intValue();
+
+            levelView.setText("Level " + (xp/100 + 1));
+            xpBar.setProgress(xp % 100);
         });
 
         /** Settings */
         this.settings = findViewById(R.id.settings_icon);
-        this.settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), SettingsAct.class));
-                finish();
-            }
+        this.settings.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), SettingsAct.class));
+            finish();
         });
 
         // set a notification channel
@@ -122,27 +116,24 @@ public class MainActivity extends AppCompatActivity {
 
     /** Bottom Navigation Bar */
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment selectedFrag = new TaskListFrag();
+            item -> {
+                Fragment selectedFrag = new TaskListFrag();
 
-                    switch (item.getItemId()) {
-                        case R.id.navigation_taskList:
-                            break;
-                        case R.id.navigation_pet:
-                            selectedFrag = new PetFrag();
-                            break;
-                        case R.id.navigation_schedule:
-                            selectedFrag = new ScheduleFrag();
-                            break;
-                    }
-
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            selectedFrag).commit();
-
-                    return true;
+                switch (item.getItemId()) {
+                    case R.id.navigation_taskList:
+                        break;
+                    case R.id.navigation_pet:
+                        selectedFrag = new PetFrag();
+                        break;
+                    case R.id.navigation_schedule:
+                        selectedFrag = new ScheduleFrag();
+                        break;
                 }
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        selectedFrag).commit();
+
+                return true;
             };
 
     /**

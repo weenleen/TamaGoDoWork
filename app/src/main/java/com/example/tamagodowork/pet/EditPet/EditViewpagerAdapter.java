@@ -34,7 +34,7 @@ public class EditViewpagerAdapter extends PagerAdapter {
         View view = LayoutInflater.from(context).inflate(R.layout.edit_pet_viewpager_item, container, false);
 
         GridView gridView = view.findViewById(R.id.viewpager_item_grid);
-        EditGridAdapter adapter = new EditGridAdapter(context, this.lst.get(position).content);
+        EditGridAdapter adapter = new EditGridAdapter(context, this.lst.get(position).content, this.lst.get(position).getType());
         gridView.setAdapter(adapter);
 
         container.addView(view, position);
