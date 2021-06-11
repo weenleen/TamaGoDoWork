@@ -21,7 +21,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.api.Context;
-import com.google.api.Distribution;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,6 +57,7 @@ public class ScheduleFrag extends Fragment {
 
         view = inflater.inflate(R.layout.schedule_frag, container, false);
 
+
         NextButton = view.findViewById(R.id.month_navigation_next);
         PreviousButton = view.findViewById(R.id.month_navigation_previous);
         CurrentDate = view.findViewById(R.id.currentDate);
@@ -83,13 +83,23 @@ public class ScheduleFrag extends Fragment {
         gridView.setAdapter(gridAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+                                    long arg3) {
+                // TODO Auto-generated method stub
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setCancelable(true);
-                final View addView = LayoutInflater.from(parent.getContext()).inflate(R.layout.add_new_event, null);
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                View addView = inflater.inflate(R.layout.add_new_event, null);
+                builder.setView(addView);
+
+                TextView EventTime = addView.findViewById(R.id.eventTime);
                 EditText EventName = addView.findViewById(R.id.events_id);
-                ImageButton SetTime = addView.findViewById(R.id.setTime);
+                Button SetTime = addView.findViewById(R.id.setTime);
                 Button AddEvent = addView.findViewById(R.id.add_new_evt_button);
+                Button CancelEvent = addView.findViewById(R.id.cancel_button);
+
+
                 SetTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -97,22 +107,35 @@ public class ScheduleFrag extends Fragment {
                         int hours = calendar.get(Calendar.HOUR_OF_DAY);
                         int minute = calendar.get(Calendar.MINUTE);
                         TimePickerDialog timePickerDialog = new TimePickerDialog(addView.getContext(), R.style.Theme_AppCompat_Dialog,
-                            new TimePickerDialog.OnTimeSetListener() {
-                                @Override
-                                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                new TimePickerDialog.OnTimeSetListener() {
+                                    @Override
+                                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                         Calendar c = Calendar.getInstance();
                                         c.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                         c.set(Calendar.MINUTE, minute);
                                         c.setTimeZone(TimeZone.getDefault());
                                         SimpleDateFormat hourFormat = new SimpleDateFormat("K:mm a", Locale.ENGLISH);
                                         String event_Time = hourFormat.format(c.getTime());
+                                        EventTime.setText(event_Time);
 
-                                }
-                            }, hours, minute, false);
+
+                                    }
+                                }, hours, minute, false);
+
+                        timePickerDialog.show();
 
 
                     }
                 });
+
+                //create alert dialog
+                AlertDialog alertDialog = builder.create();
+                //show alert box
+                alertDialog.show();
+
+
+
+
 
                 String date = dateFormat.format(dates.get(position));
                 String month = monthFormat.format(dates.get(position));
@@ -130,7 +153,14 @@ public class ScheduleFrag extends Fragment {
                 });
                 */
 
+                CancelEvent.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
             }
+
         });
 
         return view;
