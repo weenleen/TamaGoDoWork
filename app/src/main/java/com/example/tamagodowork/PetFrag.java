@@ -1,17 +1,20 @@
 package com.example.tamagodowork;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.tamagodowork.pet.EditPet.EditPetActivity;
 import com.example.tamagodowork.pet.PetCanvas;
 
 public class PetFrag extends Fragment {
@@ -26,11 +29,12 @@ public class PetFrag extends Fragment {
         PetCanvas petCanvas = new PetCanvas(getContext());
         relativeLayout.addView(petCanvas);
 
-        petCanvas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("pet", "PET TOUCHED");
-            }
+        petCanvas.setOnClickListener(v -> Log.e("pet", "PET TOUCHED"));
+
+        // edit pet button
+        Button editButton = view.findViewById(R.id.pet_edit_button);
+        editButton.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), EditPetActivity.class));
         });
 
         return view;

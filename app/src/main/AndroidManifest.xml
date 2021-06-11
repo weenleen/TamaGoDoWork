@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TamaGoDoWork">
-        <activity android:name=".pet.CreatePetActivity"></activity>
+        <activity android:name=".pet.EditPet.EditPetActivity"></activity>
+        <activity android:name=".pet.CreatePetActivity" />
         <activity android:name=".SettingsAct" />
         <activity android:name=".ChangePasswordAct" />
         <activity android:name=".RegisterAct" />

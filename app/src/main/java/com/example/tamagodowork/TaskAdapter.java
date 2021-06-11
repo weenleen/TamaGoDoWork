@@ -12,10 +12,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
@@ -68,12 +64,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case 1: // overdue
-                return new ViewHolderOverdue(
-                        LayoutInflater.from(this.context).inflate(R.layout.overdue_item, parent, false));
-            default:
-                return new ViewHolderNormal(
+        if (viewType == 1) { // overdue
+            return new ViewHolderOverdue(
+                    LayoutInflater.from(this.context).inflate(R.layout.overdue_item, parent, false));
+        } else {
+            return new ViewHolderNormal(
                     LayoutInflater.from(this.context).inflate(R.layout.task_item, parent, false));
         }
     }
@@ -94,54 +89,37 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             holder.taskDeadline.setText("OVERDUE");
 
             // dialogs
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    OverdueDetailsDial dialog = new OverdueDetailsDial(name, deadlineStr, desc);
-                    dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
-                            "Show task details");
-                }
+            holder.itemView.setOnClickListener(v -> {
+                OverdueDetailsDial dialog = new OverdueDetailsDial(name, deadlineStr, desc);
+                dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
+                        "Show task details");
             });
 
             // dismiss button
-            ((ViewHolderOverdue) holder).imageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MainActivity.userDoc.collection("Tasks").document(key).delete();
-                }
-            });
+            ((ViewHolderOverdue) holder).imageButton.setOnClickListener(v -> MainActivity.userDoc.collection("Tasks").document(key).delete());
 
         } else { // not overdue
 
             holder.taskDeadline.setText("in " + taskList.get(position).getTimeLeft());
 
             // dialogs
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    TaskDetailsDial dialog = new TaskDetailsDial(name, deadlineStr, desc, key);
-                    dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
-                            "Show task details");
-                }
+            holder.itemView.setOnClickListener(v -> {
+                TaskDetailsDial dialog = new TaskDetailsDial(name, deadlineStr, desc, key);
+                dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
+                        "Show task details");
             });
 
             // checkbox
-            ((ViewHolderNormal) holder).checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MainActivity.userDoc.collection("Tasks").document(key).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull @NotNull com.google.android.gms.tasks.Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                // add xp
-                                MainActivity.incrXP();
-                            } else {
-                                Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-            });
+            ((ViewHolderNormal) holder).checkBox.setOnClickListener(v ->
+                    MainActivity.userDoc.collection("Tasks").document(key).delete()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    // add xp
+                                    MainActivity.incrXP();
+                                } else {
+                                    Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }));
         }
     }
 

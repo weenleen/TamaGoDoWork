@@ -80,8 +80,8 @@ public class PetCanvas extends View {
         this.mouthPaint.setStrokeCap(Paint.Cap.ROUND);
         this.mouthPaint.setStrokeWidth(20f);
 
-        this.headCust = BitmapFactory.decodeResource(getResources(), R.mipmap.cust_head_yellow_ribbon);
-        this.eyeCust = BitmapFactory.decodeResource(getResources(), R.mipmap.cust_eyes_heart_glasses);
+        this.headCust = BitmapFactory.decodeResource(getResources(), R.mipmap.c_head_1);
+        this.eyeCust = BitmapFactory.decodeResource(getResources(), R.mipmap.c_eyes_1);
 
         this.petIdle.run();
     }
@@ -89,7 +89,7 @@ public class PetCanvas extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        this.height_middle = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec) / 2f;
+        this.height_middle = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec) / 2f + 100f;
         this.width_middle = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec) / 2f;
     }
 

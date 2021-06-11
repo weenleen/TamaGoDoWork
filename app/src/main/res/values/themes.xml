@@ -14,7 +14,7 @@
         <item name="colorPrimaryVariant">@color/off_white</item>
 
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/light_pink</item>
+        <item name="colorSecondary">@color/off_white</item>
         <item name="colorOnSecondary">@color/peach</item>
 
         <!-- Status bar color. -->
