@@ -59,23 +59,27 @@ public class EditGridAdapter extends BaseAdapter {
         if (this.type == 0) { // COLOUR
             GradientDrawable tmp = (GradientDrawable) AppCompatResources
                     .getDrawable(context, R.drawable.button_color_picker);
-            int colour = ContextCompat.getColor(context, this.arr[position]);
+            int colourId = this.arr[position];
             if (tmp == null) return convertView;
-            tmp.setColor(colour);
+            tmp.setColor(ContextCompat.getColor(context, colourId));
             imageView.setImageDrawable(tmp);
 
             // on click
             convertView.setOnClickListener(v -> {
                 if (EditPetActivity.petCanvas == null) return;
-                EditPetActivity.petCanvas.setBodyColour(colour);
+                EditPetActivity.petCanvas.setBodyColour(colourId);
             });
 
         } else {
             imageView.setImageBitmap(
-                    BitmapFactory.decodeResource(context.getResources(),this.arr[position]));
+                    BitmapFactory.decodeResource(context.getResources(), this.arr[position]));
+
+            // on click
+            convertView.setOnClickListener(v -> {
+                if (EditPetActivity.petCanvas == null) return;
+                EditPetActivity.petCanvas.set(this.type, this.arr[position]);
+            });
         }
-
-
 
         return convertView;
     }

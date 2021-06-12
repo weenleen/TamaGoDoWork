@@ -14,7 +14,8 @@ public class EditViewpagerModel {
 
     public static final int COLOUR = 0;
     public static final int HEAD = 1;
-    public static final int EYE = 2;
+    public static final int EYES = 2;
+    public static final int BODY = 3;
 
     private final int type;
     private Context context;
@@ -41,6 +42,55 @@ public class EditViewpagerModel {
                         R.color.teal_200,
                         R.color.grey,
                         R.color.purple_200
+                };
+                break;
+            case HEAD:
+                this.content = new int[] {
+                        R.mipmap.c_head_1,
+                        R.mipmap.acc_head_crown,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_head_1,
+                        R.mipmap.c_head_1,
+                };
+                break;
+            case EYES:
+                this.content = new int[] {
+                        R.mipmap.c_eyes_1,
+                        R.mipmap.acc_eyes_shades,
+                        R.mipmap.c_eyes_1,
+                        R.mipmap.acc_eyes_shades,
+                        R.mipmap.c_eyes_1,
+                        R.mipmap.acc_eyes_shades,
+                        R.mipmap.c_eyes_1,
+                        R.mipmap.acc_eyes_shades,
+                        R.mipmap.c_eyes_1,
+                        R.mipmap.acc_eyes_shades,
+                        R.mipmap.c_eyes_1,
+                        R.mipmap.acc_eyes_shades,
+                };
+                break;
+            case BODY:
+                this.content = new int[] {
+                        R.mipmap.acc_body_chain,
+                        R.mipmap.acc_body_chain,
+                        R.mipmap.acc_body_chain,
+                        R.mipmap.acc_body_chain,
+                        R.mipmap.acc_body_chain,
+                        R.mipmap.acc_body_chain,
+                        R.mipmap.acc_body_chain,
+                        R.mipmap.acc_body_chain,
+                        R.mipmap.acc_body_chain,
+                        R.mipmap.acc_body_chain,
+                        R.mipmap.acc_body_chain,
+                        R.mipmap.acc_body_chain
                 };
                 break;
             default:

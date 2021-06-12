@@ -12,27 +12,39 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import android.os.Handler;
 
+import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PetCanvas extends View {
-
-    private final RectF ovalTop = new RectF();
-    private final RectF ovalBottom = new RectF();
-    private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Path bodyPath = new Path();
-    private final Path mouthPath = new Path();
-
-    private final Paint eyePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Paint mouthPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private float height_middle;
     private float width_middle;
     private float offset;
+
+    private final RectF ovalTop = new RectF();
+    private final RectF ovalBottom = new RectF();
+    private final Path bodyPath = new Path();
+    private final Path mouthPath = new Path();
+
+    private final Paint bodyPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint eyePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mouthPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private static final int fps = 20;
     private float index = 0f;
@@ -50,8 +62,10 @@ public class PetCanvas extends View {
     };
 
     // customisation
-    private Bitmap headCust;
-    private Bitmap eyeCust;
+    private int bodyColour = R.color.egg_beige;
+    private Integer acc_head = null;
+    private Integer acc_eyes = null;
+    private Integer acc_body = null;
 
     public PetCanvas(Context context) {
         super(context);
@@ -69,8 +83,9 @@ public class PetCanvas extends View {
     }
 
     public void init(@Nullable AttributeSet attrs, int defStyleAttr) {
-        this.paint.setColor(ContextCompat.getColor(getContext(), R.color.egg_beige));
-        this.paint.setStyle(Paint.Style.FILL);
+        retrieveData();
+
+        this.bodyPaint.setStyle(Paint.Style.FILL);
 
         this.eyePaint.setColor(ContextCompat.getColor(getContext(), R.color.brown));
         this.eyePaint.setStyle(Paint.Style.FILL);
@@ -80,10 +95,21 @@ public class PetCanvas extends View {
         this.mouthPaint.setStrokeCap(Paint.Cap.ROUND);
         this.mouthPaint.setStrokeWidth(20f);
 
-        this.headCust = BitmapFactory.decodeResource(getResources(), R.mipmap.c_head_1);
-        this.eyeCust = BitmapFactory.decodeResource(getResources(), R.mipmap.c_eyes_1);
-
         this.petIdle.run();
+    }
+
+    private void retrieveData() {
+        DocumentReference ref = MainActivity.userDoc.collection("Pet").document("Customisation");
+        ref.get().addOnSuccessListener(documentSnapshot -> {
+            Long tmp = (Long) documentSnapshot.get("bodyColour");
+            if (tmp != null) bodyColour = tmp.intValue();
+            else bodyColour = R.color.egg_beige;
+
+            this.bodyPaint.setColor(ContextCompat.getColor(getContext(), bodyColour));
+            acc_head = documentSnapshot.get("acc_head", Integer.class);
+            acc_eyes = documentSnapshot.get("acc_eyes", Integer.class);
+            acc_body = documentSnapshot.get("acc_body", Integer.class);
+        });
     }
 
     @Override
@@ -115,7 +141,7 @@ public class PetCanvas extends View {
         bodyPath.addArc(ovalTop, 180f, 180f);
         bodyPath.addArc(ovalBottom, 0f, 180f);
         bodyPath.close();
-        canvas.drawPath(bodyPath, this.paint);
+        canvas.drawPath(bodyPath, this.bodyPaint);
 
         // eyes
         float cy = height_middle - 200f + offset;
@@ -131,36 +157,81 @@ public class PetCanvas extends View {
         canvas.drawPath(mouthPath, mouthPaint);
 
         // accessories
-        drawHeadCust(canvas);
-        drawEyeCust(canvas);
+        drawAcc_head(canvas);
+        drawAcc_eyes(canvas);
+        drawAcc_body(canvas);
     }
 
     // 300 x 300 px
-    private void drawHeadCust(Canvas canvas) {
-        if (this.headCust == null) return;
-        canvas.drawBitmap(this.headCust,
-                width_middle + 125f + offset,
-                height_middle - 400f + offset,
+    private void drawAcc_head(Canvas canvas) {
+        if (this.acc_head == null) return;
+        canvas.drawBitmap(
+                BitmapFactory.decodeResource(getResources(), this.acc_head),
+                width_middle - 200f,
+                height_middle - 500f + offset,
                 null);
     }
 
     // 300 x 600 px
-    private void drawEyeCust(Canvas canvas) {
-        if (this.eyeCust == null) return;
-        canvas.drawBitmap(this.eyeCust,
-                width_middle - 210f,
+    private void drawAcc_eyes(Canvas canvas) {
+        if (this.acc_eyes == null) return;
+        canvas.drawBitmap(
+                BitmapFactory.decodeResource(getResources(), this.acc_eyes),
+                width_middle - 150f,
                 height_middle - 300f + offset,
                 null);
     }
 
-    public PetCanvas setDefault() {
-        this.headCust = null;
-        this.eyeCust = null;
-        this.paint.setColor(ContextCompat.getColor(getContext(), R.color.egg_beige));
-        return this;
+    private void drawAcc_body(Canvas canvas) {
+        if (this.acc_body == null) return;
+        canvas.drawBitmap(
+                BitmapFactory.decodeResource(getResources(), this.acc_body),
+                width_middle - 220f,
+                height_middle - 100f + offset,
+                null);
     }
 
-    public void setBodyColour(int color) {
-        this.paint.setColor(color);
+    public void setBodyColour(int colour) {
+        this.bodyColour = colour;
+        this.bodyPaint.setColor(ContextCompat.getColor(getContext(), this.bodyColour));
+    }
+
+    public void set(int type, int id) {
+        switch(type) {
+            case 0:
+                this.setBodyColour(id);
+                break;
+            case 1:
+                this.setAcc_head(id);
+                break;
+            case 2:
+                this.setAcc_eyes(id);
+                break;
+            case 3: this.setAcc_body(id);
+            break;
+        }
+    }
+
+    public void setAcc_head(int id) {
+        this.acc_head = id;
+    }
+
+    public void setAcc_eyes(int id) {
+        this.acc_eyes = id;
+    }
+
+    public void setAcc_body(int id) {
+        this.acc_body = id;
+    }
+
+    public void save() {
+        Map<String, Integer> result = new HashMap<>();
+        result.computeIfAbsent("bodyColour", val -> this.bodyColour);
+        result.computeIfAbsent("acc_head", val -> this.acc_head);
+        result.computeIfAbsent("acc_eyes", val -> this.acc_eyes);
+        result.computeIfAbsent("acc_body", val -> this.acc_body);
+
+        MainActivity.userDoc.collection("Pet").document("Customisation")
+                .set(result);
     }
 }

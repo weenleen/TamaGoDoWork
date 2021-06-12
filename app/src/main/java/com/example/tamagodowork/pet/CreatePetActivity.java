@@ -21,7 +21,7 @@ public class CreatePetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_pet);
 
         RelativeLayout petArea = findViewById(R.id.create_pet_area);
-        PetCanvas petCanvas = new PetCanvas(getApplicationContext()).setDefault();
+        PetCanvas petCanvas = new PetCanvas(getApplicationContext());
         petArea.addView(petCanvas);
 
         Button createButton = findViewById(R.id.create_pet_button);
@@ -37,7 +37,7 @@ public class CreatePetActivity extends AppCompatActivity {
         beigeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                petCanvas.setBodyColour(ContextCompat.getColor(getApplicationContext(), R.color.egg_beige));
+                petCanvas.setBodyColour(R.color.egg_beige);
             }
         });
 
@@ -45,7 +45,7 @@ public class CreatePetActivity extends AppCompatActivity {
         yellowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                petCanvas.setBodyColour(ContextCompat.getColor(getApplicationContext(), R.color.yellow));
+                petCanvas.setBodyColour(R.color.yellow);
             }
         });
 
@@ -53,7 +53,7 @@ public class CreatePetActivity extends AppCompatActivity {
         blueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                petCanvas.setBodyColour(ContextCompat.getColor(getApplicationContext(), R.color.blue));
+                petCanvas.setBodyColour(R.color.blue);
             }
         });
     }

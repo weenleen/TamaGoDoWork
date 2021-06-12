@@ -19,8 +19,8 @@ import java.util.ArrayList;
 
 public class EditViewpagerAdapter extends PagerAdapter {
 
-    private Context context;
-    private ArrayList<EditViewpagerModel> lst;
+    private final Context context;
+    private final ArrayList<EditViewpagerModel> lst;
 
     public EditViewpagerAdapter(Context context, ArrayList<EditViewpagerModel> lst) {
         this.context = context;
@@ -37,7 +37,7 @@ public class EditViewpagerAdapter extends PagerAdapter {
         EditGridAdapter adapter = new EditGridAdapter(context, this.lst.get(position).content, this.lst.get(position).getType());
         gridView.setAdapter(adapter);
 
-        container.addView(view, position);
+        container.addView(view, 0);
 
         return view;
     }

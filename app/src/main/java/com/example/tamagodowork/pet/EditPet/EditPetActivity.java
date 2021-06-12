@@ -21,7 +21,8 @@ public class EditPetActivity extends AppCompatActivity {
     private static String[] categories = new String[] {
             "Colours",
             "Head",
-            "Eyes"
+            "Eyes",
+            "Body"
     };
 
     private ViewPager viewPager;
@@ -55,30 +56,25 @@ public class EditPetActivity extends AppCompatActivity {
         // category name text
         TextView categoryName = findViewById(R.id.edit_content_name);
         categoryName.setText(categories[viewPager.getCurrentItem()]);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
-
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 categoryName.setText(categories[position]);
             }
-
-            @Override
-            public void onPageScrollStateChanged(int state) { }
         });
 
         // next button
         ImageButton nextButton = findViewById(R.id.edit_next_button);
         nextButton.setOnClickListener(v -> {
             int position = viewPager.getCurrentItem() + 1;
-            if (position > viewPager.getChildCount() - 1) return;
+            if (position >= categories.length) return;
             viewPager.setCurrentItem(position);
         });
 
         // done button
         Button doneButton = findViewById(R.id.edit_pet_done);
         doneButton.setOnClickListener(v -> {
+            petCanvas.save();
             startActivity(new Intent(EditPetActivity.this, MainActivity.class));
             finish();
         });
