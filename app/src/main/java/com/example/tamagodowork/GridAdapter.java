@@ -1,6 +1,7 @@
 package com.example.tamagodowork;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,14 @@ import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import static android.content.ContentValues.TAG;
 
 public class GridAdapter extends ArrayAdapter {
     List<Date> dates;
@@ -56,9 +62,37 @@ public class GridAdapter extends ArrayAdapter {
         }
 
         TextView Day_Number = view.findViewById(R.id.calendar_day);
+        TextView eventsPerDay = view.findViewById(R.id.noOfEvents);
         Day_Number.setText(String.valueOf(day));
+        /*
+        Calendar eventCalendar = Calendar.getInstance();
+        ArrayList<String> arrayList = new ArrayList<>();
+        // events size == 4
+        Log.d(TAG, String.valueOf(events.size()));
+        for (int i = 0; i < events.size(); i++) {
+            Log.d(TAG, "DATE:" + events.get(i).getDATE());
+            eventCalendar.setTime(convertStringToDate(events.get(i).getDATE()));
+            if (day == eventCalendar.get(Calendar.DAY_OF_MONTH) && displayMonth == eventCalendar.get(Calendar.MONTH)) {
+                arrayList.add(events.get(i).getEVENT());
+                eventsPerDay.setText(String.valueOf(arrayList.size()));
+            }
+
+        }
+        */
+
 
         return view;
+    }
+
+    private Date convertStringToDate(String eventDate) {
+        SimpleDateFormat format = new SimpleDateFormat("MM-yyyy", Locale.ENGLISH);
+        Date date = null;
+        try {
+            date = format.parse(eventDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 
     @Override
