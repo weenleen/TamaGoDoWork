@@ -1,4 +1,4 @@
-package com.example.tamagodowork;
+package com.example.tamagodowork.bottomNav.taskList;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.tamagodowork.MainActivity;
+import com.example.tamagodowork.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class TaskDetailsDial extends BottomSheetDialogFragment {
@@ -44,36 +46,25 @@ public class TaskDetailsDial extends BottomSheetDialogFragment {
         descView.setText(desc);
 
         this.editBtn = view.findViewById(R.id.edit_button);
-        this.editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), EditTaskAct.class);
-                intent.putExtra("name", name);
-                intent.putExtra("deadline", deadline);
-                intent.putExtra("desc", desc);
-                intent.putExtra("key", key);
-                startActivity(intent);
-            }
+        this.editBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), EditTaskAct.class);
+            intent.putExtra("name", name);
+            intent.putExtra("deadline", deadline);
+            intent.putExtra("desc", desc);
+            intent.putExtra("key", key);
+            startActivity(intent);
         });
 
         // delete button
         this.delBtn = view.findViewById(R.id.delete_button);
-        this.delBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.userDoc.collection("Tasks").document(key).delete();
-                dismiss();
-            }
+        this.delBtn.setOnClickListener(v -> {
+            MainActivity.userDoc.collection("Tasks").document(key).delete();
+            dismiss();
         });
 
         // close
         this.closeIcon = view.findViewById(R.id.close_icon);
-        closeIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        closeIcon.setOnClickListener(v -> dismiss());
 
         builder.setView(view);
         return builder.create();

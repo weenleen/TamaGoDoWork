@@ -1,7 +1,5 @@
 package com.example.tamagodowork;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -11,22 +9,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tamagodowork.pet.CreatePetActivity;
+import com.example.tamagodowork.authentication.RegisterAct;
+import com.example.tamagodowork.bottomNav.pet.PetFrag;
+import com.example.tamagodowork.bottomNav.schedule.ScheduleFrag;
+import com.example.tamagodowork.bottomNav.taskList.TaskListFrag;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // NAVIGATION
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
@@ -51,9 +47,13 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 new TaskListFrag()).commit();
 
+
+
         // Store xp values in firebase
         this.xpBar = findViewById(R.id.xpBar);
         this.levelView = findViewById(R.id.levelDisplay);
+
+
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         // check if logged in
@@ -62,9 +62,13 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
+
+
         // Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         userDoc = db.collection("Users").document(firebaseAuth.getCurrentUser().getUid());
+
+
 
         // XP stuff
         userDoc.addSnapshotListener((value, error) -> {
@@ -85,7 +89,9 @@ public class MainActivity extends AppCompatActivity {
             xpBar.setProgress(xp % 100);
         });
 
-        /** Settings */
+
+
+        // Settings
         this.settings = findViewById(R.id.settings_icon);
         this.settings.setOnClickListener(v -> {
             startActivity(new Intent(getApplicationContext(), SettingsAct.class));
@@ -105,27 +111,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
     /** Bottom Navigation Bar */
-    private final BottomNavigationView.OnNavigationItemSelectedListener navListener =
-            item -> {
-                Fragment selectedFrag = new TaskListFrag();
+    private final BottomNavigationView.OnNavigationItemSelectedListener navListener = item -> {
+        int tmp = item.getItemId();
+        Fragment selectedFrag;
 
-                switch (item.getItemId()) {
-                    case R.id.navigation_taskList:
-                        break;
-                    case R.id.navigation_pet:
-                        selectedFrag = new PetFrag();
-                        break;
-                    case R.id.navigation_schedule:
-                        selectedFrag = new ScheduleFrag();
-                        break;
-                }
+        if (tmp == R.id.navigation_pet) {
+            selectedFrag = new PetFrag();
+        } else if (tmp == R.id.navigation_schedule) {
+            selectedFrag = new ScheduleFrag();
+        } else {
+            selectedFrag = new TaskListFrag();
+        }
 
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        selectedFrag).commit();
-
-                return true;
-            };
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                selectedFrag).commit();
+        return true;
+    };
 
     /**
      * A method that updates the amount of xp locally and in Firestore.

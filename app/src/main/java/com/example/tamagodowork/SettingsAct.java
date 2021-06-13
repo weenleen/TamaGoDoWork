@@ -4,9 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
+import com.example.tamagodowork.authentication.*;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsAct extends AppCompatActivity {
@@ -19,44 +19,32 @@ public class SettingsAct extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         this.resetBtn = findViewById(R.id.btn_reset);
-        this.resetBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.setXP(0);
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                finish();
-            }
+        this.resetBtn.setOnClickListener(v -> {
+            MainActivity.setXP(0);
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
         });
 
         this.themesBtn = findViewById(R.id.btn_themes);
 
         this.logoutBtn = findViewById(R.id.btn_logout);
-        this.logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), LoginAct.class));
-                finish();
-            }
+        this.logoutBtn.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(getApplicationContext(), LoginAct.class));
+            finish();
         });
 
         // change pwd button
         this.chgPwdBtn = findViewById(R.id.change_pwd);
-        this.chgPwdBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ChangePasswordAct.class));
-                finish();
-            }
+        this.chgPwdBtn.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), ChangePasswordAct.class));
+            finish();
         });
 
         this.backBtn = findViewById(R.id.btn_back);
-        this.backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                finish();
-            }
+        this.backBtn.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
         });
     }
 }

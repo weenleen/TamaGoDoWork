@@ -1,4 +1,4 @@
-package com.example.tamagodowork;
+package com.example.tamagodowork.bottomNav.schedule;
 
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.tamagodowork.R;
 import com.google.api.Context;
 
 import java.text.SimpleDateFormat;

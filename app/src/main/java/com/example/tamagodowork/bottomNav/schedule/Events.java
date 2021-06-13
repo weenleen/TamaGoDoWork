@@ -1,4 +1,4 @@
-package com.example.tamagodowork;
+package com.example.tamagodowork.bottomNav.schedule;
 
 public class Events {
     String EVENT, TIME, DATE, MONTH, YEAR;

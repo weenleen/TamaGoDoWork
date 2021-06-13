@@ -1,4 +1,4 @@
-package com.example.tamagodowork;
+package com.example.tamagodowork.bottomNav.taskList;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.tamagodowork.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class OverdueDetailsDial extends BottomSheetDialogFragment {
@@ -40,12 +41,7 @@ public class OverdueDetailsDial extends BottomSheetDialogFragment {
 
         // close
         ImageButton closeIcon = view.findViewById(R.id.close_icon);
-        closeIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        closeIcon.setOnClickListener(v -> dismiss());
 
         builder.setView(view);
         return builder.create();

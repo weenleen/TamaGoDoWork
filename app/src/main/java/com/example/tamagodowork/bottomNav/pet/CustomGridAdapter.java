@@ -1,4 +1,4 @@
-package com.example.tamagodowork.pet.EditPet;
+package com.example.tamagodowork.bottomNav.pet;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -14,18 +14,21 @@ import androidx.core.content.ContextCompat;
 
 import com.example.tamagodowork.R;
 
-public class EditGridAdapter extends BaseAdapter {
+/**
+ * Grid Adapter for each type of customisation
+ */
+public class CustomGridAdapter extends BaseAdapter {
 
     private final Context context;
     private final int[] arr;
-    private final int type;
+    private final Pet.custom custom;
 
     private LayoutInflater inflater;
 
-    public EditGridAdapter(Context context, int[] arr, int type) {
+    public CustomGridAdapter(Context context, int[] arr, Pet.custom custom) {
         this.context = context;
         this.arr = arr;
-        this.type = type;
+        this.custom = custom;
     }
 
     @Override
@@ -56,7 +59,7 @@ public class EditGridAdapter extends BaseAdapter {
 
         ImageView imageView = convertView.findViewById(R.id.grid_item_content);
 
-        if (this.type == 0) { // COLOUR
+        if (this.custom == Pet.custom.COLOUR) { // COLOUR
             GradientDrawable tmp = (GradientDrawable) AppCompatResources
                     .getDrawable(context, R.drawable.button_color_picker);
             int colourId = this.arr[position];
@@ -77,7 +80,7 @@ public class EditGridAdapter extends BaseAdapter {
             // on click
             convertView.setOnClickListener(v -> {
                 if (EditPetActivity.petCanvas == null) return;
-                EditPetActivity.petCanvas.set(this.type, this.arr[position]);
+                EditPetActivity.petCanvas.setCustom(this.custom, this.arr[position]);
             });
         }
 

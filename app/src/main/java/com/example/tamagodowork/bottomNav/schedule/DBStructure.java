@@ -1,4 +1,4 @@
-package com.example.tamagodowork;
+package com.example.tamagodowork.bottomNav.schedule;
 
 public class DBStructure {
     public static final String DB_NAME = "EVENTS";

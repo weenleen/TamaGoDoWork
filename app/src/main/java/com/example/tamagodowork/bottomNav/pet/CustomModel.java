@@ -1,38 +1,30 @@
-package com.example.tamagodowork.pet.EditPet;
+package com.example.tamagodowork.bottomNav.pet;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import com.example.tamagodowork.R;
 
-import java.util.ArrayList;
+/**
+ * Model for each Customisation accessory in the grid view
+ */
+public class CustomModel {
 
-import java.util.List;
-
-public class EditViewpagerModel {
-
-    public static final int COLOUR = 0;
-    public static final int HEAD = 1;
-    public static final int EYES = 2;
-    public static final int BODY = 3;
-
-    private final int type;
-    private Context context;
+    private final Pet.custom custom;
+    private final Context context;
     public int[] content;
 
-    public EditViewpagerModel(int type, Context context) {
-        this.type = type;
+    public CustomModel(Pet.custom custom, Context context) {
+        this.custom = custom;
         this.context = context;
         setContent();
     }
 
-    public int getType() {
-        return type;
+    public Pet.custom getCustom() {
+        return custom;
     }
 
     private void setContent() {
-        switch (this.type) {
+        switch (this.custom) {
             case COLOUR:
                 this.content = new int[] {
                         R.color.egg_beige,

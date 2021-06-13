@@ -1,4 +1,4 @@
-package com.example.tamagodowork;
+package com.example.tamagodowork.bottomNav.schedule;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.tamagodowork.R;
 
 import org.jetbrains.annotations.NotNull;
 

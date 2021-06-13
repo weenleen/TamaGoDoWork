@@ -1,4 +1,4 @@
-package com.example.tamagodowork;
+package com.example.tamagodowork.bottomNav.pet;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.tamagodowork.pet.EditPet.EditPetActivity;
-import com.example.tamagodowork.pet.PetCanvas;
+import com.example.tamagodowork.R;
 
 public class PetFrag extends Fragment {
 
@@ -26,16 +25,14 @@ public class PetFrag extends Fragment {
 
         View view = inflater.inflate(R.layout.pet_frag, container, false);
         RelativeLayout relativeLayout = view.findViewById(R.id.pet_area);
-        PetCanvas petCanvas = new PetCanvas(getContext());
+        PetCanvas petCanvas = new PetCanvas(getContext(), new Pet());
         relativeLayout.addView(petCanvas);
 
         petCanvas.setOnClickListener(v -> Log.e("pet", "PET TOUCHED"));
 
         // edit pet button
         Button editButton = view.findViewById(R.id.pet_edit_button);
-        editButton.setOnClickListener(v -> {
-            startActivity(new Intent(getContext(), EditPetActivity.class));
-        });
+        editButton.setOnClickListener(v -> startActivity(new Intent(getContext(), EditPetActivity.class)));
 
         return view;
     }

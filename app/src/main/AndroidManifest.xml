@@ -6,20 +6,19 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TamaGoDoWork">
-        <activity android:name=".pet.EditPet.EditPetActivity"></activity>
-        <activity android:name=".pet.CreatePetActivity" />
+        <activity android:name=".bottomNav.pet.EditPetActivity"/>
+        <activity android:name=".bottomNav.pet.CreatePetActivity" />
         <activity android:name=".SettingsAct" />
-        <activity android:name=".ChangePasswordAct" />
-        <activity android:name=".RegisterAct" />
-        <activity android:name=".LoginAct" />
-        <activity android:name=".EditTaskAct" />
-        <activity android:name=".AddTaskAct" />
+        <activity android:name=".authentication.ChangePasswordAct" />
+        <activity android:name=".authentication.LoginAct" />
+        <activity android:name=".authentication.RegisterAct" />
+        <activity android:name=".bottomNav.taskList.AddTaskAct" />
+        <activity android:name=".bottomNav.taskList.EditTaskAct" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

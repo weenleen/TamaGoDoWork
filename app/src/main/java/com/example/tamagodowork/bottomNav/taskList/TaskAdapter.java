@@ -1,4 +1,4 @@
-package com.example.tamagodowork;
+package com.example.tamagodowork.bottomNav.taskList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +11,9 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.tamagodowork.MainActivity;
+import com.example.tamagodowork.R;
 
 import java.util.ArrayList;
 

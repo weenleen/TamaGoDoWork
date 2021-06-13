@@ -1,4 +1,4 @@
-package com.example.tamagodowork;
+package com.example.tamagodowork.bottomNav.taskList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,13 +13,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tamagodowork.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,40 +52,33 @@ public class TaskListFrag extends Fragment {
         // Read data from Firestore
         db = FirebaseFirestore.getInstance();
         db.collection("Users").document(userID).collection("Tasks")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (error != null) {
-                            // error
-                            Toast.makeText(view.getContext(), "No Data", Toast.LENGTH_SHORT).show();
-                        }
-
-                        list.clear();
-
-                        for (QueryDocumentSnapshot doc : value) {
-                            list.add(new Task(doc.getString("taskName"),
-                                    (long) doc.get("taskDeadline"),
-                                    doc.getString("taskDesc"),
-                                    doc.getId()));
-                        }
-
-                        // might want to change to SortedList for more efficiency
-                        Collections.sort(list);
-
-                        adapter.notifyDataSetChanged();
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        // error
+                        Toast.makeText(view.getContext(), "No Data", Toast.LENGTH_SHORT).show();
                     }
-        });
 
-        /**
-         * Floating Action Button to add new tasks
-         */
+                    list.clear();
+
+                    for (QueryDocumentSnapshot doc : value) {
+                        list.add(new Task(doc.getString("taskName"),
+                                (long) doc.get("taskDeadline"),
+                                doc.getString("taskDesc"),
+                                doc.getId()));
+                    }
+
+                    // might want to change to SortedList for more efficiency
+                    Collections.sort(list);
+
+                    adapter.notifyDataSetChanged();
+                });
+
+
+        // Floating Action button to add new tasks
         fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AddTaskAct.class);
-                startActivity(intent);
-            }
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), AddTaskAct.class);
+            startActivity(intent);
         });
 
         return view;

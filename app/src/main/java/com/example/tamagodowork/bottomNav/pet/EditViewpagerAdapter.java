@@ -1,7 +1,6 @@
-package com.example.tamagodowork.pet.EditPet;
+package com.example.tamagodowork.bottomNav.pet;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.example.tamagodowork.R;
-import com.example.tamagodowork.databinding.ActivityMainBinding;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,9 +18,9 @@ import java.util.ArrayList;
 public class EditViewpagerAdapter extends PagerAdapter {
 
     private final Context context;
-    private final ArrayList<EditViewpagerModel> lst;
+    private final ArrayList<CustomModel> lst;
 
-    public EditViewpagerAdapter(Context context, ArrayList<EditViewpagerModel> lst) {
+    public EditViewpagerAdapter(Context context, ArrayList<CustomModel> lst) {
         this.context = context;
         this.lst = lst;
     }
@@ -34,7 +32,8 @@ public class EditViewpagerAdapter extends PagerAdapter {
         View view = LayoutInflater.from(context).inflate(R.layout.edit_pet_viewpager_item, container, false);
 
         GridView gridView = view.findViewById(R.id.viewpager_item_grid);
-        EditGridAdapter adapter = new EditGridAdapter(context, this.lst.get(position).content, this.lst.get(position).getType());
+        CustomGridAdapter adapter = new CustomGridAdapter(context,
+                this.lst.get(position).content, this.lst.get(position).getCustom());
         gridView.setAdapter(adapter);
 
         container.addView(view, 0);

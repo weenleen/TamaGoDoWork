@@ -1,4 +1,4 @@
-package com.example.tamagodowork.pet.EditPet;
+package com.example.tamagodowork.bottomNav.pet;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -12,13 +12,12 @@ import android.widget.TextView;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
-import com.example.tamagodowork.pet.PetCanvas;
 
 import java.util.ArrayList;
 
 public class EditPetActivity extends AppCompatActivity {
 
-    private static String[] categories = new String[] {
+    private static final String[] categories = new String[] {
             "Colours",
             "Head",
             "Eyes",
@@ -26,7 +25,7 @@ public class EditPetActivity extends AppCompatActivity {
     };
 
     private ViewPager viewPager;
-    private ArrayList<EditViewpagerModel> lst;
+    private ArrayList<CustomModel> lst;
     private EditViewpagerAdapter adapter;
 
     public static PetCanvas petCanvas;
@@ -42,7 +41,7 @@ public class EditPetActivity extends AppCompatActivity {
 
         // show the pet
         RelativeLayout petArea = findViewById(R.id.edit_pet_area);
-        petCanvas = new PetCanvas(getApplicationContext());
+        petCanvas = new PetCanvas(getApplicationContext(), new Pet());
         petArea.addView(petCanvas);
 
         // prev button
@@ -56,6 +55,7 @@ public class EditPetActivity extends AppCompatActivity {
         // category name text
         TextView categoryName = findViewById(R.id.edit_content_name);
         categoryName.setText(categories[viewPager.getCurrentItem()]);
+
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -94,8 +94,8 @@ public class EditPetActivity extends AppCompatActivity {
         this.lst = new ArrayList<>();
 
         // add all the stuff
-        for (int i = 0; i < categories.length; i++) {
-            this.lst.add(new EditViewpagerModel(i, getApplicationContext()));
+        for (Pet.custom custom : Pet.custom.values()) {
+            this.lst.add(new CustomModel(custom, getApplicationContext()));
         }
 
         this.adapter = new EditViewpagerAdapter(getApplicationContext(), this.lst);

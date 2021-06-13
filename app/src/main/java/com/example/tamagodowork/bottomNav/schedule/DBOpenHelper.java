@@ -1,4 +1,4 @@
-package com.example.tamagodowork;
+package com.example.tamagodowork.bottomNav.schedule;
 
 import android.content.ContentValues;
 import android.content.Context;

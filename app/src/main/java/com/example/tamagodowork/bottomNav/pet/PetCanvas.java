@@ -1,15 +1,15 @@
-package com.example.tamagodowork.pet;
+package com.example.tamagodowork.bottomNav.pet;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -20,16 +20,6 @@ import android.os.Handler;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class PetCanvas extends View {
 
@@ -53,7 +43,7 @@ public class PetCanvas extends View {
     private final Runnable petIdle = new Runnable() {
         @Override
         public void run() {
-            index+= 0.1;
+            index += 0.1;
             if (index >= 8) index = 0f;
             offset = (float) Math.sin((index/4) * Math.PI) * 20;
             postInvalidate();
@@ -62,29 +52,39 @@ public class PetCanvas extends View {
     };
 
     // customisation
-    private int bodyColour = R.color.egg_beige;
-    private Integer acc_head = null;
-    private Integer acc_eyes = null;
-    private Integer acc_body = null;
+    private Pet pet;
+
+    private Bitmap bitmapHead;
+    private Bitmap bitmapEyes;
+    private Bitmap bitmapBody;
+
+    private Integer bodyColour;
+    private Integer acc_head;
+    private Integer acc_eyes;
+    private Integer acc_body;
+
+    public PetCanvas(Context context, @NonNull Pet pet) {
+        super(context);
+        this.pet = pet;
+        init();
+    }
 
     public PetCanvas(Context context) {
         super(context);
-        init(null, 0);
+        init();
     }
 
     public PetCanvas(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init();
     }
 
     public PetCanvas(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs, defStyleAttr);
+        init();
     }
 
-    public void init(@Nullable AttributeSet attrs, int defStyleAttr) {
-        retrieveData();
-
+    public void init() {
         this.bodyPaint.setStyle(Paint.Style.FILL);
 
         this.eyePaint.setColor(ContextCompat.getColor(getContext(), R.color.brown));
@@ -95,21 +95,18 @@ public class PetCanvas extends View {
         this.mouthPaint.setStrokeCap(Paint.Cap.ROUND);
         this.mouthPaint.setStrokeWidth(20f);
 
+        update();
+
         this.petIdle.run();
     }
 
-    private void retrieveData() {
-        DocumentReference ref = MainActivity.userDoc.collection("Pet").document("Customisation");
-        ref.get().addOnSuccessListener(documentSnapshot -> {
-            Long tmp = (Long) documentSnapshot.get("bodyColour");
-            if (tmp != null) bodyColour = tmp.intValue();
-            else bodyColour = R.color.egg_beige;
+    private void update() {
+        if (this.pet == null) return;
 
-            this.bodyPaint.setColor(ContextCompat.getColor(getContext(), bodyColour));
-            acc_head = documentSnapshot.get("acc_head", Integer.class);
-            acc_eyes = documentSnapshot.get("acc_eyes", Integer.class);
-            acc_body = documentSnapshot.get("acc_body", Integer.class);
-        });
+        setBodyColour(this.pet.getBodyColour());
+        setCustomHead(this.pet.getAcc_head());
+        setCustomEyes(this.pet.getAcc_eyes());
+        setCustomBody(this.pet.getAcc_body());
     }
 
     @Override
@@ -121,6 +118,11 @@ public class PetCanvas extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if (this.bodyColour == null) {
+            update();
+            return;
+        }
+
         super.onDraw(canvas);
         bodyPath.reset();
         mouthPath.reset();
@@ -164,9 +166,9 @@ public class PetCanvas extends View {
 
     // 300 x 300 px
     private void drawAcc_head(Canvas canvas) {
-        if (this.acc_head == null) return;
+        if (this.bitmapHead == null) return;
         canvas.drawBitmap(
-                BitmapFactory.decodeResource(getResources(), this.acc_head),
+                this.bitmapHead,
                 width_middle - 200f,
                 height_middle - 500f + offset,
                 null);
@@ -174,64 +176,79 @@ public class PetCanvas extends View {
 
     // 300 x 600 px
     private void drawAcc_eyes(Canvas canvas) {
-        if (this.acc_eyes == null) return;
+        if (this.bitmapEyes == null) return;
         canvas.drawBitmap(
-                BitmapFactory.decodeResource(getResources(), this.acc_eyes),
+                this.bitmapEyes,
                 width_middle - 150f,
                 height_middle - 300f + offset,
                 null);
     }
 
     private void drawAcc_body(Canvas canvas) {
-        if (this.acc_body == null) return;
+        if (this.bitmapBody == null) return;
         canvas.drawBitmap(
-                BitmapFactory.decodeResource(getResources(), this.acc_body),
+                this.bitmapBody,
                 width_middle - 220f,
                 height_middle - 100f + offset,
                 null);
     }
 
-    public void setBodyColour(int colour) {
-        this.bodyColour = colour;
-        this.bodyPaint.setColor(ContextCompat.getColor(getContext(), this.bodyColour));
-    }
-
-    public void set(int type, int id) {
-        switch(type) {
-            case 0:
+    public void setCustom(Pet.custom custom, int id) {
+        switch(custom) {
+            case COLOUR:
                 this.setBodyColour(id);
                 break;
-            case 1:
-                this.setAcc_head(id);
+            case HEAD:
+                this.setCustomHead(id);
                 break;
-            case 2:
-                this.setAcc_eyes(id);
+            case EYES:
+                this.setCustomEyes(id);
                 break;
-            case 3: this.setAcc_body(id);
+            case BODY: this.setCustomBody(id);
             break;
         }
     }
 
-    public void setAcc_head(int id) {
+    public void setBodyColour(Integer id) {
+        if (id== null) return;
+        this.bodyColour = id;
+        this.bodyPaint.setColor(ContextCompat.getColor(getContext(), id));
+    }
+
+    public void setCustomHead(Integer id) {
+        if (id == null) {
+            this.bitmapHead = null;
+            return;
+        }
+
         this.acc_head = id;
+        this.bitmapHead = BitmapFactory.decodeResource(getResources(), id);
     }
 
-    public void setAcc_eyes(int id) {
+    public void setCustomEyes(Integer id) {
+        if (id == null) {
+            this.bitmapEyes = null;
+            return;
+        }
+
         this.acc_eyes = id;
+        this.bitmapEyes = BitmapFactory.decodeResource(getResources(), id);
     }
 
-    public void setAcc_body(int id) {
+    public void setCustomBody(Integer id) {
+        if (id == null) {
+            this.bitmapBody = null;
+            return;
+        }
+
         this.acc_body = id;
+        this.bitmapBody = BitmapFactory.decodeResource(getResources(), id);
     }
 
     public void save() {
-        Map<String, Integer> result = new HashMap<>();
-        result.computeIfAbsent("bodyColour", val -> this.bodyColour);
-        result.computeIfAbsent("acc_head", val -> this.acc_head);
-        result.computeIfAbsent("acc_eyes", val -> this.acc_eyes);
-        result.computeIfAbsent("acc_body", val -> this.acc_body);
-
         MainActivity.userDoc.collection("Pet").document("Customisation")
-                .set(result);
+                .set(new Pet(this.bodyColour, this.acc_head, this.acc_eyes, this.acc_body))
+                .addOnSuccessListener(unused -> Log.e("upload", "SUCCESS"))
+                .addOnFailureListener(e -> Log.e("upload", "FAIL"));
     }
 }
