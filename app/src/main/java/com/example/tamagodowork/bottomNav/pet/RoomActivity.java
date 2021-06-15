@@ -83,6 +83,7 @@ public class RoomActivity extends AppCompatActivity {
 
     private void loadWallpapers() {
         wallpapers = new int[] {
+                -1,
                 R.drawable.wallpaper_blue,
                 R.drawable.wallpaper_orange
         };
@@ -104,8 +105,10 @@ public class RoomActivity extends AppCompatActivity {
         @Override
         public Object instantiateItem(@NonNull @NotNull ViewGroup container, int position) {
             ImageView view = new ImageView(this.context);
-            view.setImageDrawable(
-                    AppCompatResources.getDrawable(this.context, wallpapers[position]));
+            if (wallpapers[position] != -1) {
+                view.setImageDrawable(
+                        AppCompatResources.getDrawable(this.context, wallpapers[position]));
+            }
             container.addView(view, 0);
             return view;
         }

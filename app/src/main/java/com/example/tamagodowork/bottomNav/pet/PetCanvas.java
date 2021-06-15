@@ -210,13 +210,14 @@ public class PetCanvas extends View {
     }
 
     public void setBodyColour(Integer id) {
-        if (id== null) return;
+        if (id == null) return;
         this.bodyColour = id;
         this.bodyPaint.setColor(ContextCompat.getColor(getContext(), id));
     }
 
     public void setCustomHead(Integer id) {
-        if (id == null) {
+        if (id == null || id == R.mipmap.none) {
+            this.acc_head = null;
             this.bitmapHead = null;
             return;
         }
@@ -226,7 +227,8 @@ public class PetCanvas extends View {
     }
 
     public void setCustomEyes(Integer id) {
-        if (id == null) {
+        if (id == null || id == R.mipmap.none) {
+            this.acc_eyes = null;
             this.bitmapEyes = null;
             return;
         }
@@ -236,7 +238,8 @@ public class PetCanvas extends View {
     }
 
     public void setCustomBody(Integer id) {
-        if (id == null) {
+        if (id == null || id == R.mipmap.none) {
+            this.acc_body = null;
             this.bitmapBody = null;
             return;
         }
@@ -247,8 +250,6 @@ public class PetCanvas extends View {
 
     public void save() {
         MainActivity.userDoc.collection("Pet").document("Customisation")
-                .set(new Pet(this.bodyColour, this.acc_head, this.acc_eyes, this.acc_body))
-                .addOnSuccessListener(unused -> Log.e("upload", "SUCCESS"))
-                .addOnFailureListener(e -> Log.e("upload", "FAIL"));
+                .set(new Pet(this.bodyColour, this.acc_head, this.acc_eyes, this.acc_body));
     }
 }

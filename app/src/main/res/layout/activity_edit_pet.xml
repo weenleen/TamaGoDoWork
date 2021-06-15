@@ -6,14 +6,13 @@
     android:background="@color/off_white"
     android:layout_gravity="center|bottom"
     android:orientation="vertical"
-    tools:context=".pet.CreatePetActivity">
+    tools:context=".bottomNav.pet.EditPetActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="5dp"
-        android:layout_margin="15dp">
+        android:layout_margin="9dp">
 
         <ImageButton
             android:id="@+id/edit_prev_button"
@@ -26,10 +25,11 @@
         <TextView
             android:id="@+id/edit_content_name"
             android:layout_width="0dp"
-            android:layout_weight="3"
+            android:layout_weight="5"
             android:layout_height="wrap_content"
-            android:text="Name"
-            android:textSize="25sp"
+            android:background="@drawable/bg_task_item"
+            android:padding="4dp"
+            android:textSize="20sp"
             android:textAlignment="center"
             android:textColor="?attr/colorPrimary" />
 
@@ -46,7 +46,7 @@
         android:id="@+id/edit_pet_viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="10"
         android:layout_marginHorizontal="10dp" >
     </androidx.viewpager.widget.ViewPager>
 
@@ -54,27 +54,34 @@
         android:id="@+id/edit_pet_area"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="11"
         android:layout_marginHorizontal="60dp">
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/edit_pet_done"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:text="Done!"
-        android:textSize="20sp"/>
+        android:orientation="horizontal"
+        android:padding="7dp">
 
-    <Button
-        android:id="@+id/edit_pet_cancel"
-        android:backgroundTint="@color/light_pink"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="15dp"
-        android:text="cancel"
-        android:textColor="?attr/colorPrimary"
-        android:textSize="20sp"/>
+        <Button
+            android:id="@+id/edit_pet_done"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:text="@string/done"
+            android:textSize="20sp"/>
 
+        <Button
+            android:id="@+id/edit_pet_cancel"
+            android:backgroundTint="@color/light_pink"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:text="@string/cancel"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="20sp"/>
+    </LinearLayout>
 </LinearLayout>

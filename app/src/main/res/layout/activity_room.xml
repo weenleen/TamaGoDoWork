@@ -9,7 +9,8 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/room_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="?attr/colorSecondary"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -76,7 +77,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
-            android:text="Done!"
+            android:text="@string/done"
             android:textSize="20sp"/>
 
         <Button
@@ -86,7 +87,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
-            android:text="cancel"
+            android:text="@string/cancel"
             android:textColor="?attr/colorPrimary"
             android:textSize="20sp"/>
     </LinearLayout>

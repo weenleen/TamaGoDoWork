@@ -38,6 +38,7 @@ public class CustomModel {
                 break;
             case HEAD:
                 this.content = new int[] {
+                        R.mipmap.none,
                         R.mipmap.c_head_1,
                         R.mipmap.acc_head_crown,
                         R.mipmap.c_head_1,
@@ -55,6 +56,7 @@ public class CustomModel {
                 break;
             case EYES:
                 this.content = new int[] {
+                        R.mipmap.none,
                         R.mipmap.c_eyes_1,
                         R.mipmap.acc_eyes_shades,
                         R.mipmap.c_eyes_1,
@@ -71,6 +73,7 @@ public class CustomModel {
                 break;
             case BODY:
                 this.content = new int[] {
+                        R.mipmap.none,
                         R.mipmap.acc_body_chain,
                         R.mipmap.acc_body_chain,
                         R.mipmap.acc_body_chain,
@@ -87,6 +90,7 @@ public class CustomModel {
                 break;
             default:
                 this.content = new int[] {
+                        R.mipmap.none,
                         R.mipmap.c_head_1,
                         R.mipmap.c_eyes_1,
                         R.mipmap.c_head_1,

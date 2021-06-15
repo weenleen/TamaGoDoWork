@@ -13,7 +13,6 @@
         android:theme="@style/Theme.TamaGoDoWork">
         <activity android:name=".bottomNav.pet.RoomActivity"></activity>
         <activity android:name=".bottomNav.pet.EditPetActivity" />
-        <activity android:name=".bottomNav.pet.CreatePetActivity" />
         <activity android:name=".SettingsAct" />
         <activity android:name=".authentication.ChangePasswordAct" />
         <activity android:name=".authentication.LoginAct" />
