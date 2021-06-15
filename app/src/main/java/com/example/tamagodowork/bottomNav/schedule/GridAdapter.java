@@ -46,6 +46,7 @@ public class GridAdapter extends ArrayAdapter {
         Date monthDate = dates.get(position);
         Calendar dateCalendar = Calendar.getInstance();
         dateCalendar.setTime(monthDate);
+
         int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
         int displayMonth = dateCalendar.get(Calendar.MONTH) + 1;
         int displayYear = dateCalendar.get(Calendar.YEAR);
@@ -66,28 +67,31 @@ public class GridAdapter extends ArrayAdapter {
         TextView Day_Number = view.findViewById(R.id.calendar_day);
         TextView eventsPerDay = view.findViewById(R.id.noOfEvents);
         Day_Number.setText(String.valueOf(day));
-        /*
+
         Calendar eventCalendar = Calendar.getInstance();
         ArrayList<String> arrayList = new ArrayList<>();
         // events size == 4
         Log.d(TAG, String.valueOf(events.size()));
         for (int i = 0; i < events.size(); i++) {
-            Log.d(TAG, "DATE:" + events.get(i).getDATE());
             eventCalendar.setTime(convertStringToDate(events.get(i).getDATE()));
-            if (day == eventCalendar.get(Calendar.DAY_OF_MONTH) && displayMonth == eventCalendar.get(Calendar.MONTH)) {
+            if (day == eventCalendar.get(Calendar.DAY_OF_MONTH) && displayMonth == eventCalendar.get(Calendar.MONTH) + 1) {
                 arrayList.add(events.get(i).getEVENT());
-                eventsPerDay.setText(String.valueOf(arrayList.size()));
             }
-
+            if (arrayList.size() == 0) {
+                eventsPerDay.setText("");
+            }
+            else if (arrayList.size() == 1) {
+                eventsPerDay.setText(arrayList.size() + " Event");
+            } else {
+                eventsPerDay.setText(arrayList.size() + " Events");
+            }
         }
-        */
-
 
         return view;
     }
 
     private Date convertStringToDate(String eventDate) {
-        SimpleDateFormat format = new SimpleDateFormat("MM-yyyy", Locale.ENGLISH);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         Date date = null;
         try {
             date = format.parse(eventDate);
