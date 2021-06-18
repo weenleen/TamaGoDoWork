@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -41,30 +42,36 @@ public class PetFrag extends Fragment {
         View view = inflater.inflate(R.layout.pet_frag, container, false);
 
         // wallpaper
-        LinearLayout wallpaperBG = view.findViewById(R.id.pet_frag_wallpaper);
+        ImageView wallpaperBG = view.findViewById(R.id.pet_frag_wallpaper);
         MainActivity.userDoc.collection("Pet").document("Room").get()
                 .addOnSuccessListener(documentSnapshot -> {
                     wallpaper = documentSnapshot.get("wallpaper", Integer.class);
                     if (wallpaper != null && wallpaper != -1) {
-                        wallpaperBG.setBackground(AppCompatResources.getDrawable(
-                                getActivity(), wallpaper));
+                        wallpaperBG.setImageDrawable(AppCompatResources.getDrawable(
+                                context, wallpaper));
                     }
                 });
 
         // pet
         RelativeLayout relativeLayout = view.findViewById(R.id.pet_area);
-        PetCanvas petCanvas = new PetCanvas(getActivity(), new Pet());
+        PetCanvas petCanvas = new PetCanvas(context, new Pet());
         relativeLayout.addView(petCanvas);
 
         petCanvas.setOnClickListener(v -> Log.e("pet", "PET TOUCHED"));
 
         // room button
         Button roomButton = view.findViewById(R.id.pet_room_button);
-        roomButton.setOnClickListener(v -> startActivity(new Intent(getActivity(), RoomActivity.class)));
+        roomButton.setOnClickListener(v -> {
+            startActivity(new Intent(context, RoomActivity.class));
+            MainActivity.userDoc.update("selectedFrag", MainActivity.PET_FRAG);
+        });
 
         // edit pet button
         Button editButton = view.findViewById(R.id.pet_edit_button);
-        editButton.setOnClickListener(v -> startActivity(new Intent(getActivity(), EditPetActivity.class)));
+        editButton.setOnClickListener(v -> {
+            startActivity(new Intent(context, EditPetActivity.class));
+            MainActivity.userDoc.update("selectedFrag", MainActivity.PET_FRAG);
+        });
 
         return view;
     }

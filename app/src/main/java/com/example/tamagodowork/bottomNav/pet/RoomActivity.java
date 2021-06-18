@@ -105,6 +105,7 @@ public class RoomActivity extends AppCompatActivity {
         @Override
         public Object instantiateItem(@NonNull @NotNull ViewGroup container, int position) {
             ImageView view = new ImageView(this.context);
+            view.setScaleType(ImageView.ScaleType.CENTER_CROP);
             if (wallpapers[position] != -1) {
                 view.setImageDrawable(
                         AppCompatResources.getDrawable(this.context, wallpapers[position]));
