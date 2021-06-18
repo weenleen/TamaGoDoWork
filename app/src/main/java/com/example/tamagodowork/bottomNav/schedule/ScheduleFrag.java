@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,12 +22,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.Context;
+import com.google.api.Distribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
@@ -41,6 +45,7 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -66,12 +71,28 @@ public class ScheduleFrag extends Fragment {
     List<Date> dates = new ArrayList<>();
     List<Events> eventsList = new ArrayList<>();
 
+    // initialization of all layout upon start
+    @Override
+    public void onStart() {
+        super.onStart();
+        SetUpCalendar();
+
+    }
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+
+
+        inflater = (LayoutInflater) getActivity().getSystemService(this.getActivity().LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.schedule_frag, container, false);
+
+        gridView = view.findViewById(R.id.gridView);
+        gridView.setAdapter(gridAdapter);
+
 
 
 
@@ -88,7 +109,7 @@ public class ScheduleFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 calendar.add(Calendar.MONTH, -1);
-                SetUpCalendarToggle();
+                SetUpCalendar();
             }
         });
 
@@ -96,12 +117,18 @@ public class ScheduleFrag extends Fragment {
             @Override
             public void onClick(View v) {
                 calendar.add(Calendar.MONTH, 1);
-                SetUpCalendarToggle();
+                SetUpCalendar();
             }
         });
 
+        CurrentDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        gridView.setAdapter(gridAdapter);
+
+            }
+        });
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
@@ -199,6 +226,42 @@ public class ScheduleFrag extends Fragment {
 
         });
 
+        gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                String date = eventDateFormat.format(dates.get(position));
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setCancelable(true);
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                View addView = inflater.inflate(R.layout.display_event,null);
+
+
+
+                TextView eventName = addView.findViewById(R.id.eventName);
+                TextView eventDate = addView.findViewById(R.id.eventDate);
+                TextView eventTime = addView.findViewById(R.id.eventTime);
+                RecyclerView eventListView = addView.findViewById(R.id.events_view);
+
+                /*
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(addView.getContext());
+                eventListView.setLayoutManager(layoutManager);
+                eventListView.setHasFixedSize(true);
+                EventsRecyclerAdapter listAdapter = new EventsRecyclerAdapter(addView.getContext(),collectEventsByDay(date));
+                eventListView.setAdapter(listAdapter);
+                listAdapter.notifyDataSetChanged();
+                */
+
+
+                builder.setView(addView);
+                AlertDialog alertDialog = builder.create();
+                //show alert box
+                alertDialog.show();
+
+
+                return true;
+            }
+        });
+
 
 
         return view;
@@ -206,8 +269,34 @@ public class ScheduleFrag extends Fragment {
     }
 
 
+    private ArrayList<Events> collectEventsByDay(String date) {
+        ArrayList<Events> emptyList = new ArrayList<Events>();
+        db = FirebaseFirestore.getInstance();
+        db.collection("Users").document(FirebaseAuth.getInstance().getUid()).collection("Events").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                if (date.equals(document.getString("date"))) {
+                                    emptyList.add(new Events(document.getString("event"), document.getString("time"), document.getString("date"), document.getString("month"), document.getString("year")));
+                                }
+                            }
+                            //listAdapter.notifyDataSetChanged();
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+        return emptyList;
+
+
+    }
 
     private void collectEventsPerMonth(String MONTH, String YEAR) {
+
         eventsList.clear();
         db = FirebaseFirestore.getInstance();
         db.collection("Users").document(FirebaseAuth.getInstance().getUid()).collection("Events").get()
@@ -216,7 +305,7 @@ public class ScheduleFrag extends Fragment {
                     public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                /*
+
                                 Log.d(TAG, "month: " + MONTH);
                                 Log.d(TAG, "doc_month: " + document.getString("month"));
                                 Log.d(TAG, "same month: " +  String.valueOf(MONTH == document.getString("month")));
@@ -226,7 +315,7 @@ public class ScheduleFrag extends Fragment {
                                 Log.d(TAG, "bob");
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 Log.d(TAG, "date" + document.getString("date"));
-                                 */
+
                                 if (MONTH.equals(document.getString("month")) && YEAR.equals(document.getString("year"))) {
                                     Log.d(TAG, "month: " + MONTH);
                                     Log.d(TAG, "year: " + YEAR);
@@ -235,40 +324,23 @@ public class ScheduleFrag extends Fragment {
                                     Log.d(TAG, "date" + document.getString("date"));
                                     eventsList.add(new Events(document.getString("event"), document.getString("time"), document.getString("date"), document.getString("month"), document.getString("year")));
                                 }
+
+
                             }
+                            gridAdapter.notifyDataSetChanged();
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
-    }
 
 
-
-    private void SetUpCalendarToggle() {
-        String currentDate = dateFormat.format(calendar.getTime());
-        CurrentDate.setText(currentDate);
-        dates.clear();
-        // clones a month calendar
-        Calendar monthCalendar = (Calendar) calendar.clone();
-        // sets the values for the calendar fields, YEAR, MONTH, DAY_OF_MONTH, HOUR_OF_DAY, MINUTE & SECOND
-        monthCalendar.set(Calendar.DAY_OF_MONTH,1);
-        int firstDayOfMonth = monthCalendar.get(Calendar.DAY_OF_WEEK) - 1;
-        // adds or subtracts the specified amount of time to the given calendar field, based on the calendar rules
-        // 2nd param : amount of time to be added to this field
-        monthCalendar.add(Calendar.DAY_OF_MONTH, -firstDayOfMonth);
-
-
-        while (dates.size() < MAX_CALENDAR_DAY) {
-            dates.add(monthCalendar.getTime());
-            monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
-        }
-
-        gridAdapter = new GridAdapter(getContext(), dates, calendar, eventsList);
-        gridView.setAdapter(gridAdapter);
 
 
     }
+
+
+
 
     private void SetUpCalendar() {
         String currentDate = dateFormat.format(calendar.getTime());
