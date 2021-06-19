@@ -1,7 +1,5 @@
 package com.example.tamagodowork.bottomNav.pet;
 
-import android.content.Context;
-
 import com.example.tamagodowork.R;
 
 /**
@@ -10,12 +8,10 @@ import com.example.tamagodowork.R;
 public class CustomModel {
 
     private final Pet.custom custom;
-    private final Context context;
     public int[] content;
 
-    public CustomModel(Pet.custom custom, Context context) {
+    public CustomModel(Pet.custom custom) {
         this.custom = custom;
-        this.context = context;
         setContent();
     }
 

@@ -10,25 +10,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/levelContainer"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:paddingTop="25dp"
-        android:paddingBottom="10dp"
-        android:background="@color/peach"
+        android:paddingHorizontal="30dp"
+        android:paddingVertical="15dp"
+        android:background="?attr/colorPrimary"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <!-- text that says your level -->
             <TextView
-                android:layout_width="300dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
                 android:id="@+id/levelDisplay"
                 android:textColor="@android:color/white"
-                android:text="Level 1"
+                android:text=""
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
@@ -36,18 +34,19 @@
                 android:id="@+id/settings_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_settings_24"
-                android:layout_alignParentEnd="true">
-            </ImageView>
+                android:layout_gravity="center"
+                android:padding="5dp"
+                android:src="@drawable/ic_baseline_settings_24"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
         <!-- xp bar -->
         <ProgressBar
             android:id="@+id/xpBar"
             style="?android:attr/progressBarStyleHorizontal"
+            android:paddingTop="5dp"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:progressTint="@android:color/white" />
     </LinearLayout>
 

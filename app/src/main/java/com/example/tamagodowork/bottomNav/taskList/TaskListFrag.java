@@ -17,6 +17,7 @@ import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -47,8 +48,9 @@ public class TaskListFrag extends Fragment {
         taskListView.setAdapter(adapter);
 
         // get user info
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        String userID = firebaseAuth.getCurrentUser().getUid();
+        String userID = "";
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) userID = user.getUid();
 
         // Read data from Firestore
         db = FirebaseFirestore.getInstance();
@@ -57,13 +59,13 @@ public class TaskListFrag extends Fragment {
                     if (error != null) {
                         // error
                         Toast.makeText(view.getContext(), "No Data", Toast.LENGTH_SHORT).show();
-                    }
+                    } else if (value == null) return;
 
                     list.clear();
 
                     for (QueryDocumentSnapshot doc : value) {
                         list.add(new Task(doc.getString("taskName"),
-                                (long) doc.get("taskDeadline"),
+                                doc.get("taskDeadline", Long.class),
                                 doc.getString("taskDesc"),
                                 doc.getId()));
                     }
@@ -78,6 +80,7 @@ public class TaskListFrag extends Fragment {
         // Floating Action button to add new tasks
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
+            MainActivity.userDoc.update("selectedFrag", MainActivity.TASK_LIST_FRAG);
             Intent intent = new Intent(getContext(), AddTaskAct.class);
             startActivity(intent);
         });

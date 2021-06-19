@@ -7,6 +7,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -27,7 +29,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         this.context = context;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView taskName, taskDesc, taskDeadline;
 
         public ViewHolder(@NonNull View itemView) {
@@ -39,7 +41,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     // Non overdue tasks
-    public class ViewHolderNormal extends ViewHolder {
+    public static class ViewHolderNormal extends ViewHolder {
         private final CheckBox checkBox;
 
         public ViewHolderNormal(@NonNull View itemView) {
@@ -49,7 +51,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     // overdue tasks
-    public class ViewHolderOverdue extends ViewHolder {
+    public static class ViewHolderOverdue extends ViewHolder {
         private final ImageButton imageButton;
 
         public ViewHolderOverdue(@NonNull View itemView) {
@@ -112,17 +114,29 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                         "Show task details");
             });
 
+
             // checkbox
-            ((ViewHolderNormal) holder).checkBox.setOnClickListener(v ->
-                    MainActivity.userDoc.collection("Tasks").document(key).delete()
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    // add xp
-                                    MainActivity.incrXP();
-                                } else {
-                                    Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show();
-                                }
-                            }));
+            TaskAdapter adapter = this;
+            ((ViewHolderNormal) holder).checkBox.setOnClickListener(v -> {
+                Animation anim = AnimationUtils.loadAnimation(context, R.anim.anim_task_complete);
+                anim.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) { }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) { }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        taskList.remove(position);
+                        adapter.notifyDataSetChanged();
+                        MainActivity.userDoc.collection("Tasks").document(key).delete()
+                                .addOnSuccessListener(unused -> MainActivity.incrXP())
+                                .addOnFailureListener(e -> Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show());
+                    }
+                });
+
+                holder.itemView.startAnimation(anim);
+            });
         }
     }
 

@@ -95,7 +95,7 @@ public class EditPetActivity extends AppCompatActivity {
 
         // add all the stuff
         for (Pet.custom custom : Pet.custom.values()) {
-            this.lst.add(new CustomModel(custom, getApplicationContext()));
+            this.lst.add(new CustomModel(custom));
         }
 
         this.adapter = new EditViewpagerAdapter(getApplicationContext(), this.lst);

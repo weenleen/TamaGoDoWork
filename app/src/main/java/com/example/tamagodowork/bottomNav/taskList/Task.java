@@ -52,8 +52,6 @@ public class Task implements Comparable<Task> {
         this.taskDesc = taskDesc;
     }
 
-    public void setKey(String key) { this.key = key; }
-
     // others
     @Override
     public int compareTo(Task o) {

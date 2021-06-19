@@ -3,6 +3,7 @@ package com.example.tamagodowork;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.animation.ObjectAnimator;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private static Integer xp = 0;
 
     private ImageView settings;
-    private ProgressBar xpBar;
+    public ProgressBar xpBar;
     private TextView levelView;
 
     private NotificationChannel channel;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Store xp values in firebase
-        this.xpBar = findViewById(R.id.xpBar);
+        xpBar = findViewById(R.id.xpBar);
         this.levelView = findViewById(R.id.levelDisplay);
 
 
@@ -87,21 +88,22 @@ public class MainActivity extends AppCompatActivity {
 
         // XP stuff
         userDoc.addSnapshotListener((value, error) -> {
-            if (error != null) {
+            if (error != null || value == null) {
                 Toast.makeText(getApplicationContext(), "XP error", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            Long tmp = (Long) value.get("XP");
+            Integer tmp = value.get("XP", Integer.class);
             if (tmp == null) {
                 MainActivity.setXP(0);
                 return;
             }
 
-            xp = tmp.intValue();
-
+            xp = tmp;
             levelView.setText("Level " + (xp/100 + 1));
-            xpBar.setProgress(xp % 100);
+            ObjectAnimator.ofInt(xpBar, "progress", xp % 100)
+                    .setDuration(200)
+                    .start();
         });
 
 

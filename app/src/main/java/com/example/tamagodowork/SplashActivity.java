@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 
 import com.example.tamagodowork.authentication.RegisterAct;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,7 +17,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        Handler handler = new Handler();
+        Handler handler = new Handler(Looper.getMainLooper());
 
         handler.postDelayed(() -> {
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -26,6 +27,6 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(new Intent(SplashActivity.this, RegisterAct.class));
             }
             finish();
-        }, 2000);
+        }, 1000);
     }
 }
