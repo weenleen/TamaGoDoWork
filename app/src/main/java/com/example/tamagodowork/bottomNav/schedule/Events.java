@@ -1,14 +1,15 @@
 package com.example.tamagodowork.bottomNav.schedule;
 
 public class Events {
-    String EVENT, TIME, DATE, MONTH, YEAR;
+    String EVENT, TIME, DATE, MONTH, YEAR, KEY;
 
-    public Events(String EVENT, String TIME, String DATE, String MONTH, String YEAR) {
+    public Events(String EVENT, String TIME, String DATE, String MONTH, String YEAR, String KEY) {
         this.EVENT = EVENT;
         this.TIME = TIME;
         this.DATE = DATE;
         this.MONTH = MONTH;
         this.YEAR = YEAR;
+        this.KEY = KEY;
     }
 
     public String getEVENT() {
@@ -50,4 +51,6 @@ public class Events {
     public void setYEAR(String YEAR) {
         this.YEAR = YEAR;
     }
+
+    public String getKEY() { return KEY; }
 }
