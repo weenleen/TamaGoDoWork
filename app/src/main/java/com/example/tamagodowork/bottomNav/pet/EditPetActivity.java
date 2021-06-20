@@ -1,11 +1,16 @@
 package com.example.tamagodowork.bottomNav.pet;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,20 +18,14 @@ import android.widget.TextView;
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class EditPetActivity extends AppCompatActivity {
 
-    private static final String[] categories = new String[] {
-            "Colours",
-            "Head",
-            "Eyes",
-            "Body"
-    };
-
     private ViewPager viewPager;
     private ArrayList<CustomModel> lst;
-    private EditViewpagerAdapter adapter;
 
     public static PetCanvas petCanvas;
 
@@ -54,12 +53,11 @@ public class EditPetActivity extends AppCompatActivity {
 
         // category name text
         TextView categoryName = findViewById(R.id.edit_content_name);
-        categoryName.setText(categories[viewPager.getCurrentItem()]);
-
+        categoryName.setText(lst.get(viewPager.getCurrentItem()).getCustom().toString());
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                categoryName.setText(categories[position]);
+                categoryName.setText(lst.get(viewPager.getCurrentItem()).getCustom().toString());
             }
         });
 
@@ -67,7 +65,7 @@ public class EditPetActivity extends AppCompatActivity {
         ImageButton nextButton = findViewById(R.id.edit_next_button);
         nextButton.setOnClickListener(v -> {
             int position = viewPager.getCurrentItem() + 1;
-            if (position >= categories.length) return;
+            if (position >= lst.size()) return;
             viewPager.setCurrentItem(position);
         });
 
@@ -87,9 +85,7 @@ public class EditPetActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Handles all the views for the viewpager.
-     */
+    // Handles all the views for the viewpager.
     private void loadCards() {
         this.lst = new ArrayList<>();
 
@@ -98,7 +94,44 @@ public class EditPetActivity extends AppCompatActivity {
             this.lst.add(new CustomModel(custom));
         }
 
-        this.adapter = new EditViewpagerAdapter(getApplicationContext(), this.lst);
+        EditViewpagerAdapter adapter = new EditViewpagerAdapter();
         this.viewPager.setAdapter(adapter);
+    }
+
+    /**
+     * adapter for the viewpager
+     */
+    public class EditViewpagerAdapter extends PagerAdapter {
+
+        public EditViewpagerAdapter() { }
+
+        @NonNull @NotNull @Override
+        public Object instantiateItem(@NonNull @NotNull ViewGroup container, int position) {
+            GridView gridView = new GridView(getApplicationContext());
+            gridView.setNumColumns(3);
+            gridView.setHorizontalSpacing(30);
+            gridView.setVerticalSpacing(30);
+            CustomGridAdapter adapter = new CustomGridAdapter(getApplicationContext(),
+                    lst.get(position).content, lst.get(position).getCustom());
+            gridView.setAdapter(adapter);
+
+            container.addView(gridView, 0);
+            return gridView;
+        }
+
+        @Override
+        public void destroyItem(@NonNull @NotNull ViewGroup container, int position, @NonNull @NotNull Object object) {
+            container.removeView((View) object);
+        }
+
+        @Override
+        public int getCount() {
+            return lst.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(@NonNull @NotNull View view, @NonNull @NotNull Object object) {
+            return view.equals(object);
+        }
     }
 }

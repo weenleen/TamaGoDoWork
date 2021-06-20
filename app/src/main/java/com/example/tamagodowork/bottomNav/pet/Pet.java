@@ -1,12 +1,23 @@
 package com.example.tamagodowork.bottomNav.pet;
 
+import androidx.annotation.NonNull;
+
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
+
+import org.jetbrains.annotations.NotNull;
 
 public class Pet {
 
     public enum custom {
-        COLOUR, HEAD, EYES, BODY
+        COLOUR, HEAD, EYES, BODY;
+
+        @NonNull
+        @NotNull
+        @Override
+        public String toString() {
+            return super.toString().charAt(0) + super.toString().substring(1).toLowerCase();
+        }
     }
 
     private Integer bodyColour = null;

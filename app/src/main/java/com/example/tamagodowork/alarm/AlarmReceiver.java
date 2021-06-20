@@ -39,6 +39,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         String key = intent.getStringExtra("key");
         String taskName = intent.getStringExtra("taskName");
         String timeLeft = intent.getStringExtra("timeLeft");
+        if (timeLeft == null) return;
         String message = alarmMessages.get(Integer.parseInt(timeLeft));
 
         if (key == null || key.isEmpty()) return;

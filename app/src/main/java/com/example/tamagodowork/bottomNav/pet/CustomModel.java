@@ -85,25 +85,7 @@ public class CustomModel {
                 };
                 break;
             default:
-                this.content = new int[] {
-                        R.mipmap.none,
-                        R.mipmap.c_head_1,
-                        R.mipmap.c_eyes_1,
-                        R.mipmap.c_head_1,
-                        R.mipmap.c_eyes_1,
-                        R.mipmap.c_head_1,
-                        R.mipmap.c_eyes_1,
-                        R.mipmap.c_head_1,
-                        R.mipmap.c_eyes_1,
-                        R.mipmap.c_head_1,
-                        R.mipmap.c_eyes_1,
-                        R.mipmap.c_head_1,
-                        R.mipmap.c_eyes_1,
-                        R.mipmap.c_head_1,
-                        R.mipmap.c_eyes_1,
-                        R.mipmap.c_head_1,
-                        R.mipmap.c_eyes_1
-                };
+                this.content = new int[] {};
                 break;
         }
     }

@@ -47,7 +47,6 @@ public class TaskDetailsDial extends BottomSheetDialogFragment {
 
         this.editBtn = view.findViewById(R.id.edit_button);
         this.editBtn.setOnClickListener(v -> {
-            MainActivity.userDoc.update("selectedFrag", MainActivity.TASK_LIST_FRAG);
             Intent intent = new Intent(getContext(), EditTaskAct.class);
             intent.putExtra("name", name);
             intent.putExtra("deadline", deadline);

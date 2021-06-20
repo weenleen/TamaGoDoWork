@@ -19,28 +19,18 @@ import com.example.tamagodowork.authentication.RegisterAct;
 import com.example.tamagodowork.bottomNav.pet.PetFrag;
 import com.example.tamagodowork.bottomNav.schedule.ScheduleFrag;
 import com.example.tamagodowork.bottomNav.taskList.TaskListFrag;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static int TASK_LIST_FRAG = 0;
-    public static int PET_FRAG = 1;
-    public static int SCHEDULE_FRAG = 2;
-
     public static DocumentReference userDoc;
     private static Integer xp = 0;
 
-    private ImageView settings;
     public ProgressBar xpBar;
     private TextView levelView;
-
-    private NotificationChannel channel;
-    private int selectedIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,15 +63,15 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         // Set default fragment to the task list fragment
-//        DocumentSnapshot snapshot = userDoc.get().getResult();
         userDoc.get().addOnSuccessListener(documentSnapshot -> {
+            int selectedIndex = 0;
             if (documentSnapshot != null) {
                 Integer tmp = documentSnapshot.get("selectedFrag", Integer.class);
-                if (tmp != null) this.selectedIndex = (int) tmp;
+                if (tmp != null) selectedIndex = tmp;
             }
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    getFrag(this.selectedIndex)).commit();
+                    getFrag(selectedIndex)).commit();
         });
 
 
@@ -109,16 +99,17 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Settings
-        this.settings = findViewById(R.id.settings_icon);
-        this.settings.setOnClickListener(v -> {
+        ImageView settings = findViewById(R.id.settings_icon);
+        settings.setOnClickListener(v -> {
             startActivity(new Intent(getApplicationContext(), SettingsAct.class));
-            userDoc.update("selectedFrag", this.selectedIndex);
             finish();
         });
 
+
+
         // set a notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            this.channel = new NotificationChannel(
+            NotificationChannel channel = new NotificationChannel(
                     "tamagodowork",
                     "tamagodoworkReminderChannel",
                     NotificationManager.IMPORTANCE_HIGH);
@@ -144,19 +135,20 @@ public class MainActivity extends AppCompatActivity {
     /** Bottom Navigation Bar */
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener = item -> {
         int tmp = item.getItemId();
+        int selectedIndex = 0;
         Fragment selectedFrag;
 
         if (tmp == R.id.navigation_pet) {
-            this.selectedIndex = 1;
+            selectedIndex = 1;
             selectedFrag = new PetFrag();
         } else if (tmp == R.id.navigation_schedule) {
-            this.selectedIndex = 2;
+            selectedIndex = 2;
             selectedFrag = new ScheduleFrag();
         } else {
-            this.selectedIndex = 0;
             selectedFrag = new TaskListFrag();
         }
 
+        userDoc.update("selectedFrag", selectedIndex);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 selectedFrag).commit();
         return true;

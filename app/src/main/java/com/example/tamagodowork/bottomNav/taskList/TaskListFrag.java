@@ -80,7 +80,6 @@ public class TaskListFrag extends Fragment {
         // Floating Action button to add new tasks
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
-            MainActivity.userDoc.update("selectedFrag", MainActivity.TASK_LIST_FRAG);
             Intent intent = new Intent(getContext(), AddTaskAct.class);
             startActivity(intent);
         });
