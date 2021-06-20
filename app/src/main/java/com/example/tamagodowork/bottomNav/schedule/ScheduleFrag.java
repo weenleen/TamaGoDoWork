@@ -153,6 +153,7 @@ public class ScheduleFrag extends Fragment {
 
                 EditText SetName = addView.findViewById(R.id.setEvent);
                 EditText SetTime = addView.findViewById(R.id.setTime);
+                EditText Duration = addView.findViewById(R.id.duration);
                 //EditText SetEndTime = addView.findViewById(R.id.setEndTime);
                 Button AddEvent = addView.findViewById(R.id.add_new_evt_button);
                 Button CancelEvent = addView.findViewById(R.id.cancel_button);
@@ -190,7 +191,9 @@ public class ScheduleFrag extends Fragment {
                     public void onClick(View v) {
                         String event = SetName.getText().toString();
                         String eventTime = SetTime.getText().toString();
+                        int duration = Integer.valueOf(Duration.getText().toString());
                         String date = eventDateFormat.format(dates.get(position));
+                        String endDate = eventDateFormat.format(dates.get(position+duration));
                         String month = monthFormat.format(dates.get(position));
                         String year = yearFormat.format(dates.get(position));
                         DocumentReference ref = MainActivity.userDoc.collection("Events").document();
@@ -204,10 +207,13 @@ public class ScheduleFrag extends Fragment {
                             SetTime.setError("Please enter a name");
                             return;
                         }
+                        if (TextUtils.isEmpty(String.valueOf(duration))) {
+                            Duration.setError("Please enter a duration");
+                            return;
+                        }
                         // Put Event in Firestore
-                        Events addedEvent = new Events(event, eventTime, date, month, year, key);
+                        Events addedEvent = new Events(event, eventTime, date, endDate, month, year, key);
                         ref.set(addedEvent);
-                        // SaveEvent(EventName.getText().toString(),EventTime.getText().toString(),date, month, year);
                         SetUpCalendar();
 
                         RecyclerView eventsView = view.findViewById(R.id.recyclerView);
@@ -222,13 +228,11 @@ public class ScheduleFrag extends Fragment {
                                     public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                                         if (task.isSuccessful()) {
                                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.d(TAG, "print ok");
-                                                Log.e(TAG, "date" + date);
-                                                Log.e(TAG, "doc date" + document.getString("date"));
+                                                Log.e(TAG, "doc date" + document.getString("startdate"));
 
-                                                if (date.equals(document.getString("date"))) {
-                                                    list.add(new Events(document.getString("event"), document.getString("time"), document.getString("date"),
-                                                            document.getString("month"), document.getString("year"), document.getId()));
+                                                if (date.equals(document.getString("startdate"))) {
+                                                    list.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
+                                                            document.getString("enddate"), document.getString("month"), document.getString("year"), document.getId()));
                                                 }
                                             }
                                             adapter.notifyDataSetChanged();
@@ -267,13 +271,9 @@ public class ScheduleFrag extends Fragment {
                             public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        Log.d(TAG, "print ok");
-                                        Log.e(TAG, "date" + date);
-                                        Log.e(TAG, "doc date" + document.getString("date"));
-
-                                        if (date.equals(document.getString("date"))) {
-                                            list.add(new Events(document.getString("event"), document.getString("time"), document.getString("date"),
-                                                    document.getString("month"), document.getString("year"), document.getId()));
+                                        if (date.equals(document.getString("startdate"))) {
+                                            list.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
+                                                    document.getString("enddate"), document.getString("month"), document.getString("year"), document.getId()));
                                         }
                                     }
                                     adapter.notifyDataSetChanged();
@@ -284,6 +284,7 @@ public class ScheduleFrag extends Fragment {
                         });
 
                 MainActivity.userDoc.update("selectedFrag", MainActivity.SCHEDULE_FRAG);
+
 
             }
 
@@ -304,12 +305,12 @@ public class ScheduleFrag extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                if (date.equals(document.getString("date"))) {
-                                    emptyList.add(new Events(document.getString("event"), document.getString("time"), document.getString("date"),
-                                            document.getString("month"), document.getString("year"), document.getId()));
+                                if (date.equals(document.getString("startdate"))) {
+                                    emptyList.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
+                                            document.getString("enddate"), document.getString("month"), document.getString("year"), document.getId()));
                                 }
                             }
-                            //listAdapter.notifyDataSetChanged();
+                            
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
@@ -332,24 +333,10 @@ public class ScheduleFrag extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                Log.d(TAG, "month: " + MONTH);
-                                Log.d(TAG, "doc_month: " + document.getString("month"));
-                                Log.d(TAG, "same month: " +  String.valueOf(MONTH == document.getString("month")));
-                                Log.d(TAG, "same year" + String.valueOf(MONTH == document.getString("month")));
-                                Log.d(TAG, "doc_year: " + document.getString("year"));
-                                Log.d(TAG, "year: " + YEAR);
-                                Log.d(TAG, "bob");
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                Log.d(TAG, "date" + document.getString("date"));
 
                                 if (MONTH.equals(document.getString("month")) && YEAR.equals(document.getString("year"))) {
-                                    Log.d(TAG, "month: " + MONTH);
-                                    Log.d(TAG, "year: " + YEAR);
-                                    Log.d(TAG, "bob");
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
-                                    Log.d(TAG, "date" + document.getString("date"));
-                                    eventsList.add(new Events(document.getString("event"), document.getString("time"), document.getString("date"),
-                                            document.getString("month"), document.getString("year"), document.getId()));
+                                    eventsList.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
+                                            document.getString("enddate"),document.getString("month"), document.getString("year"), document.getId()));
                                 }
 
 

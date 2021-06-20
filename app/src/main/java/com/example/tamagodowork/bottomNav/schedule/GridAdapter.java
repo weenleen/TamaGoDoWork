@@ -1,6 +1,7 @@
 package com.example.tamagodowork.bottomNav.schedule;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
+import static android.graphics.Typeface.BOLD;
 
 public class GridAdapter extends ArrayAdapter {
     List<Date> dates;
@@ -46,12 +48,16 @@ public class GridAdapter extends ArrayAdapter {
         Date monthDate = dates.get(position);
         Calendar dateCalendar = Calendar.getInstance();
         dateCalendar.setTime(monthDate);
+        Calendar eventCalendar = Calendar.getInstance();
+
 
         int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
         int displayMonth = dateCalendar.get(Calendar.MONTH) + 1;
         int displayYear = dateCalendar.get(Calendar.YEAR);
+        int currentDay = currentDate.get(Calendar.DAY_OF_MONTH);
         int currentMonth = currentDate.get(Calendar.MONTH) + 1;
         int currentYear = currentDate.get(Calendar.YEAR);
+
 
         View view = convertView;
         if (view == null) {
@@ -65,15 +71,23 @@ public class GridAdapter extends ArrayAdapter {
         }
 
         TextView Day_Number = view.findViewById(R.id.calendar_day);
+        Calendar currentData = Calendar.getInstance();
+        // highlight current date
+        if (day == currentData.get(Calendar.DAY_OF_MONTH) && displayMonth == currentData.get(Calendar.MONTH) + 1 && displayYear == currentData.get(Calendar.YEAR)) {
+            view.setBackgroundColor(getContext().getResources().getColor(R.color.peach));
+            Day_Number.setTextColor(Color.BLACK);
+            Day_Number.setTypeface(Day_Number.getTypeface(),BOLD);
+        }
+
         TextView eventsPerDay = view.findViewById(R.id.noOfEvents);
         Day_Number.setText(String.valueOf(day));
 
-        Calendar eventCalendar = Calendar.getInstance();
+
         ArrayList<String> arrayList = new ArrayList<>();
         // events size == 4
         Log.d(TAG, String.valueOf(events.size()));
         for (int i = 0; i < events.size(); i++) {
-            eventCalendar.setTime(convertStringToDate(events.get(i).getDATE()));
+            eventCalendar.setTime(convertStringToDate(events.get(i).getSTARTDATE()));
             if (day == eventCalendar.get(Calendar.DAY_OF_MONTH) && displayMonth == eventCalendar.get(Calendar.MONTH) + 1) {
                 arrayList.add(events.get(i).getEVENT());
             }

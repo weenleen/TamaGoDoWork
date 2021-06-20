@@ -55,7 +55,7 @@ public class EventsRecyclerAdapter extends RecyclerView.Adapter<EventsRecyclerAd
         Events events = eventsList.get(position);
         String key = events.getKEY();
         holder.event.setText(events.getEVENT());
-        holder.dateText.setText(events.getDATE());
+        holder.dateText.setText(events.getSTARTDATE());
         holder.time.setText(events.getTIME());
 
 
@@ -67,6 +67,7 @@ public class EventsRecyclerAdapter extends RecyclerView.Adapter<EventsRecyclerAd
                 MainActivity.userDoc.collection("Events").document(key).delete()
                         .addOnSuccessListener(e -> Toast.makeText(context, "item Updated", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e -> Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show());
+
             }
         });
     }
