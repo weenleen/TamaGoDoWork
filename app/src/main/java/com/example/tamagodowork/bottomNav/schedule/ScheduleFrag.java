@@ -2,22 +2,18 @@ package com.example.tamagodowork.bottomNav.schedule;
 
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Context;
 import android.os.Bundle;
-import android.text.Layout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,26 +23,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
-import com.example.tamagodowork.bottomNav.taskList.TaskAdapter;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.api.Context;
-import com.google.api.Distribution;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -78,6 +63,8 @@ public class ScheduleFrag extends Fragment {
     List<Date> dates = new ArrayList<>();
     List<Events> eventsList = new ArrayList<>();
 
+    private Context context;
+
     // initialization of all layout upon start
     @Override
     public void onStart() {
@@ -85,6 +72,11 @@ public class ScheduleFrag extends Fragment {
         SetUpCalendar();
     }
 
+    @Override
+    public void onAttach(@NonNull @NotNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     @Nullable
     @Override
@@ -92,7 +84,7 @@ public class ScheduleFrag extends Fragment {
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         // grid
-        inflater = (LayoutInflater) getActivity().getSystemService(this.getActivity().LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.schedule_frag, container, false);
 
         gridView = view.findViewById(R.id.gridView);
@@ -110,184 +102,145 @@ public class ScheduleFrag extends Fragment {
 
 
 
-        PreviousButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calendar.add(Calendar.MONTH, -1);
+        PreviousButton.setOnClickListener(v -> {
+            calendar.add(Calendar.MONTH, -1);
+            SetUpCalendar();
+        });
+
+        NextButton.setOnClickListener(v -> {
+            calendar.add(Calendar.MONTH, 1);
+            SetUpCalendar();
+        });
+
+        CurrentDate.setOnClickListener(v -> {
+
+
+        });
+
+        gridView.setOnItemClickListener((arg0, arg1, position, arg3) -> {
+            // TODO Auto-generated method stub
+            String date = eventDateFormat.format(dates.get(position));
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setCancelable(true);
+            LayoutInflater inflater1 = requireActivity().getLayoutInflater();
+            View addView = inflater1.inflate(R.layout.add_new_event, null);
+            builder.setView(addView);
+            //create alert dialog
+            AlertDialog alertDialog = builder.create();
+            //show alert box
+            alertDialog.show();
+
+
+            EditText SetName = addView.findViewById(R.id.setEvent);
+            EditText SetTime = addView.findViewById(R.id.setTime);
+            EditText Duration = addView.findViewById(R.id.duration);
+            //EditText SetEndTime = addView.findViewById(R.id.setEndTime);
+            Button AddEvent = addView.findViewById(R.id.add_new_evt_button);
+            Button CancelEvent = addView.findViewById(R.id.cancel_button);
+
+
+            SetTime.setOnClickListener(v -> {
+                Calendar calendar = Calendar.getInstance();
+                int hours = calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = calendar.get(Calendar.MINUTE);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(addView.getContext(), R.style.Theme_AppCompat_Dialog,
+                        (view, hourOfDay, minute1) -> {
+                            Calendar c = Calendar.getInstance();
+                            c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            c.set(Calendar.MINUTE, minute1);
+                            c.setTimeZone(TimeZone.getDefault());
+                            SimpleDateFormat hourFormat = new SimpleDateFormat("K:mm a", Locale.ENGLISH);
+                            String event_Time = hourFormat.format(c.getTime());
+                            SetTime.setText(event_Time);
+
+                        }, hours, minute, false);
+
+                timePickerDialog.show();
+            });
+
+
+
+            AddEvent.setOnClickListener(v -> {
+                String event = SetName.getText().toString();
+                String eventTime = SetTime.getText().toString();
+                int duration = Integer.parseInt(Duration.getText().toString());
+                String date1 = eventDateFormat.format(dates.get(position));
+                String endDate = eventDateFormat.format(dates.get(position+duration));
+                String month = monthFormat.format(dates.get(position));
+                String year = yearFormat.format(dates.get(position));
+                DocumentReference ref = MainActivity.userDoc.collection("Events").document();
+                String key = ref.getId();
+
+                if (TextUtils.isEmpty(event)) {
+                    SetName.setError("Please enter a name");
+                    return;
+                }
+                if (TextUtils.isEmpty(eventTime)) {
+                    SetTime.setError("Please enter a name");
+                    return;
+                }
+                if (TextUtils.isEmpty(String.valueOf(duration))) {
+                    Duration.setError("Please enter a duration");
+                    return;
+                }
+                // Put Event in Firestore
+                Events addedEvent = new Events(event, eventTime, date1, endDate, month, year, key);
+                ref.set(addedEvent);
                 SetUpCalendar();
-            }
-        });
-
-        NextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calendar.add(Calendar.MONTH, 1);
-                SetUpCalendar();
-            }
-        });
-
-        CurrentDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-            }
-        });
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-                                    long arg3) {
-                // TODO Auto-generated method stub
-                String date = eventDateFormat.format(dates.get(position));
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setCancelable(true);
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                View addView = inflater.inflate(R.layout.add_new_event, null);
-                builder.setView(addView);
-                //create alert dialog
-                AlertDialog alertDialog = builder.create();
-                //show alert box
-                alertDialog.show();
-
-
-                EditText SetName = addView.findViewById(R.id.setEvent);
-                EditText SetTime = addView.findViewById(R.id.setTime);
-                EditText Duration = addView.findViewById(R.id.duration);
-                //EditText SetEndTime = addView.findViewById(R.id.setEndTime);
-                Button AddEvent = addView.findViewById(R.id.add_new_evt_button);
-                Button CancelEvent = addView.findViewById(R.id.cancel_button);
-
-
-                SetTime.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Calendar calendar = Calendar.getInstance();
-                        int hours = calendar.get(Calendar.HOUR_OF_DAY);
-                        int minute = calendar.get(Calendar.MINUTE);
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(addView.getContext(), R.style.Theme_AppCompat_Dialog,
-                                new TimePickerDialog.OnTimeSetListener() {
-                                    @Override
-                                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                        Calendar c = Calendar.getInstance();
-                                        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                        c.set(Calendar.MINUTE, minute);
-                                        c.setTimeZone(TimeZone.getDefault());
-                                        SimpleDateFormat hourFormat = new SimpleDateFormat("K:mm a", Locale.ENGLISH);
-                                        String event_Time = hourFormat.format(c.getTime());
-                                        SetTime.setText(event_Time);
-
-                                    }
-                                }, hours, minute, false);
-
-                        timePickerDialog.show();
-                    }
-                });
-
-
-
-                AddEvent.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String event = SetName.getText().toString();
-                        String eventTime = SetTime.getText().toString();
-                        int duration = Integer.valueOf(Duration.getText().toString());
-                        String date = eventDateFormat.format(dates.get(position));
-                        String endDate = eventDateFormat.format(dates.get(position+duration));
-                        String month = monthFormat.format(dates.get(position));
-                        String year = yearFormat.format(dates.get(position));
-                        DocumentReference ref = MainActivity.userDoc.collection("Events").document();
-                        String key = ref.getId();
-
-                        if (TextUtils.isEmpty(event)) {
-                            SetName.setError("Please enter a name");
-                            return;
-                        }
-                        if (TextUtils.isEmpty(eventTime)) {
-                            SetTime.setError("Please enter a name");
-                            return;
-                        }
-                        if (TextUtils.isEmpty(String.valueOf(duration))) {
-                            Duration.setError("Please enter a duration");
-                            return;
-                        }
-                        // Put Event in Firestore
-                        Events addedEvent = new Events(event, eventTime, date, endDate, month, year, key);
-                        ref.set(addedEvent);
-                        SetUpCalendar();
-
-                        RecyclerView eventsView = view.findViewById(R.id.recyclerView);
-                        ArrayList<Events> list = new ArrayList<>();
-                        eventsView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-                        EventsRecyclerAdapter adapter = new EventsRecyclerAdapter(getActivity(), list);
-                        eventsView.setAdapter(adapter);
-                        db = FirebaseFirestore.getInstance();
-                        db.collection("Users").document(FirebaseAuth.getInstance().getUid()).collection("Events").get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                Log.e(TAG, "doc date" + document.getString("startdate"));
-
-                                                if (date.equals(document.getString("startdate"))) {
-                                                    list.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
-                                                            document.getString("enddate"), document.getString("month"), document.getString("year"), document.getId()));
-                                                }
-                                            }
-                                            adapter.notifyDataSetChanged();
-                                        } else {
-                                            Log.d(TAG, "Error getting documents: ", task.getException());
-                                        }
-                                    }
-                                });
-
-                        MainActivity.userDoc.update("selectedFrag", MainActivity.SCHEDULE_FRAG);
-                        alertDialog.dismiss();
-                    }
-                });
-
-
-
-
-
-
-                CancelEvent.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-                    }
-                });
 
                 RecyclerView eventsView = view.findViewById(R.id.recyclerView);
                 ArrayList<Events> list = new ArrayList<>();
                 eventsView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-                EventsRecyclerAdapter adapter = new EventsRecyclerAdapter(getActivity(), list);
+                EventsRecyclerAdapter adapter = new EventsRecyclerAdapter(context, list);
                 eventsView.setAdapter(adapter);
                 db = FirebaseFirestore.getInstance();
-                db.collection("Users").document(FirebaseAuth.getInstance().getUid()).collection("Events").get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        if (date.equals(document.getString("startdate"))) {
-                                            list.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
-                                                    document.getString("enddate"), document.getString("month"), document.getString("year"), document.getId()));
-                                        }
+                MainActivity.userDoc.collection("Events").get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Log.e(TAG, "doc date" + document.getString("startdate"));
+
+                                    if (date1.equals(document.getString("startdate"))) {
+                                        list.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
+                                                document.getString("enddate"), document.getString("month"), document.getString("year"), document.getId()));
                                     }
-                                    adapter.notifyDataSetChanged();
-                                } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
                                 }
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                Log.d(TAG, "Error getting documents: ", task.getException());
                             }
                         });
 
-                MainActivity.userDoc.update("selectedFrag", MainActivity.SCHEDULE_FRAG);
+                alertDialog.dismiss();
+            });
 
 
-            }
 
+
+
+
+            CancelEvent.setOnClickListener(v -> alertDialog.dismiss());
+
+            RecyclerView eventsView = view.findViewById(R.id.recyclerView);
+            ArrayList<Events> list = new ArrayList<>();
+            eventsView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+            EventsRecyclerAdapter adapter = new EventsRecyclerAdapter(context, list);
+            eventsView.setAdapter(adapter);
+            db = FirebaseFirestore.getInstance();
+            MainActivity.userDoc.collection("Events").get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (date.equals(document.getString("startdate"))) {
+                                    list.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
+                                            document.getString("enddate"), document.getString("month"), document.getString("year"), document.getId()));
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    });
         });
 
         return view;
@@ -296,24 +249,21 @@ public class ScheduleFrag extends Fragment {
 
 
     private ArrayList<Events> collectEventsByDay(String date) {
-        ArrayList<Events> emptyList = new ArrayList<Events>();
+        ArrayList<Events> emptyList = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
-        db.collection("Users").document(FirebaseAuth.getInstance().getUid()).collection("Events").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+        MainActivity.userDoc.collection("Events").get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                if (date.equals(document.getString("startdate"))) {
-                                    emptyList.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
-                                            document.getString("enddate"), document.getString("month"), document.getString("year"), document.getId()));
-                                }
+                            if (date.equals(document.getString("startdate"))) {
+                                emptyList.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
+                                        document.getString("enddate"), document.getString("month"), document.getString("year"), document.getId()));
                             }
-                            
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
+
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
 
@@ -326,25 +276,22 @@ public class ScheduleFrag extends Fragment {
 
         eventsList.clear();
         db = FirebaseFirestore.getInstance();
-        db.collection("Users").document(FirebaseAuth.getInstance().getUid()).collection("Events").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+        MainActivity.userDoc.collection("Events").get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
 
 
-                                if (MONTH.equals(document.getString("month")) && YEAR.equals(document.getString("year"))) {
-                                    eventsList.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
-                                            document.getString("enddate"),document.getString("month"), document.getString("year"), document.getId()));
-                                }
-
-
+                            if (MONTH.equals(document.getString("month")) && YEAR.equals(document.getString("year"))) {
+                                eventsList.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
+                                        document.getString("enddate"),document.getString("month"), document.getString("year"), document.getId()));
                             }
-                            gridAdapter.notifyDataSetChanged();
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+
+
                         }
+                        gridAdapter.notifyDataSetChanged();
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
 
@@ -371,7 +318,7 @@ public class ScheduleFrag extends Fragment {
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        gridAdapter = new GridAdapter(getContext(), dates, calendar, eventsList);
+        gridAdapter = new GridAdapter(context, dates, calendar, eventsList);
         gridView.setAdapter(gridAdapter);
     }
 }

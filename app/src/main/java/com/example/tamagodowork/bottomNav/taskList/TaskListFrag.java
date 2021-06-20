@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,13 +58,16 @@ public class TaskListFrag extends Fragment {
                     if (error != null) {
                         // error
                         Toast.makeText(view.getContext(), "No Data", Toast.LENGTH_SHORT).show();
-                    } else if (value == null) return;
+                    }
 
                     list.clear();
 
+                    assert value != null;
                     for (QueryDocumentSnapshot doc : value) {
+                        Long tmp = doc.get("taskDeadline", Long.class);
+                        if (tmp == null) continue;
                         list.add(new Task(doc.getString("taskName"),
-                                doc.get("taskDeadline", Long.class),
+                                tmp,
                                 doc.getString("taskDesc"),
                                 doc.getId()));
                     }

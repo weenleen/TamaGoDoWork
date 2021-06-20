@@ -59,16 +59,13 @@ public class EventsRecyclerAdapter extends RecyclerView.Adapter<EventsRecyclerAd
         holder.time.setText(events.getTIME());
 
 
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                eventsList.remove(position);
-                notifyDataSetChanged();
-                MainActivity.userDoc.collection("Events").document(key).delete()
-                        .addOnSuccessListener(e -> Toast.makeText(context, "item Updated", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show());
+        holder.deleteButton.setOnClickListener(v -> {
+            eventsList.remove(position);
+            notifyDataSetChanged();
+            MainActivity.userDoc.collection("Events").document(key).delete()
+                    .addOnSuccessListener(e -> Toast.makeText(context, "item Updated", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show());
 
-            }
         });
     }
 
