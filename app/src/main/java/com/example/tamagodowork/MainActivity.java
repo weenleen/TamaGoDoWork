@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,9 +18,12 @@ import android.widget.Toast;
 
 import com.example.tamagodowork.authentication.RegisterAct;
 import com.example.tamagodowork.bottomNav.pet.PetFrag;
+import com.example.tamagodowork.bottomNav.schedule.AddEventActivity;
 import com.example.tamagodowork.bottomNav.schedule.ScheduleFrag;
+import com.example.tamagodowork.bottomNav.taskList.AddTaskAct;
 import com.example.tamagodowork.bottomNav.taskList.TaskListFrag;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -31,11 +35,15 @@ public class MainActivity extends AppCompatActivity {
 
     public ProgressBar xpBar;
     private TextView levelView;
+    private int selectedIndex = 0;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
 
         // Store xp values in firebase
@@ -64,10 +72,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Set default fragment to the task list fragment
         userDoc.get().addOnSuccessListener(documentSnapshot -> {
-            int selectedIndex = 0;
+            selectedIndex = 0;
             if (documentSnapshot != null) {
                 Integer tmp = documentSnapshot.get("selectedFrag", Integer.class);
                 if (tmp != null) selectedIndex = tmp;
+            }
+
+            if (selectedIndex == 1) {
+                this.fab.setVisibility(View.GONE);
             }
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -118,6 +130,18 @@ public class MainActivity extends AppCompatActivity {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+
+
+        // fab
+        this.fab = findViewById(R.id.fab);
+        this.fab.setOnClickListener(v -> {
+            if (this.selectedIndex == 0) {
+                startActivity(new Intent(getApplicationContext(), AddTaskAct.class));
+            } else if (this.selectedIndex == 2) {
+                startActivity(new Intent(getApplicationContext(), AddEventActivity.class));
+            }
+            finish();
+        });
     }
 
     private static Fragment getFrag(int num) {
@@ -135,16 +159,19 @@ public class MainActivity extends AppCompatActivity {
     /** Bottom Navigation Bar */
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener = item -> {
         int tmp = item.getItemId();
-        int selectedIndex = 0;
         Fragment selectedFrag;
 
         if (tmp == R.id.navigation_pet) {
+            fab.setVisibility(View.GONE);
             selectedIndex = 1;
             selectedFrag = new PetFrag();
         } else if (tmp == R.id.navigation_schedule) {
+            fab.setVisibility(View.VISIBLE);
             selectedIndex = 2;
             selectedFrag = new ScheduleFrag();
         } else {
+            selectedIndex = 0;
+            fab.setVisibility(View.VISIBLE);
             selectedFrag = new TaskListFrag();
         }
 

@@ -29,8 +29,6 @@ public class TaskListFrag extends Fragment {
     TaskAdapter adapter;
     ArrayList<Task> list;
 
-    FloatingActionButton fab;
-
     FirebaseFirestore db;
 
     @Nullable
@@ -77,14 +75,6 @@ public class TaskListFrag extends Fragment {
 
                     adapter.notifyDataSetChanged();
                 });
-
-
-        // Floating Action button to add new tasks
-        fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), AddTaskAct.class);
-            startActivity(intent);
-        });
 
         return view;
     }

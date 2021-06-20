@@ -35,7 +35,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import static android.content.ContentValues.TAG;
 
@@ -43,6 +42,7 @@ public class ScheduleFrag extends Fragment {
 
     ImageButton NextButton, PreviousButton;
     TextView CurrentDate;
+
     // initialize views
     GridView gridView;
     RecyclerView eventListView;
@@ -92,31 +92,31 @@ public class ScheduleFrag extends Fragment {
 
 
 
-
+        // next month button
         NextButton = view.findViewById(R.id.month_navigation_next);
-        PreviousButton = view.findViewById(R.id.month_navigation_previous);
-        CurrentDate = view.findViewById(R.id.currentDate);
-        gridView = view.findViewById(R.id.gridView);
-
-
-
-
-
-        PreviousButton.setOnClickListener(v -> {
-            calendar.add(Calendar.MONTH, -1);
-            SetUpCalendar();
-        });
-
         NextButton.setOnClickListener(v -> {
             calendar.add(Calendar.MONTH, 1);
             SetUpCalendar();
         });
 
-        CurrentDate.setOnClickListener(v -> {
 
-
+        // previous month button
+        PreviousButton = view.findViewById(R.id.month_navigation_previous);
+        PreviousButton.setOnClickListener(v -> {
+            calendar.add(Calendar.MONTH, -1);
+            SetUpCalendar();
         });
 
+
+        //
+        CurrentDate = view.findViewById(R.id.currentDate);
+        CurrentDate.setOnClickListener(v -> {
+        });
+
+
+
+        // for every item in the grid
+        gridView = view.findViewById(R.id.gridView);
         gridView.setOnItemClickListener((arg0, arg1, position, arg3) -> {
             // TODO Auto-generated method stub
             String date = eventDateFormat.format(dates.get(position));
@@ -202,7 +202,6 @@ public class ScheduleFrag extends Fragment {
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful() && task.getResult() != null) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.e(TAG, "doc date" + document.getString("startdate"));
 
                                     if (date1.equals(document.getString("startdate"))) {
                                         list.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
