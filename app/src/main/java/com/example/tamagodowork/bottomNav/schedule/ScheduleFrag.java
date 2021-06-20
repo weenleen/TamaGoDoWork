@@ -133,6 +133,8 @@ public class ScheduleFrag extends Fragment {
 
             EditText SetName = addView.findViewById(R.id.setEvent);
             EditText SetTime = addView.findViewById(R.id.setTime);
+            SetTime.setFocusable(false);
+            SetTime.setCursorVisible(false);
             EditText Duration = addView.findViewById(R.id.duration);
             //EditText SetEndTime = addView.findViewById(R.id.setEndTime);
             Button AddEvent = addView.findViewById(R.id.add_new_evt_button);
@@ -143,14 +145,16 @@ public class ScheduleFrag extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 int hours = calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = calendar.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(addView.getContext(), R.style.Theme_AppCompat_Dialog,
+                TimePickerDialog timePickerDialog = new TimePickerDialog(addView.getContext(),
                         (view, hourOfDay, minute1) -> {
-                            Calendar c = Calendar.getInstance();
-                            c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                            c.set(Calendar.MINUTE, minute1);
-                            c.setTimeZone(TimeZone.getDefault());
-                            SimpleDateFormat hourFormat = new SimpleDateFormat("K:mm a", Locale.ENGLISH);
-                            String event_Time = hourFormat.format(c.getTime());
+//                            Calendar c = Calendar.getInstance();
+//                            c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+//                            c.set(Calendar.MINUTE, minute1);
+//                            c.setTimeZone(TimeZone.getDefault());
+//                            SimpleDateFormat hourFormat = new SimpleDateFormat("K:mm a", Locale.ENGLISH);
+//                            String event_Time = hourFormat.format(c.getTime());
+
+                            String event_Time = hourOfDay + ":" + minute1;
                             SetTime.setText(event_Time);
 
                         }, hours, minute, false);
