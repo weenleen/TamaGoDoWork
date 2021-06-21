@@ -1,4 +1,4 @@
-package com.example.tamagodowork.bottomNav.taskList;
+package com.example.tamagodowork.bottomNav.todoList;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +29,6 @@ import java.util.Map;
 public class EditTaskAct extends AppCompatActivity {
 
     private EditText editName, editDeadline, editDesc;
-    private Button saveBtn, cancelBtn;
     private String key;
     private long deadline;
 
@@ -99,8 +98,8 @@ public class EditTaskAct extends AppCompatActivity {
         });
 
         // save button
-        this.saveBtn = findViewById(R.id.save_button);
-        this.saveBtn.setOnClickListener(v -> {
+        Button saveBtn = findViewById(R.id.save_button);
+        saveBtn.setOnClickListener(v -> {
             String name = editName.getText().toString();
             String desc = editDesc.getText().toString();
 
@@ -136,7 +135,7 @@ public class EditTaskAct extends AppCompatActivity {
         });
 
         // Cancel Button
-        this.cancelBtn = findViewById(R.id.cancel_edit_button);
-        this.cancelBtn.setOnClickListener(v -> MainActivity.backToMain(EditTaskAct.this));
+        Button cancelBtn = findViewById(R.id.cancel_edit_button);
+        cancelBtn.setOnClickListener(v -> MainActivity.backToMain(EditTaskAct.this));
     }
 }

@@ -1,4 +1,4 @@
-package com.example.tamagodowork.bottomNav.taskList;
+package com.example.tamagodowork.bottomNav.todoList;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -26,7 +26,6 @@ import java.time.ZoneId;
 public class AddTaskAct extends AppCompatActivity {
 
     private EditText addName, addDeadline, addDesc;
-    private Button createBtn, cancelBtn;
     private long deadline;
 
     @Override
@@ -60,8 +59,8 @@ public class AddTaskAct extends AppCompatActivity {
         // Reminders Checkboxes
         LinearLayout remLayout = findViewById(R.id.reminders);
 
-        this.createBtn = findViewById(R.id.create_button);
-        this.createBtn.setOnClickListener(v -> {
+        Button createBtn = findViewById(R.id.create_button);
+        createBtn.setOnClickListener(v -> {
             DocumentReference ref = MainActivity.userDoc.collection("Tasks").document();
 
             String name = addName.getText().toString();
@@ -109,7 +108,7 @@ public class AddTaskAct extends AppCompatActivity {
 
 
         // cancel button
-        this.cancelBtn = findViewById(R.id.cancel_add_button);
-        this.cancelBtn.setOnClickListener(v -> MainActivity.backToMain(AddTaskAct.this));
+        Button cancelBtn = findViewById(R.id.cancel_add_button);
+        cancelBtn.setOnClickListener(v -> MainActivity.backToMain(AddTaskAct.this));
     }
 }

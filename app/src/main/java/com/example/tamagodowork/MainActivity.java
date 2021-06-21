@@ -133,13 +133,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         // fab
-        this.fab = findViewById(R.id.fab);
-        this.fab.setOnClickListener(v -> {
-            if (this.selectedIndex == 0) {
-                startActivity(new Intent(getApplicationContext(), AddTaskAct.class));
-            } else if (this.selectedIndex == 2) {
-                startActivity(new Intent(getApplicationContext(), AddEventActivity.class));
-            }
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), AddTaskAct.class));
             finish();
         });
     }

@@ -1,4 +1,4 @@
-package com.example.tamagodowork.bottomNav.schedule;
+package com.example.tamagodowork.bottomNav.todoList;
 
 public class Events {
     String EVENT, TIME, STARTDATE, ENDDATE, MONTH, YEAR, KEY;

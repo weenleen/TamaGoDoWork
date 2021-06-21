@@ -1,4 +1,4 @@
-package com.example.tamagodowork.bottomNav.taskList;
+package com.example.tamagodowork.bottomNav.todoList;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

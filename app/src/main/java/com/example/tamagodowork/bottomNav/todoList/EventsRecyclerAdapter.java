@@ -1,4 +1,4 @@
-package com.example.tamagodowork.bottomNav.schedule;
+package com.example.tamagodowork.bottomNav.todoList;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +30,7 @@ public class EventsRecyclerAdapter extends RecyclerView.Adapter<EventsRecyclerAd
         this.eventsList = events;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView dateText, event, time;
         private final ImageButton deleteButton;
 

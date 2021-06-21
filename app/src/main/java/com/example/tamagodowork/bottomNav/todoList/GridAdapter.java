@@ -1,12 +1,13 @@
-package com.example.tamagodowork.bottomNav.schedule;
+package com.example.tamagodowork.bottomNav.todoList;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,15 +24,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static android.content.ContentValues.TAG;
 import static android.graphics.Typeface.BOLD;
 
 public class GridAdapter extends BaseAdapter {
 
-    Context context;
     List<Date> dates;
     Calendar currentDate;
     List<Events> events;
     LayoutInflater inflater;
+    Context context;
 
     public GridAdapter(@NonNull @NotNull Context context, List<Date> dates, Calendar currentDate, List<Events> events) {
         this.context = context;
@@ -44,7 +46,6 @@ public class GridAdapter extends BaseAdapter {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
         Date monthDate = dates.get(position);
         Calendar dateCalendar = Calendar.getInstance();
         dateCalendar.setTime(monthDate);
@@ -63,10 +64,10 @@ public class GridAdapter extends BaseAdapter {
         if (view == null) {
             view = inflater.inflate(R.layout.single_cell_layout, parent, false);
         }
-
         if (displayMonth == currentMonth && displayYear == currentYear) {
             view.setBackgroundColor(context.getResources().getColor(R.color.light_pink));
-        } else {
+        }
+        else {
             view.setBackgroundColor(context.getResources().getColor(R.color.off_white));
         }
 
@@ -79,23 +80,25 @@ public class GridAdapter extends BaseAdapter {
             Day_Number.setTypeface(Day_Number.getTypeface(),BOLD);
         }
 
+        TextView eventsPerDay = view.findViewById(R.id.noOfEvents);
         Day_Number.setText(String.valueOf(day));
 
-        LinearLayout stripeLayout = view.findViewById(R.id.event_stripe_layout);
 
         ArrayList<String> arrayList = new ArrayList<>();
         // events size == 4
+        Log.d(TAG, String.valueOf(events.size()));
         for (int i = 0; i < events.size(); i++) {
             eventCalendar.setTime(convertStringToDate(events.get(i).getSTARTDATE()));
             if (day == eventCalendar.get(Calendar.DAY_OF_MONTH) && displayMonth == eventCalendar.get(Calendar.MONTH) + 1) {
                 arrayList.add(events.get(i).getEVENT());
             }
-
-            for (int s = 0; s < arrayList.size(); s++) {
-                if (s > 3) break;
-
-                TextView stripe = (TextView) stripeLayout.getChildAt(s);
-                stripe.setBackgroundColor(context.getResources().getColor(R.color.peach));
+            if (arrayList.size() == 0) {
+                eventsPerDay.setText("");
+            }
+            else if (arrayList.size() == 1) {
+                eventsPerDay.setText(arrayList.size() + " Event");
+            } else {
+                eventsPerDay.setText(arrayList.size() + " Events");
             }
         }
 
