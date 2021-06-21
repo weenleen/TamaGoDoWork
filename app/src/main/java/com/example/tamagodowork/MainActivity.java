@@ -18,10 +18,9 @@ import android.widget.Toast;
 
 import com.example.tamagodowork.authentication.RegisterAct;
 import com.example.tamagodowork.bottomNav.pet.PetFrag;
-import com.example.tamagodowork.bottomNav.schedule.AddEventActivity;
-import com.example.tamagodowork.bottomNav.schedule.ScheduleFrag;
-import com.example.tamagodowork.bottomNav.taskList.AddTaskAct;
-import com.example.tamagodowork.bottomNav.taskList.TaskListFrag;
+import com.example.tamagodowork.bottomNav.todoList.ScheduleFrag;
+import com.example.tamagodowork.bottomNav.todoList.AddTaskAct;
+import com.example.tamagodowork.bottomNav.todoList.TaskListFrag;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
