@@ -1,16 +1,11 @@
 package com.example.tamagodowork.bottomNav.todoList;
 
-import android.app.AlertDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -23,31 +18,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Locale;
-import java.util.TimeZone;
-
-import static android.content.ContentValues.TAG;
 
 public class ScheduleFrag extends Fragment {
 
     ImageButton NextButton, PreviousButton;
     TextView CurrentDate;
+
     // initialize views
-    GridView gridView;
-    RecyclerView eventListView;
-    View view;
-    FirebaseFirestore db;
     private static final int MAX_CALENDAR_DAY = 42;
     Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
     SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
@@ -56,16 +46,18 @@ public class ScheduleFrag extends Fragment {
     SimpleDateFormat eventDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     // initialize adapters
+    GridView gridView;
     GridAdapter gridAdapter;
-    EventsRecyclerAdapter eventAdapter;
+    RecyclerView recyclerView;
+    TaskAdapter recyclerAdapter;
 
     //initialize others
-    List<Date> dates = new ArrayList<>();
-    List<Events> eventsList = new ArrayList<>();
+    ArrayList<Date> dates = new ArrayList<>();
+
+    private HashMap<Integer, ArrayList<Task>> monthTaskMap = new HashMap<>();
 
     private Context context;
 
-    // initialization of all layout upon start
     @Override
     public void onStart() {
         super.onStart();
@@ -83,246 +75,138 @@ public class ScheduleFrag extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        // grid
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = inflater.inflate(R.layout.schedule_frag, container, false);
-
-        gridView = view.findViewById(R.id.gridView);
-        gridView.setAdapter(gridAdapter);
+        View view = inflater.inflate(R.layout.schedule_frag, container, false);
 
 
+        // grid
+        this.gridView = view.findViewById(R.id.gridView);
 
 
-        NextButton = view.findViewById(R.id.month_navigation_next);
+        // recycler view
+        this.recyclerView = view.findViewById(R.id.schedule_recyclerView);
+        this.recyclerAdapter = new TaskAdapter(context, new ArrayList<Task>());
+        this.recyclerView.setAdapter(this.recyclerAdapter);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+
+        // prev button
         PreviousButton = view.findViewById(R.id.month_navigation_previous);
-        CurrentDate = view.findViewById(R.id.currentDate);
-        gridView = view.findViewById(R.id.gridView);
-
-
-
-
-
         PreviousButton.setOnClickListener(v -> {
             calendar.add(Calendar.MONTH, -1);
             SetUpCalendar();
         });
 
+
+        // next button
+        NextButton = view.findViewById(R.id.month_navigation_next);
         NextButton.setOnClickListener(v -> {
             calendar.add(Calendar.MONTH, 1);
             SetUpCalendar();
         });
 
-        CurrentDate.setOnClickListener(v -> {
+
+        // current month date textView
+        CurrentDate = view.findViewById(R.id.currentDate);
 
 
-        });
-
+        // listener for every grid item
         gridView.setOnItemClickListener((arg0, arg1, position, arg3) -> {
             // TODO Auto-generated method stub
-            String date = eventDateFormat.format(dates.get(position));
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setCancelable(true);
-            LayoutInflater inflater1 = requireActivity().getLayoutInflater();
-            View addView = inflater1.inflate(R.layout.add_new_event, null);
-            builder.setView(addView);
-            //create alert dialog
-            AlertDialog alertDialog = builder.create();
-            //show alert box
-            alertDialog.show();
 
+            Date selectedDate = dates.get(position);
+            int day = selectedDate.toInstant().atZone(ZoneId.systemDefault()).getDayOfMonth();
 
-            EditText SetName = addView.findViewById(R.id.setEvent);
-            EditText SetTime = addView.findViewById(R.id.setTime);
-            SetTime.setFocusable(false);
-            SetTime.setCursorVisible(false);
-            EditText Duration = addView.findViewById(R.id.duration);
-            //EditText SetEndTime = addView.findViewById(R.id.setEndTime);
-            Button AddEvent = addView.findViewById(R.id.add_new_evt_button);
-            Button CancelEvent = addView.findViewById(R.id.cancel_button);
+            ArrayList<Task> dayTaskList = monthTaskMap.get(day);
 
+            if (dayTaskList == null) {
+                dayTaskList = new ArrayList<>();
+            }
 
-            SetTime.setOnClickListener(v -> {
-                Calendar calendar = Calendar.getInstance();
-                int hours = calendar.get(Calendar.HOUR_OF_DAY);
-                int minute = calendar.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(addView.getContext(),
-                        (view, hourOfDay, minute1) -> {
-//                            Calendar c = Calendar.getInstance();
-//                            c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-//                            c.set(Calendar.MINUTE, minute1);
-//                            c.setTimeZone(TimeZone.getDefault());
-//                            SimpleDateFormat hourFormat = new SimpleDateFormat("K:mm a", Locale.ENGLISH);
-//                            String event_Time = hourFormat.format(c.getTime());
-
-                            String event_Time = hourOfDay + ":" + minute1;
-                            SetTime.setText(event_Time);
-
-                        }, hours, minute, false);
-
-                timePickerDialog.show();
-            });
-
-
-
-            AddEvent.setOnClickListener(v -> {
-                String event = SetName.getText().toString();
-                String eventTime = SetTime.getText().toString();
-                int duration = Integer.parseInt(Duration.getText().toString());
-                String date1 = eventDateFormat.format(dates.get(position));
-                String endDate = eventDateFormat.format(dates.get(position+duration));
-                String month = monthFormat.format(dates.get(position));
-                String year = yearFormat.format(dates.get(position));
-                DocumentReference ref = MainActivity.userDoc.collection("Events").document();
-                String key = ref.getId();
-
-                if (TextUtils.isEmpty(event)) {
-                    SetName.setError("Please enter a name");
-                    return;
-                }
-                if (TextUtils.isEmpty(eventTime)) {
-                    SetTime.setError("Please enter a name");
-                    return;
-                }
-                if (TextUtils.isEmpty(String.valueOf(duration))) {
-                    Duration.setError("Please enter a duration");
-                    return;
-                }
-                // Put Event in Firestore
-                Events addedEvent = new Events(event, eventTime, date1, endDate, month, year, key);
-                ref.set(addedEvent);
-                SetUpCalendar();
-
-                RecyclerView eventsView = view.findViewById(R.id.recyclerView);
-                ArrayList<Events> list = new ArrayList<>();
-                eventsView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-                EventsRecyclerAdapter adapter = new EventsRecyclerAdapter(context, list);
-                eventsView.setAdapter(adapter);
-                db = FirebaseFirestore.getInstance();
-                MainActivity.userDoc.collection("Events").get()
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Log.e(TAG, "doc date" + document.getString("startdate"));
-
-                                    if (date1.equals(document.getString("startdate"))) {
-                                        list.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
-                                                document.getString("enddate"), document.getString("month"), document.getString("year"), document.getId()));
-                                    }
-                                }
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                Log.d(TAG, "Error getting documents: ", task.getException());
-                            }
-                        });
-
-                alertDialog.dismiss();
-            });
-
-
-
-
-
-
-            CancelEvent.setOnClickListener(v -> alertDialog.dismiss());
-
-            RecyclerView eventsView = view.findViewById(R.id.recyclerView);
-            ArrayList<Events> list = new ArrayList<>();
-            eventsView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-            EventsRecyclerAdapter adapter = new EventsRecyclerAdapter(context, list);
-            eventsView.setAdapter(adapter);
-            db = FirebaseFirestore.getInstance();
-            MainActivity.userDoc.collection("Events").get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                if (date.equals(document.getString("startdate"))) {
-                                    list.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
-                                            document.getString("enddate"), document.getString("month"), document.getString("year"), document.getId()));
-                                }
-                            }
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
-                        }
-                    });
+            recyclerAdapter = new TaskAdapter(context, dayTaskList);
+            recyclerView.setAdapter(recyclerAdapter);
         });
 
         return view;
-
     }
 
 
-    private ArrayList<Events> collectEventsByDay(String date) {
-        ArrayList<Events> emptyList = new ArrayList<>();
-        db = FirebaseFirestore.getInstance();
-        MainActivity.userDoc.collection("Events").get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
+    /**
+     *
+     * @param month Month of the calendar.
+     * @param year Year of the calendar.
+     */
+    private void collectTasksPerMonth(int month, int year) {
 
-                            if (date.equals(document.getString("startdate"))) {
-                                emptyList.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
-                                        document.getString("enddate"), document.getString("month"), document.getString("year"), document.getId()));
-                            }
+
+        MainActivity.userDoc.collection("Tasks")
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) return;
+
+                    monthTaskMap.clear();
+
+                    assert value != null;
+                    for (QueryDocumentSnapshot doc : value) {
+                        Long tmp = doc.get("taskDeadline", Long.class);
+                        if (tmp == null) {
+                            continue;
                         }
 
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
-                    }
-                });
+                        ZonedDateTime dateTime = Instant.ofEpochMilli(tmp).atZone(ZoneId.systemDefault());
 
-        return emptyList;
-
-
-    }
-
-    private void collectEventsPerMonth(String MONTH, String YEAR) {
-
-        eventsList.clear();
-        db = FirebaseFirestore.getInstance();
-        MainActivity.userDoc.collection("Events").get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-
-
-                            if (MONTH.equals(document.getString("month")) && YEAR.equals(document.getString("year"))) {
-                                eventsList.add(new Events(document.getString("event"), document.getString("time"), document.getString("startdate"),
-                                        document.getString("enddate"),document.getString("month"), document.getString("year"), document.getId()));
-                            }
-
-
+                        if (month != dateTime.getMonthValue() || year != dateTime.getYear()) {
+                            Log.e("task month", String.valueOf(dateTime.getMonthValue()));
+                            Log.e("task year", String.valueOf(dateTime.getYear()));
+                            continue;
                         }
-                        gridAdapter.notifyDataSetChanged();
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
-                    }
-                });
 
+                        int dayOfMonth = dateTime.getDayOfMonth();
+                        ArrayList<Task> dayTaskList = monthTaskMap.get(dayOfMonth);
+
+                        if (dayTaskList == null) {
+                            dayTaskList = new ArrayList<>();
+                            monthTaskMap.put(dayOfMonth, dayTaskList);
+                        }
+
+                        Log.e("task added", String.valueOf(dayOfMonth));
+                        dayTaskList.add(new Task(doc.getString("taskName"),
+                                tmp,
+                                doc.getString("taskDesc"),
+                                doc.getId()));
+                    }
+
+                    Log.e("monthTaskMap size", String.valueOf(monthTaskMap.size()));
+                    gridAdapter.notifyDataSetChanged();
+                });
     }
 
-
-
-
+    /**
+     *
+     */
     private void SetUpCalendar() {
         String currentDate = dateFormat.format(calendar.getTime());
         CurrentDate.setText(currentDate);
         dates.clear();
+
+        monthTaskMap = new HashMap<>();
+        this.gridAdapter = new GridAdapter(context, dates, calendar, monthTaskMap);
+        this.gridView.setAdapter(gridAdapter);
+
         // clones a month calendar
         Calendar monthCalendar = (Calendar) calendar.clone();
         // sets the values for the calendar fields, YEAR, MONTH, DAY_OF_MONTH, HOUR_OF_DAY, MINUTE & SECOND
-        monthCalendar.set(Calendar.DAY_OF_MONTH,1);
+        monthCalendar.set(Calendar.DAY_OF_MONTH, 1);
         int firstDayOfMonth = monthCalendar.get(Calendar.DAY_OF_WEEK) - 1;
         monthCalendar.add(Calendar.DAY_OF_MONTH, -firstDayOfMonth);
-        collectEventsPerMonth(monthFormat.format(calendar.getTime()), yearFormat.format(calendar.getTime()));
+
+        Log.e("collect month", String.valueOf(monthCalendar.get(Calendar.MONTH)));
+        Log.e("collect year", String.valueOf(calendar.get(Calendar.YEAR)));
+        collectTasksPerMonth(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
 
 
         while (dates.size() < MAX_CALENDAR_DAY) {
             dates.add(monthCalendar.getTime());
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
-
-        gridAdapter = new GridAdapter(context, dates, calendar, eventsList);
-        gridView.setAdapter(gridAdapter);
     }
 }

@@ -86,6 +86,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         final String desc = taskList.get(position).getTaskDesc();
         final int viewType = holder.getItemViewType();
 
+        TaskAdapter adapter = this;
+
         holder.taskName.setText(name);
         holder.taskDesc.setText(desc);
 
@@ -101,7 +103,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             });
 
             // dismiss button
-            ((ViewHolderOverdue) holder).imageButton.setOnClickListener(v -> MainActivity.userDoc.collection("Tasks").document(key).delete());
+            ((ViewHolderOverdue) holder).imageButton.setOnClickListener(v -> {
+                MainActivity.userDoc.collection("Tasks").document(key).delete();
+                adapter.notifyDataSetChanged();
+            });
 
         } else { // not overdue
 
@@ -116,7 +121,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
 
             // checkbox
-            TaskAdapter adapter = this;
             ((ViewHolderNormal) holder).checkBox.setOnClickListener(v -> {
                 Animation anim = AnimationUtils.loadAnimation(context, R.anim.anim_task_complete);
                 anim.setAnimationListener(new Animation.AnimationListener() {

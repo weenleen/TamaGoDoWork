@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,31 +32,34 @@ public class GridAdapter extends BaseAdapter {
 
     List<Date> dates;
     Calendar currentDate;
-    List<Events> events;
+    HashMap<Integer, ArrayList<Task>> monthTaskMap;
     LayoutInflater inflater;
     Context context;
 
-    public GridAdapter(@NonNull @NotNull Context context, List<Date> dates, Calendar currentDate, List<Events> events) {
+    public GridAdapter(@NonNull @NotNull Context context, List<Date> dates, Calendar currentDate,
+                       HashMap<Integer, ArrayList<Task>> monthTaskMap) {
         this.context = context;
         this.dates = dates;
         this.currentDate = currentDate;
-        this.events = events;
+        this.monthTaskMap = monthTaskMap;
         inflater = LayoutInflater.from(context);
+        Log.e("gridAdapter map", String.valueOf(monthTaskMap.size()));
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
         Date monthDate = dates.get(position);
         Calendar dateCalendar = Calendar.getInstance();
         dateCalendar.setTime(monthDate);
-        Calendar eventCalendar = Calendar.getInstance();
 
 
         int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
         int displayMonth = dateCalendar.get(Calendar.MONTH) + 1;
         int displayYear = dateCalendar.get(Calendar.YEAR);
-        int currentDay = currentDate.get(Calendar.DAY_OF_MONTH);
+
+
         int currentMonth = currentDate.get(Calendar.MONTH) + 1;
         int currentYear = currentDate.get(Calendar.YEAR);
 
@@ -73,6 +77,7 @@ public class GridAdapter extends BaseAdapter {
 
         TextView Day_Number = view.findViewById(R.id.calendar_day);
         Calendar currentData = Calendar.getInstance();
+
         // highlight current date
         if (day == currentData.get(Calendar.DAY_OF_MONTH) && displayMonth == currentData.get(Calendar.MONTH) + 1 && displayYear == currentData.get(Calendar.YEAR)) {
             view.setBackgroundColor(context.getResources().getColor(R.color.peach));
@@ -84,22 +89,27 @@ public class GridAdapter extends BaseAdapter {
         Day_Number.setText(String.valueOf(day));
 
 
-        ArrayList<String> arrayList = new ArrayList<>();
-        // events size == 4
-        Log.d(TAG, String.valueOf(events.size()));
-        for (int i = 0; i < events.size(); i++) {
-            eventCalendar.setTime(convertStringToDate(events.get(i).getSTARTDATE()));
-            if (day == eventCalendar.get(Calendar.DAY_OF_MONTH) && displayMonth == eventCalendar.get(Calendar.MONTH) + 1) {
-                arrayList.add(events.get(i).getEVENT());
-            }
-            if (arrayList.size() == 0) {
-                eventsPerDay.setText("");
-            }
-            else if (arrayList.size() == 1) {
-                eventsPerDay.setText(arrayList.size() + " Event");
-            } else {
-                eventsPerDay.setText(arrayList.size() + " Events");
-            }
+        ArrayList<Task> dayTaskList = monthTaskMap.get(day);
+        int numOfTasks;
+
+        if (dayTaskList == null) {
+            numOfTasks = 0;
+        } else {
+            numOfTasks = dayTaskList.size();
+        }
+
+
+
+        if (numOfTasks == 0) {
+            eventsPerDay.setText("");
+        } else if (numOfTasks == 1) {
+            eventsPerDay.setText(numOfTasks + " Event");
+            Log.e("gridAdapter day", String.valueOf(day));
+            Log.e("gridAdapter events", String.valueOf(numOfTasks));
+        } else {
+            eventsPerDay.setText(numOfTasks + " Event");
+            Log.e("gridAdapter day", String.valueOf(day));
+            Log.e("gridAdapter events", String.valueOf(numOfTasks));
         }
 
         return view;
