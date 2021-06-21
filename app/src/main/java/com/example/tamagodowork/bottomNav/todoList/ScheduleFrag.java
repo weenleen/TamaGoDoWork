@@ -322,6 +322,8 @@ public class ScheduleFrag extends Fragment {
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
+
+
         gridAdapter = new GridAdapter(context, dates, calendar, eventsList);
         gridView.setAdapter(gridAdapter);
     }
