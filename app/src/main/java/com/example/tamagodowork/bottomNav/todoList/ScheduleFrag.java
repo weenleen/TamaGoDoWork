@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -112,14 +112,14 @@ public class ScheduleFrag extends Fragment {
 
             View prevView = gridView.getChildAt(gridSelectedPos);
             if (prevView != null) {
-                LinearLayout outline = prevView.findViewById(R.id.schedule_gridItem_bg);
+                RelativeLayout outline = prevView.findViewById(R.id.schedule_gridItem_bg);
                 outline.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
             }
 
 
             View itemView = gridView.getChildAt(position);
             if (itemView != null) {
-                LinearLayout outline = itemView.findViewById(R.id.schedule_gridItem_bg);
+                RelativeLayout outline = itemView.findViewById(R.id.schedule_gridItem_bg);
                 outline.setBackgroundColor(ContextCompat.getColor(context, R.color.peach));
             }
 
@@ -210,26 +210,10 @@ public class ScheduleFrag extends Fragment {
 
         collectTasksPerMonth(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
 
-//        Calendar today = Calendar.getInstance();
-//        int todayDay = today.get(Calendar.DAY_OF_MONTH);
-//        int todayMonth = today.get(Calendar.MONTH) + 1;
-//        int todayYear = today.get(Calendar.YEAR);
-
         while (dates.size() < MAX_CALENDAR_DAY) {
             Date gridDate = monthCalendar.getTime();
             dates.add(gridDate);
-
-//            if (gridDate.toInstant().atZone(ZoneId.systemDefault()).getDayOfMonth() == todayDay &&
-//                    gridDate.toInstant().atZone(ZoneId.systemDefault()).getMonthValue() == todayMonth &&
-//                    gridDate.toInstant().atZone(ZoneId.systemDefault()).getYear() == todayYear) {
-//                this.gridSelectedPos = dates.indexOf(gridDate);
-//            }
-
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
-
-//        if (gridView != null && gridView.getChildAt(this.gridSelectedPos) != null) {
-//            gridView.getChildAt(this.gridSelectedPos).performClick();
-//        }
     }
 }

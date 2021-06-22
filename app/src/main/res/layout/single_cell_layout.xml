@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/schedule_gridItem_bg"
     android:layout_width="match_parent"
     android:padding="3dp"
     android:focusable="false"
     android:focusableInTouchMode="false"
-    android:orientation="vertical"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -25,9 +24,11 @@
 
         <LinearLayout
             android:id="@+id/schedule_task_indicator"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal"
+            android:layout_gravity="center"
             android:gravity="center" >
 
             <ImageView
@@ -66,4 +67,4 @@
 
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
