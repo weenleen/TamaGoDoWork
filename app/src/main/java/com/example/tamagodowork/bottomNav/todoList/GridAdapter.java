@@ -2,39 +2,36 @@ package com.example.tamagodowork.bottomNav.todoList;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.example.tamagodowork.R;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
-import static android.content.ContentValues.TAG;
 import static android.graphics.Typeface.BOLD;
 
 public class GridAdapter extends BaseAdapter {
 
-    List<Date> dates;
-    Calendar currentDate;
-    HashMap<Integer, ArrayList<Task>> monthTaskMap;
-    LayoutInflater inflater;
-    Context context;
+    private final List<Date> dates;
+    private final Calendar currentDate;
+    private final HashMap<Integer, ArrayList<Task>> monthTaskMap;
+    private final Context context;
 
     public GridAdapter(@NonNull @NotNull Context context, List<Date> dates, Calendar currentDate,
                        HashMap<Integer, ArrayList<Task>> monthTaskMap) {
@@ -42,88 +39,80 @@ public class GridAdapter extends BaseAdapter {
         this.dates = dates;
         this.currentDate = currentDate;
         this.monthTaskMap = monthTaskMap;
-        inflater = LayoutInflater.from(context);
-        Log.e("gridAdapter map", String.valueOf(monthTaskMap.size()));
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        Date monthDate = dates.get(position);
+        // date of the current grid item
+        Date monthDate = this.dates.get(position);
         Calendar dateCalendar = Calendar.getInstance();
         dateCalendar.setTime(monthDate);
 
-
-        int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
+        int displayDay = dateCalendar.get(Calendar.DAY_OF_MONTH);
         int displayMonth = dateCalendar.get(Calendar.MONTH) + 1;
         int displayYear = dateCalendar.get(Calendar.YEAR);
 
 
-        int currentMonth = currentDate.get(Calendar.MONTH) + 1;
-        int currentYear = currentDate.get(Calendar.YEAR);
-
 
         View view = convertView;
         if (view == null) {
+            LayoutInflater inflater = LayoutInflater.from(this.context);
             view = inflater.inflate(R.layout.single_cell_layout, parent, false);
         }
-        if (displayMonth == currentMonth && displayYear == currentYear) {
-            view.setBackgroundColor(context.getResources().getColor(R.color.light_pink));
-        }
-        else {
-            view.setBackgroundColor(context.getResources().getColor(R.color.off_white));
-        }
 
+
+
+        // number on the grid item
         TextView Day_Number = view.findViewById(R.id.calendar_day);
-        Calendar currentData = Calendar.getInstance();
+        Day_Number.setText(String.valueOf(displayDay));
+
 
         // highlight current date
-        if (day == currentData.get(Calendar.DAY_OF_MONTH) && displayMonth == currentData.get(Calendar.MONTH) + 1 && displayYear == currentData.get(Calendar.YEAR)) {
-            view.setBackgroundColor(context.getResources().getColor(R.color.peach));
+        Calendar currentData = Calendar.getInstance(); // today's date
+        if (displayDay == currentData.get(Calendar.DAY_OF_MONTH) && displayMonth == currentData.get(Calendar.MONTH) + 1 && displayYear == currentData.get(Calendar.YEAR)) {
+            Day_Number.setBackground(AppCompatResources.getDrawable(context, R.drawable.bg_date_highlight));
+            Day_Number.setTextColor(Color.WHITE);
+        }
+
+
+
+        // month and year on the calendar page
+        int currentMonth = this.currentDate.get(Calendar.MONTH) + 1;
+        int currentYear = this.currentDate.get(Calendar.YEAR);
+
+        // checks if the current grid item belongs to the current month on the calendar
+        if (displayMonth != currentMonth || displayYear != currentYear) { // other months
+            return view; // no need to add events
+        } else { // current month
             Day_Number.setTextColor(Color.BLACK);
             Day_Number.setTypeface(Day_Number.getTypeface(),BOLD);
         }
 
-        TextView eventsPerDay = view.findViewById(R.id.noOfEvents);
-        Day_Number.setText(String.valueOf(day));
 
 
-        ArrayList<Task> dayTaskList = monthTaskMap.get(day);
+        // retrieve tasks for this day
+        ArrayList<Task> dayTaskList = this.monthTaskMap.get(displayDay);
         int numOfTasks;
 
-        if (dayTaskList == null) {
-            numOfTasks = 0;
-        } else {
-            numOfTasks = dayTaskList.size();
+        if (dayTaskList == null) numOfTasks = 0;
+        else numOfTasks = dayTaskList.size();
+
+        LinearLayout indicatorLayout = view.findViewById(R.id.schedule_task_indicator);
+
+        // for every task for this day
+        for (int i = 0; i < numOfTasks; i++) {
+            if (i >= 5) break; // maximum 4 indicators and a plus symbol
+
+            ImageView indicator = (ImageView) indicatorLayout.getChildAt(i);
+            LinearLayout.LayoutParams childLayoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    1f / numOfTasks);
+            indicator.setLayoutParams(childLayoutParams);
         }
-
-
-
-        if (numOfTasks == 0) {
-            eventsPerDay.setText("");
-        } else if (numOfTasks == 1) {
-            eventsPerDay.setText(numOfTasks + " Event");
-            Log.e("gridAdapter day", String.valueOf(day));
-            Log.e("gridAdapter events", String.valueOf(numOfTasks));
-        } else {
-            eventsPerDay.setText(numOfTasks + " Event");
-            Log.e("gridAdapter day", String.valueOf(day));
-            Log.e("gridAdapter events", String.valueOf(numOfTasks));
-        }
-
         return view;
-    }
-
-    private Date convertStringToDate(String eventDate) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        Date date = null;
-        try {
-            date = format.parse(eventDate);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return date;
     }
 
     @Override
@@ -137,12 +126,6 @@ public class GridAdapter extends BaseAdapter {
         return dates.get(position);
     }
 
-    /**
-     * Get the row id associated with the specified position in the list.
-     *
-     * @param position The position of the item within the adapter's data set whose row id we want.
-     * @return The id of the item at the specified position.
-     */
     @Override
     public long getItemId(int position) {
         return position;

@@ -8,7 +8,6 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import android.util.Log;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;

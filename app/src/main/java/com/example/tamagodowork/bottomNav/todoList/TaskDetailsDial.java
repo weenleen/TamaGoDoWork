@@ -19,8 +19,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class TaskDetailsDial extends BottomSheetDialogFragment {
 
     private final String name, deadline, desc, key;
-    private Button editBtn, delBtn;
-    private ImageButton closeIcon;
 
     public TaskDetailsDial(String name, String deadline, String desc, String key) {
         this.name = name;
@@ -33,6 +31,8 @@ public class TaskDetailsDial extends BottomSheetDialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        if (getActivity() == null) return builder.create();
+
         View view = getActivity().getLayoutInflater().inflate(R.layout.task_details_dial, null);
 
         // set the views
@@ -45,8 +45,8 @@ public class TaskDetailsDial extends BottomSheetDialogFragment {
         deadlineView.setText(deadline);
         descView.setText(desc);
 
-        this.editBtn = view.findViewById(R.id.edit_button);
-        this.editBtn.setOnClickListener(v -> {
+        Button editBtn = view.findViewById(R.id.edit_button);
+        editBtn.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), EditTaskAct.class);
             intent.putExtra("name", name);
             intent.putExtra("deadline", deadline);
@@ -56,14 +56,14 @@ public class TaskDetailsDial extends BottomSheetDialogFragment {
         });
 
         // delete button
-        this.delBtn = view.findViewById(R.id.delete_button);
-        this.delBtn.setOnClickListener(v -> {
+        Button delBtn = view.findViewById(R.id.delete_button);
+        delBtn.setOnClickListener(v -> {
             MainActivity.userDoc.collection("Tasks").document(key).delete();
             dismiss();
         });
 
         // close
-        this.closeIcon = view.findViewById(R.id.close_icon);
+        ImageButton closeIcon = view.findViewById(R.id.close_icon);
         closeIcon.setOnClickListener(v -> dismiss());
 
         builder.setView(view);

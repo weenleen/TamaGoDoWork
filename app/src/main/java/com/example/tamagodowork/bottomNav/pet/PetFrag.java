@@ -60,15 +60,11 @@ public class PetFrag extends Fragment {
 
         // room button
         Button roomButton = view.findViewById(R.id.pet_room_button);
-        roomButton.setOnClickListener(v -> {
-            startActivity(new Intent(context, RoomActivity.class));
-        });
+        roomButton.setOnClickListener(v -> startActivity(new Intent(context, RoomActivity.class)));
 
         // edit pet button
         Button editButton = view.findViewById(R.id.pet_edit_button);
-        editButton.setOnClickListener(v -> {
-            startActivity(new Intent(context, EditPetActivity.class));
-        });
+        editButton.setOnClickListener(v -> startActivity(new Intent(context, EditPetActivity.class)));
 
         return view;
     }

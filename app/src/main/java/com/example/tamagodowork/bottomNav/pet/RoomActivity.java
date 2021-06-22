@@ -79,6 +79,10 @@ public class RoomActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * Add all wallpapers here.
+     */
     private void loadWallpapers() {
         wallpapers = new int[] {
                 -1,
@@ -90,6 +94,9 @@ public class RoomActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Adapter for the viewpager.
+     */
     private static class RoomViewpagerAdapter extends PagerAdapter {
 
         private final Context context;

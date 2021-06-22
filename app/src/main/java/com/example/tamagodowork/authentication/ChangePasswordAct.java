@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class ChangePasswordAct extends AppCompatActivity {
     private EditText newPwd, oldPwd;
-    private Button saveBtn, cancelBtn;
     FirebaseUser user;
 
     @Override
@@ -30,21 +29,26 @@ public class ChangePasswordAct extends AppCompatActivity {
         // retrieve current user
         this.oldPwd = findViewById(R.id.oldPwd);
         this.newPwd = findViewById(R.id.newPwd);
-        this.saveBtn = findViewById(R.id.pwd_save_button);
-        this.cancelBtn = findViewById(R.id.cancel_button);
+        Button saveBtn = findViewById(R.id.pwd_save_button);
+        Button cancelBtn = findViewById(R.id.cancel_button);
 
 
 
-        this.saveBtn.setOnClickListener(v -> updatePassword());
+        saveBtn.setOnClickListener(v -> updatePassword());
  
 
-        this.cancelBtn.setOnClickListener(v -> MainActivity.backToMain(ChangePasswordAct.this));
+        cancelBtn.setOnClickListener(v -> MainActivity.backToMain(ChangePasswordAct.this));
 
     }
 
     public void updatePassword() {
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user == null) return;
+
         final String email = user.getEmail();
+        if (email == null) return;
+
         String newPassword = newPwd.getText().toString();
         AuthCredential credential = EmailAuthProvider.getCredential(email, oldPwd.getText().toString());
 

@@ -2,16 +2,17 @@ package com.example.tamagodowork.bottomNav.todoList;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,29 +35,24 @@ import java.util.Locale;
 
 public class ScheduleFrag extends Fragment {
 
-    ImageButton NextButton, PreviousButton;
-    TextView CurrentDate;
-
-    // initialize views
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
     private static final int MAX_CALENDAR_DAY = 42;
-    Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
-    SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
-    SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
-    SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.ENGLISH);
-    SimpleDateFormat eventDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
-    // initialize adapters
-    GridView gridView;
-    GridAdapter gridAdapter;
-    RecyclerView recyclerView;
-    TaskAdapter recyclerAdapter;
+    private final Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
 
-    //initialize others
-    ArrayList<Date> dates = new ArrayList<>();
+    // views
+    private TextView monthTextView;
+    private GridView gridView;
+    private GridAdapter gridAdapter;
+    private RecyclerView recyclerView;
+    private TaskAdapter recyclerAdapter;
 
+    // Data
+    private final ArrayList<Date> dates = new ArrayList<>();
     private HashMap<Integer, ArrayList<Task>> monthTaskMap = new HashMap<>();
 
     private Context context;
+    private int gridSelectedPos = 0;
 
     @Override
     public void onStart() {
@@ -85,47 +81,64 @@ public class ScheduleFrag extends Fragment {
 
         // recycler view
         this.recyclerView = view.findViewById(R.id.schedule_recyclerView);
-        this.recyclerAdapter = new TaskAdapter(context, new ArrayList<Task>());
+        this.recyclerAdapter = new TaskAdapter(context, new ArrayList<>());
         this.recyclerView.setAdapter(this.recyclerAdapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
 
         // prev button
-        PreviousButton = view.findViewById(R.id.month_navigation_previous);
-        PreviousButton.setOnClickListener(v -> {
+        ImageButton previousButton = view.findViewById(R.id.month_navigation_previous);
+        previousButton.setOnClickListener(v -> {
             calendar.add(Calendar.MONTH, -1);
             SetUpCalendar();
         });
 
 
         // next button
-        NextButton = view.findViewById(R.id.month_navigation_next);
-        NextButton.setOnClickListener(v -> {
+        ImageButton nextButton = view.findViewById(R.id.month_navigation_next);
+        nextButton.setOnClickListener(v -> {
             calendar.add(Calendar.MONTH, 1);
             SetUpCalendar();
         });
 
 
         // current month date textView
-        CurrentDate = view.findViewById(R.id.currentDate);
+        monthTextView = view.findViewById(R.id.currentDate);
 
 
         // listener for every grid item
         gridView.setOnItemClickListener((arg0, arg1, position, arg3) -> {
             // TODO Auto-generated method stub
 
+            View prevView = gridView.getChildAt(gridSelectedPos);
+            if (prevView != null) {
+                LinearLayout outline = prevView.findViewById(R.id.schedule_gridItem_bg);
+                outline.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+            }
+
+
+            View itemView = gridView.getChildAt(position);
+            if (itemView != null) {
+                LinearLayout outline = itemView.findViewById(R.id.schedule_gridItem_bg);
+                outline.setBackgroundColor(ContextCompat.getColor(context, R.color.peach));
+            }
+
+            gridSelectedPos = position;
+
             Date selectedDate = dates.get(position);
             int day = selectedDate.toInstant().atZone(ZoneId.systemDefault()).getDayOfMonth();
+            int month = selectedDate.toInstant().atZone(ZoneId.systemDefault()).getMonthValue();
 
             ArrayList<Task> dayTaskList = monthTaskMap.get(day);
 
-            if (dayTaskList == null) {
+            if (dayTaskList == null || month != calendar.get(Calendar.MONTH) + 1) {
                 dayTaskList = new ArrayList<>();
             }
 
             recyclerAdapter = new TaskAdapter(context, dayTaskList);
             recyclerView.setAdapter(recyclerAdapter);
         });
+
 
         return view;
     }
@@ -137,8 +150,6 @@ public class ScheduleFrag extends Fragment {
      * @param year Year of the calendar.
      */
     private void collectTasksPerMonth(int month, int year) {
-
-
         MainActivity.userDoc.collection("Tasks")
                 .addSnapshotListener((value, error) -> {
                     if (error != null) return;
@@ -155,8 +166,6 @@ public class ScheduleFrag extends Fragment {
                         ZonedDateTime dateTime = Instant.ofEpochMilli(tmp).atZone(ZoneId.systemDefault());
 
                         if (month != dateTime.getMonthValue() || year != dateTime.getYear()) {
-                            Log.e("task month", String.valueOf(dateTime.getMonthValue()));
-                            Log.e("task year", String.valueOf(dateTime.getYear()));
                             continue;
                         }
 
@@ -168,14 +177,12 @@ public class ScheduleFrag extends Fragment {
                             monthTaskMap.put(dayOfMonth, dayTaskList);
                         }
 
-                        Log.e("task added", String.valueOf(dayOfMonth));
                         dayTaskList.add(new Task(doc.getString("taskName"),
                                 tmp,
                                 doc.getString("taskDesc"),
                                 doc.getId()));
                     }
 
-                    Log.e("monthTaskMap size", String.valueOf(monthTaskMap.size()));
                     gridAdapter.notifyDataSetChanged();
                 });
     }
@@ -184,11 +191,13 @@ public class ScheduleFrag extends Fragment {
      *
      */
     private void SetUpCalendar() {
-        String currentDate = dateFormat.format(calendar.getTime());
-        CurrentDate.setText(currentDate);
-        dates.clear();
+        // set the month text
+        String monthStr = dateFormat.format(calendar.getTime());
+        monthTextView.setText(monthStr);
 
-        monthTaskMap = new HashMap<>();
+        // set up data and adapters
+        dates.clear();
+        this.monthTaskMap = new HashMap<>();
         this.gridAdapter = new GridAdapter(context, dates, calendar, monthTaskMap);
         this.gridView.setAdapter(gridAdapter);
 
@@ -199,14 +208,28 @@ public class ScheduleFrag extends Fragment {
         int firstDayOfMonth = monthCalendar.get(Calendar.DAY_OF_WEEK) - 1;
         monthCalendar.add(Calendar.DAY_OF_MONTH, -firstDayOfMonth);
 
-        Log.e("collect month", String.valueOf(monthCalendar.get(Calendar.MONTH)));
-        Log.e("collect year", String.valueOf(calendar.get(Calendar.YEAR)));
         collectTasksPerMonth(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
 
+//        Calendar today = Calendar.getInstance();
+//        int todayDay = today.get(Calendar.DAY_OF_MONTH);
+//        int todayMonth = today.get(Calendar.MONTH) + 1;
+//        int todayYear = today.get(Calendar.YEAR);
 
         while (dates.size() < MAX_CALENDAR_DAY) {
-            dates.add(monthCalendar.getTime());
+            Date gridDate = monthCalendar.getTime();
+            dates.add(gridDate);
+
+//            if (gridDate.toInstant().atZone(ZoneId.systemDefault()).getDayOfMonth() == todayDay &&
+//                    gridDate.toInstant().atZone(ZoneId.systemDefault()).getMonthValue() == todayMonth &&
+//                    gridDate.toInstant().atZone(ZoneId.systemDefault()).getYear() == todayYear) {
+//                this.gridSelectedPos = dates.indexOf(gridDate);
+//            }
+
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
+
+//        if (gridView != null && gridView.getChildAt(this.gridSelectedPos) != null) {
+//            gridView.getChildAt(this.gridSelectedPos).performClick();
+//        }
     }
 }

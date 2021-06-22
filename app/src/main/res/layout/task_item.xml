@@ -7,7 +7,7 @@
     android:paddingVertical="10dp"
     android:paddingHorizontal="20dp"
     android:background="@drawable/bg_task_item"
-    android:layout_marginBottom="20dp"
+    android:layout_marginBottom="10dp"
     android:orientation="horizontal" >
 
     <!-- Details -->

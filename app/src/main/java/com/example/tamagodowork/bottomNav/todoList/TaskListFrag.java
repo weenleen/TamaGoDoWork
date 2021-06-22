@@ -1,6 +1,5 @@
 package com.example.tamagodowork.bottomNav.todoList;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -25,11 +21,8 @@ import java.util.Collections;
 
 public class TaskListFrag extends Fragment {
 
-    RecyclerView taskListView;
-    TaskAdapter adapter;
-    ArrayList<Task> list;
-
-    FirebaseFirestore db;
+    private TaskAdapter adapter;
+    private ArrayList<Task> list;
 
     @Nullable
     @Override
@@ -37,21 +30,15 @@ public class TaskListFrag extends Fragment {
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view =  inflater.inflate(R.layout.task_list_frag, container, false);
-        this.taskListView = view.findViewById(R.id.taskListView);
-        this.taskListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        RecyclerView taskListView = view.findViewById(R.id.taskListView);
+        taskListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         list = new ArrayList<>();
         adapter = new TaskAdapter(getActivity(), this.list);
         taskListView.setAdapter(adapter);
 
-        // get user info
-        String userID = "";
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) userID = user.getUid();
-
         // Read data from Firestore
-        db = FirebaseFirestore.getInstance();
-        db.collection("Users").document(userID).collection("Tasks")
+        MainActivity.userDoc.collection("Tasks")
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
                         // error

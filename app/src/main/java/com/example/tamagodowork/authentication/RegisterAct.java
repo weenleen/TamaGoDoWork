@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.tamagodowork.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -70,12 +71,15 @@ public class RegisterAct extends AppCompatActivity {
             firebaseAuth.createUserWithEmailAndPassword(email, password2)
                     .addOnSuccessListener(authResult -> {
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        FirebaseUser user = authResult.getUser();
+
+                        if (user == null) return;
 
                         HashMap<String, Object> userData = new HashMap<>();
                         userData.put("Name", name);
                         userData.put("XP", 0);
 
-                        db.collection("Users").document(authResult.getUser().getUid())
+                        db.collection("Users").document(user.getUid())
                                 .set(userData);
 
                         Toast.makeText(getApplicationContext(), "User Registered", Toast.LENGTH_SHORT).show();

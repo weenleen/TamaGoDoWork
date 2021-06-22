@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     getFrag(selectedIndex)).commit();
+            bottomNav.setSelectedItemId(selectedIndex);
         });
 
 
@@ -140,13 +141,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static Fragment getFrag(int num) {
-        switch (num) {
-            case 1:
-                return new PetFrag();
-            case 2:
-                return new ScheduleFrag();
-            default:
-                return new TaskListFrag();
+        if (num == R.id.navigation_pet) {
+            return new PetFrag();
+        } else if (num == R.id.navigation_schedule) {
+            return new ScheduleFrag();
+        } else {
+            return new TaskListFrag();
         }
     }
 
@@ -158,11 +158,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (tmp == R.id.navigation_pet) {
             fab.setVisibility(View.GONE);
-            selectedIndex = 1;
             selectedFrag = new PetFrag();
         } else if (tmp == R.id.navigation_schedule) {
             fab.setVisibility(View.VISIBLE);
-            selectedIndex = 2;
             selectedFrag = new ScheduleFrag();
         } else {
             selectedIndex = 0;
@@ -170,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
             selectedFrag = new TaskListFrag();
         }
 
-        userDoc.update("selectedFrag", selectedIndex);
+        userDoc.update("selectedFrag", tmp);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 selectedFrag).commit();
         return true;
