@@ -1,5 +1,7 @@
 package com.example.tamagodowork.bottomNav.todoList;
 
+import com.example.tamagodowork.R;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -12,18 +14,33 @@ import java.time.temporal.ChronoUnit;
  */
 public class Task implements Comparable<Task> {
 
+    public static final int[] colours = new int[] {
+            R.color.yellow,
+            R.color.blue,
+            R.color.teal_200,
+            R.color.purple_500,
+            R.color.peach
+    };
+
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private String taskName, taskDesc, key;
     private Long taskDeadline;
+    private int colourId;
 
     public Task() { }
 
-    public Task(String taskName, long deadline, String taskDesc, String key) {
+    public Task(String taskName, long deadline, String taskDesc, String key, Integer colourId) {
         this.taskName = taskName;
         this.taskDeadline = deadline;
         this.taskDesc = taskDesc;
         this.key = key;
+
+        if (colourId == null) {
+            this.colourId = colours[0];
+        } else {
+            this.colourId = colourId;
+        }
     }
 
     // added getters
@@ -38,6 +55,8 @@ public class Task implements Comparable<Task> {
     public long getTaskDeadline() { return this.taskDeadline; }
 
     public String getKey() { return key; }
+
+    public int getColourId() { return colourId; }
 
     // added setters
     public void setTaskName(String taskName) {

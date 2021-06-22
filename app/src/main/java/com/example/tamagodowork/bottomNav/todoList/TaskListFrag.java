@@ -54,7 +54,8 @@ public class TaskListFrag extends Fragment {
                         list.add(new Task(doc.getString("taskName"),
                                 tmp,
                                 doc.getString("taskDesc"),
-                                doc.getId()));
+                                doc.getId(),
+                                doc.get("colourId", Integer.class)));
                     }
 
                     // might want to change to SortedList for more efficiency

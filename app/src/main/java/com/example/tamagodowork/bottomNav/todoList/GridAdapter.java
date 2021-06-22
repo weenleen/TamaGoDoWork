@@ -2,7 +2,7 @@ package com.example.tamagodowork.bottomNav.todoList;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 
 import com.example.tamagodowork.R;
 
@@ -21,11 +22,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static android.graphics.Typeface.BOLD;
 
@@ -33,7 +32,7 @@ public class GridAdapter extends BaseAdapter {
 
     private final List<Date> dates;
     private final Calendar currentDate;
-    private HashMap<Integer, ArrayList<Task>> monthTaskMap;
+    private final HashMap<Integer, ArrayList<Task>> monthTaskMap;
     private final Context context;
 
     public GridAdapter(@NonNull @NotNull Context context, List<Date> dates, Calendar currentDate,
@@ -108,12 +107,21 @@ public class GridAdapter extends BaseAdapter {
         for (int i = 0; i < numOfTasks; i++) {
             if (i >= 5) break; // maximum 4 indicators and a plus symbol
 
+
             ImageView indicator = (ImageView) indicatorLayout.getChildAt(i);
             LinearLayout.LayoutParams childLayoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     1f / numOfTasks);
             indicator.setLayoutParams(childLayoutParams);
+
+            if (i >= 4) break; // below is for the circles and not plus sign
+
+            GradientDrawable tmp = (GradientDrawable) indicator.getDrawable();
+
+            if (tmp != null) {
+                tmp.setColor(ContextCompat.getColor(context, dayTaskList.get(i).getColourId()));
+            }
         }
 
         return view;

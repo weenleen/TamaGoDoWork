@@ -33,16 +33,32 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <EditText
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Name"
-                    android:textSize="20sp"
-                    android:id="@+id/addName"
-                    android:maxLines="3"
-                    android:layout_marginBottom="20dp"
-                    android:inputType="text" >
-                </EditText>
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageButton
+                        android:id="@+id/addColour"
+                        android:layout_height="wrap_content"
+                        android:layout_width= "wrap_content"
+                        android:padding="10dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/button_color_picker_small"
+                        android:background="@android:color/transparent"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Name"
+                        android:textSize="20sp"
+                        android:id="@+id/addName"
+                        android:maxLines="3"
+                        android:inputType="text" />
+                </LinearLayout>
+
+
 
                 <!-- Deadline -->
                 <EditText

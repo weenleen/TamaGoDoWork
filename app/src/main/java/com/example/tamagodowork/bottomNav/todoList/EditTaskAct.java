@@ -119,7 +119,7 @@ public class EditTaskAct extends AppCompatActivity {
                 if (child.isChecked()) {
                     remRef.document(String.valueOf(i)).set(
                             Map.of("alarmId",
-                                    new Task("", deadline, "", "").getAlarmTime(i)));
+                                    new Task("", deadline, "", "", Task.colours[0]).getAlarmTime(i)));
                 } else {
                     remRef.document(String.valueOf(i)).delete();
                 }

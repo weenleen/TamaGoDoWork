@@ -2,7 +2,6 @@ package com.example.tamagodowork.bottomNav.todoList;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -181,7 +180,8 @@ public class ScheduleFrag extends Fragment {
                         dayTaskList.add(new Task(doc.getString("taskName"),
                                 tmp,
                                 doc.getString("taskDesc"),
-                                doc.getId()));
+                                doc.getId(),
+                                doc.get("colourId", Integer.class)));
                     }
 
                     this.gridView.setAdapter(this.gridAdapter);
