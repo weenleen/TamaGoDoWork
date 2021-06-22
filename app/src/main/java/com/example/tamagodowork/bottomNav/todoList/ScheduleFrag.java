@@ -2,6 +2,7 @@ package com.example.tamagodowork.bottomNav.todoList;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -154,7 +155,7 @@ public class ScheduleFrag extends Fragment {
                 .addSnapshotListener((value, error) -> {
                     if (error != null) return;
 
-                    monthTaskMap.clear();
+                    this.monthTaskMap.clear();
 
                     assert value != null;
                     for (QueryDocumentSnapshot doc : value) {
@@ -170,11 +171,11 @@ public class ScheduleFrag extends Fragment {
                         }
 
                         int dayOfMonth = dateTime.getDayOfMonth();
-                        ArrayList<Task> dayTaskList = monthTaskMap.get(dayOfMonth);
+                        ArrayList<Task> dayTaskList = this.monthTaskMap.get(dayOfMonth);
 
                         if (dayTaskList == null) {
                             dayTaskList = new ArrayList<>();
-                            monthTaskMap.put(dayOfMonth, dayTaskList);
+                            this.monthTaskMap.put(dayOfMonth, dayTaskList);
                         }
 
                         dayTaskList.add(new Task(doc.getString("taskName"),
@@ -183,7 +184,7 @@ public class ScheduleFrag extends Fragment {
                                 doc.getId()));
                     }
 
-                    gridAdapter.notifyDataSetChanged();
+                    this.gridView.setAdapter(this.gridAdapter);
                 });
     }
 

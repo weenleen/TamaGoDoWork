@@ -2,6 +2,7 @@ package com.example.tamagodowork.bottomNav.todoList;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +21,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.graphics.Typeface.BOLD;
 
@@ -30,7 +33,7 @@ public class GridAdapter extends BaseAdapter {
 
     private final List<Date> dates;
     private final Calendar currentDate;
-    private final HashMap<Integer, ArrayList<Task>> monthTaskMap;
+    private HashMap<Integer, ArrayList<Task>> monthTaskMap;
     private final Context context;
 
     public GridAdapter(@NonNull @NotNull Context context, List<Date> dates, Calendar currentDate,
@@ -96,7 +99,7 @@ public class GridAdapter extends BaseAdapter {
         ArrayList<Task> dayTaskList = this.monthTaskMap.get(displayDay);
         int numOfTasks;
 
-        if (dayTaskList == null) numOfTasks = 0;
+        if (dayTaskList == null) return view;
         else numOfTasks = dayTaskList.size();
 
         LinearLayout indicatorLayout = view.findViewById(R.id.schedule_task_indicator);
@@ -112,6 +115,7 @@ public class GridAdapter extends BaseAdapter {
                     1f / numOfTasks);
             indicator.setLayoutParams(childLayoutParams);
         }
+
         return view;
     }
 
@@ -130,4 +134,5 @@ public class GridAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
+
 }
