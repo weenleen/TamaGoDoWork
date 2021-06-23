@@ -23,10 +23,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/peach"
-            android:text="Title testing"
+            android:text=""
             android:textSize="20sp"
             android:maxLines="1"
-            android:ellipsize="end" >
+            android:ellipsize="end"
+            android:drawablePadding="10dp">
         </TextView>
 
         <!-- Deadline. -->
@@ -48,7 +49,7 @@
             android:id="@+id/taskDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description testing."
+            android:text=""
             android:textSize="15sp"
             android:drawablePadding="10dp"
             android:maxLines="1"

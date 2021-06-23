@@ -2,8 +2,11 @@ package com.example.tamagodowork.bottomNav.todoList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,11 +87,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         final String name = taskList.get(position).getTaskName();
         final String deadlineStr = taskList.get(position).getDeadlineString();
         final String desc = taskList.get(position).getTaskDesc();
+        final int colourId = taskList.get(position).getColourId();
         final int viewType = holder.getItemViewType();
 
         TaskAdapter adapter = this;
 
         holder.taskName.setText(name);
+        GradientDrawable indicator = (GradientDrawable) AppCompatResources.getDrawable(context,
+                R.drawable.button_color_picker_small);
+        if (indicator != null) {
+            indicator.setColor(ContextCompat.getColor(context, colourId));
+            holder.taskName.setCompoundDrawablesWithIntrinsicBounds(indicator, null, null, null);
+        }
+
+
         holder.taskDesc.setText(desc);
 
         if (viewType == 1) { // overdue
@@ -97,7 +109,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
             // dialogs
             holder.itemView.setOnClickListener(v -> {
-                OverdueDetailsDial dialog = new OverdueDetailsDial(name, deadlineStr, desc);
+                OverdueDetailsDial dialog = new OverdueDetailsDial(name, deadlineStr, desc, colourId);
                 dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
                         "Show task details");
             });
@@ -114,7 +126,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
             // dialogs
             holder.itemView.setOnClickListener(v -> {
-                TaskDetailsDial dialog = new TaskDetailsDial(name, deadlineStr, desc, key);
+                TaskDetailsDial dialog = new TaskDetailsDial(name, deadlineStr, desc, key, colourId);
                 dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
                         "Show task details");
             });

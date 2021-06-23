@@ -23,9 +23,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="?attr/colorPrimary"
-            android:text="Title testing"
             android:textSize="20sp"
             android:maxLines="1"
+            android:drawablePadding="10dp"
             android:ellipsize="end" >
         </TextView>
 
@@ -34,12 +34,10 @@
             android:id="@+id/taskDeadline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="3 days"
             android:textSize="15sp"
             android:drawablePadding="10dp"
             android:maxLines="1"
             android:ellipsize="end"
-            app:drawableTint="?attr/colorPrimary"
             app:drawableStartCompat="@drawable/ic_baseline_access_time_24">
         </TextView>
 
@@ -48,7 +46,6 @@
             android:id="@+id/taskDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description testing."
             android:textSize="15sp"
             android:drawablePadding="10dp"
             android:maxLines="1"

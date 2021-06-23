@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.alarm.AlarmReceiver;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.time.LocalDateTime;
@@ -36,6 +37,7 @@ public class AddTaskAct extends AppCompatActivity {
     private EditText addName, addDeadline, addDesc;
     private ImageButton addColour;
     private long deadline;
+
     private static Integer colourId;
 
     @Override
@@ -44,10 +46,6 @@ public class AddTaskAct extends AppCompatActivity {
         setContentView(R.layout.activity_add_task);
 
         this.context = getApplicationContext();
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(10, 10, 10, 10);
-
 
         this.addName = findViewById(R.id.addName);
         this.addDesc = findViewById(R.id.addDesc);
@@ -76,11 +74,13 @@ public class AddTaskAct extends AppCompatActivity {
 
         // add colour
         this.addColour = findViewById(R.id.addColour);
+        ((GradientDrawable) addColour.getDrawable()).setColor(
+                ContextCompat.getColor(context, Task.colours[0]));
         this.addColour.setOnClickListener(v -> {
             final View dialogView = View.inflate(context, R.layout.dial_colour_picker, null);
-            final AlertDialog alertDialog = new AlertDialog.Builder(AddTaskAct.this).create();
+            final BottomSheetDialog dialog = new BottomSheetDialog(AddTaskAct.this);
 
-            LinearLayout layout = (LinearLayout) dialogView;
+            LinearLayout layout = dialogView.findViewById(R.id.colourPicker_image_layout);
 
             for (int i = 0; i < layout.getChildCount(); i++) {
 
@@ -99,12 +99,12 @@ public class AddTaskAct extends AppCompatActivity {
                     colourId = c;
                     ((GradientDrawable) addColour.getDrawable()).setColor(
                             ContextCompat.getColor(context, c));
-                    alertDialog.dismiss();
+                    dialog.dismiss();
                 });
             }
 
-            alertDialog.setView(dialogView);
-            alertDialog.show();
+            dialog.setContentView(dialogView);
+            dialog.show();
         });
 
 

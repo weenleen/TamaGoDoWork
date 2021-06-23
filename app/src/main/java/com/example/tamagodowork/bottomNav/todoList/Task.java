@@ -15,19 +15,20 @@ import java.time.temporal.ChronoUnit;
 public class Task implements Comparable<Task> {
 
     public static final int[] colours = new int[] {
+            R.color.peach,
             R.color.yellow,
+            R.color.green,
             R.color.blue,
-            R.color.teal_200,
-            R.color.purple_500,
-            R.color.peach
+            R.color.purple
     };
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private String taskName, taskDesc, key;
     private Long taskDeadline;
-    private int colourId;
+    private Integer colourId;
 
+    @SuppressWarnings("unused")
     public Task() { }
 
     public Task(String taskName, long deadline, String taskDesc, String key, Integer colourId) {
@@ -35,12 +36,7 @@ public class Task implements Comparable<Task> {
         this.taskDeadline = deadline;
         this.taskDesc = taskDesc;
         this.key = key;
-
-        if (colourId == null) {
-            this.colourId = colours[0];
-        } else {
-            this.colourId = colourId;
-        }
+        this.colourId = colourId;
     }
 
     // added getters
@@ -56,7 +52,12 @@ public class Task implements Comparable<Task> {
 
     public String getKey() { return key; }
 
-    public int getColourId() { return colourId; }
+    public int getColourId() {
+        if (this.colourId == null) {
+            this.colourId = colours[0];
+        }
+        return this.colourId;
+    }
 
     // added setters
     public void setTaskName(String taskName) {

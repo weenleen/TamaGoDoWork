@@ -32,27 +32,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/taskName"
-                android:text="Task Name"
                 android:textColor="@color/peach"
                 android:textSize="20sp"
-                android:layout_marginBottom="15dp" >
+                android:layout_marginBottom="15dp"
+                android:drawablePadding="20dp">
             </TextView>
 
             <TextView
                 android:id='@+id/taskDeadline'
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Task Deadline"
                 android:drawablePadding="20dp"
                 android:textSize="15sp"
                 android:layout_marginBottom="15dp"
-                app:drawableStartCompat="@drawable/ic_baseline_access_time_24"
-                app:drawableTint="@color/peach" />
+                app:drawableStartCompat="@drawable/ic_baseline_access_time_24" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Reminders"
+                android:text="@string/reminders"
                 android:textColor="@color/peach"
                 android:textSize="15sp"/>
 
@@ -66,7 +64,6 @@
                 android:id='@+id/taskDesc'
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Task Description"
                 android:drawablePadding="20dp"
                 android:textSize="15sp"
                 app:drawableTint="@color/peach"
@@ -86,8 +83,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:id="@+id/edit_button"
-            android:text="Edit"
-            android:backgroundTint="@color/peach"
+            android:text="@string/edit"
             android:layout_marginEnd="5dp"
             android:drawableLeft="@drawable/ic_baseline_edit_24" />
 

@@ -1,6 +1,8 @@
 package com.example.tamagodowork;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.animation.ObjectAnimator;
@@ -11,6 +13,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             xp = tmp;
-            levelView.setText("Level " + (xp/100 + 1));
+            levelView.setText(getString(R.string.level, (xp/100 + 1)));
             ObjectAnimator.ofInt(xpBar, "progress", xp % 100)
                     .setDuration(200)
                     .start();
@@ -111,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Settings
-        ImageView settings = findViewById(R.id.settings_icon);
+        ImageButton settings = findViewById(R.id.settings_icon);
         settings.setOnClickListener(v -> {
             startActivity(new Intent(getApplicationContext(), SettingsAct.class));
             finish();

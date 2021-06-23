@@ -75,8 +75,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
-            android:text="@string/done"
-            android:textSize="20sp"/>
+            android:text="@string/done" />
 
         <Button
             android:id="@+id/room_cancel"
@@ -86,8 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
             android:text="@string/cancel"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="20sp"/>
+            android:textColor="?attr/colorPrimary" />
     </LinearLayout>
 
 </RelativeLayout>
