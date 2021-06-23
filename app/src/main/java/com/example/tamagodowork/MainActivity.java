@@ -21,8 +21,8 @@ import android.widget.Toast;
 
 import com.example.tamagodowork.authentication.RegisterAct;
 import com.example.tamagodowork.bottomNav.pet.PetFrag;
-import com.example.tamagodowork.bottomNav.todoList.ScheduleFrag;
 import com.example.tamagodowork.bottomNav.todoList.AddTaskAct;
+import com.example.tamagodowork.bottomNav.todoList.ScheduleFrag;
 import com.example.tamagodowork.bottomNav.todoList.TaskListFrag;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,15 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
     public ProgressBar xpBar;
     private TextView levelView;
-    private int selectedIndex = 0;
     private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
 
         // Store xp values in firebase
@@ -74,14 +71,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Set default fragment to the task list fragment
         userDoc.get().addOnSuccessListener(documentSnapshot -> {
-            selectedIndex = 0;
+            int selectedIndex = R.id.navigation_taskList;
             if (documentSnapshot != null) {
                 Integer tmp = documentSnapshot.get("selectedFrag", Integer.class);
                 if (tmp != null) selectedIndex = tmp;
-            }
-
-            if (selectedIndex == 1) {
-                this.fab.setVisibility(View.GONE);
             }
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -166,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
             fab.setVisibility(View.VISIBLE);
             selectedFrag = new ScheduleFrag();
         } else {
-            selectedIndex = 0;
             fab.setVisibility(View.VISIBLE);
             selectedFrag = new TaskListFrag();
         }
