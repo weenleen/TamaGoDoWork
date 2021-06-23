@@ -151,11 +151,11 @@ public class RoomActivity extends AppCompatActivity {
      * A PagerAdapter that wraps around another PagerAdapter to handle paging wrap-around.
      * INFINITE SCROLLING
      */
-    public class InfinitePagerAdapter extends PagerAdapter {
+    public static class InfinitePagerAdapter extends PagerAdapter {
 
         private static final boolean DEBUG = false;
 
-        private PagerAdapter adapter;
+        private final PagerAdapter adapter;
 
         public InfinitePagerAdapter(PagerAdapter adapter) {
             this.adapter = adapter;
@@ -175,8 +175,9 @@ public class RoomActivity extends AppCompatActivity {
             return adapter.getCount();
         }
 
+        @NotNull
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull @NotNull ViewGroup container, int position) {
             int virtualPosition = position % getRealCount();
             debug("instantiateItem: real position: " + position);
             debug("instantiateItem: virtual position: " + virtualPosition);
@@ -186,7 +187,7 @@ public class RoomActivity extends AppCompatActivity {
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(@NotNull ViewGroup container, int position, @NotNull Object object) {
             int virtualPosition = position % getRealCount();
             debug("destroyItem: real position: " + position);
             debug("destroyItem: virtual position: " + virtualPosition);
@@ -194,12 +195,12 @@ public class RoomActivity extends AppCompatActivity {
         }
 
         @Override
-        public void finishUpdate(ViewGroup container) {
+        public void finishUpdate(@NotNull ViewGroup container) {
             adapter.finishUpdate(container);
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(@NonNull @NotNull View view, @NonNull @NotNull Object object) {
             return adapter.isViewFromObject(view, object);
         }
 
@@ -214,7 +215,7 @@ public class RoomActivity extends AppCompatActivity {
         }
 
         @Override
-        public void startUpdate(ViewGroup container) {
+        public void startUpdate(@NotNull ViewGroup container) {
             adapter.startUpdate(container);
         }
 
@@ -230,17 +231,17 @@ public class RoomActivity extends AppCompatActivity {
         }
 
         @Override
-        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        public void setPrimaryItem(@NotNull ViewGroup container, int position, @NotNull Object object) {
             adapter.setPrimaryItem(container, position, object);
         }
 
         @Override
-        public void unregisterDataSetObserver(DataSetObserver observer) {
+        public void unregisterDataSetObserver(@NotNull DataSetObserver observer) {
             adapter.unregisterDataSetObserver(observer);
         }
 
         @Override
-        public void registerDataSetObserver(DataSetObserver observer) {
+        public void registerDataSetObserver(@NotNull DataSetObserver observer) {
             adapter.registerDataSetObserver(observer);
         }
 
@@ -250,7 +251,7 @@ public class RoomActivity extends AppCompatActivity {
         }
 
         @Override
-        public int getItemPosition(Object object) {
+        public int getItemPosition(@NotNull Object object) {
             return adapter.getItemPosition(object);
         }
 

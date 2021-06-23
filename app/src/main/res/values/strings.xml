@@ -3,15 +3,27 @@
     <string name="title_taskList">Tasks</string>
     <string name="title_pet">Pet</string>
     <string name="title_schedule">Schedule</string>
-    <string name="title_activity_login">LoginActivity</string>
+
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
+    <string name="action_login">Login</string>
+    <string name="action_register">Register</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <string name="level">Level %1$d</string>
+
+    <string name="create">Create</string>
+    <string name="edit">Edit</string>
     <string name="done">Done!</string>
     <string name="cancel">Cancel</string>
+    <string name="saveChanges">Save Changes</string>
+
+    <string name="name">Name</string>
+    <string name="deadline">Deadline</string>
+    <string name="description">Description</string>
+
+    <string name="reminders">Reminders</string>
+    <string name="colorPicker">Choose a Colour:</string>
 </resources>

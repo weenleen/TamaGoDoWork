@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/off_white"
-    android:paddingHorizontal="20dp"
-    android:paddingVertical="40dp" >
+    android:padding="20dp" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,11 +16,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Edit"
-            android:textSize="30sp"
+            android:text="@string/edit"
+            android:textSize="25sp"
             android:textColor="?attr/colorPrimary"
-            android:gravity="center" >
-        </TextView>
+            android:gravity="center" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -34,41 +32,52 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <EditText
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Name"
-                    android:textSize="20sp"
-                    android:id="@+id/editName"
-                    android:maxLines="3"
-                    android:layout_marginBottom="40dp"
-                    android:inputType="text">
-                </EditText>
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageButton
+                        android:id="@+id/editColour"
+                        android:layout_height="wrap_content"
+                        android:layout_width= "wrap_content"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="15dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/button_color_picker_small"
+                        android:background="@android:color/transparent"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/name"
+                        android:textSize="20sp"
+                        android:id="@+id/editName"
+                        android:maxLines="3"
+                        android:inputType="text" />
+                </LinearLayout>
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_baseline_access_time_24"
-                    android:drawableTint="@color/peach"
                     android:id="@+id/editDeadline"
                     android:drawablePadding="20dp"
-                    android:hint="Deadline"
+                    android:hint="@string/deadline"
                     android:textSize="15sp"
-                    android:editable="false"
                     android:focusable="false"
                     android:cursorVisible="false"
                     android:layout_marginBottom="20dp"
-                    android:inputType="text">
-                </EditText>
+                    android:inputType="text"/>
 
                 <!-- Reminders title -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Reminders"
+                    android:text="@string/reminders"
                     android:textSize="18sp"
-                    android:textColor="@color/peach">
-                </TextView>
+                    android:textColor="@color/peach"/>
 
                 <!-- Reminders checkboxes -->
                 <LinearLayout
@@ -83,24 +92,21 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/ctv_1_h"
                         android:text="1 hour before"
-                        android:gravity="center_vertical" >
-                    </CheckBox>
+                        android:gravity="center_vertical" />
 
                     <CheckBox
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/ctv_1_d"
                         android:text="1 day before"
-                        android:gravity="center_vertical" >
-                    </CheckBox>
+                        android:gravity="center_vertical" />
 
                     <CheckBox
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/ctv_2_d"
                         android:text="2 days before"
-                        android:gravity="center_vertical" >
-                    </CheckBox>
+                        android:gravity="center_vertical" />
                 </LinearLayout>
 
                 <EditText
@@ -109,12 +115,11 @@
                     android:drawableStart="@drawable/ic_baseline_assignment_24"
                     android:drawableTint="@color/peach"
                     android:drawablePadding="20dp"
-                    android:hint="Description"
+                    android:hint="@string/description"
                     android:textSize="15sp"
                     android:id="@+id/editDesc"
                     android:maxLines="8"
-                    android:inputType="text">
-                </EditText>
+                    android:inputType="text"/>
             </LinearLayout>
         </ScrollView>
 
@@ -128,18 +133,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/save_button"
-                android:text="Save Changes"
-                android:backgroundTint="@color/peach">
-            </Button>
+                android:text="@string/saveChanges" />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/cancel_edit_button"
-                android:text="Cancel"
-                android:textColor="@color/peach"
-                android:backgroundTint="@color/off_white">
-            </Button>
+                android:text="@string/cancel"
+                android:textColor="?attr/colorPrimary"
+                android:backgroundTint="@color/off_white"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

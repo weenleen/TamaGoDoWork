@@ -81,8 +81,6 @@ public class ScheduleFrag extends Fragment {
 
         // recycler view
         this.recyclerView = view.findViewById(R.id.schedule_recyclerView);
-        this.recyclerAdapter = new TaskAdapter(context, new ArrayList<>());
-        this.recyclerView.setAdapter(this.recyclerAdapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
 
@@ -216,5 +214,8 @@ public class ScheduleFrag extends Fragment {
             dates.add(gridDate);
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
+
+        this.recyclerAdapter = new TaskAdapter(context, new ArrayList<>());
+        this.recyclerView.setAdapter(recyclerAdapter);
     }
 }

@@ -2,8 +2,12 @@ package com.example.tamagodowork.bottomNav.todoList;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,12 +15,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -28,14 +35,20 @@ import java.util.Map;
 
 public class EditTaskAct extends AppCompatActivity {
 
+    private Context context;
+
     private EditText editName, editDeadline, editDesc;
+    private ImageButton editColour;
     private String key;
     private long deadline;
+    private int colourId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_task);
+
+        this.context = getApplicationContext();
 
         // Set Views
         this.editName = findViewById(R.id.editName);
@@ -53,7 +66,7 @@ public class EditTaskAct extends AppCompatActivity {
         // set deadline to previous deadline
         LocalDateTime prevDate = LocalDateTime.parse(deadlineStr,
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm") );
-        deadline = prevDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        this.deadline = prevDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
         // Check reminders Checkboxes
         LinearLayout remLayout = findViewById(R.id.reminders);
@@ -71,7 +84,7 @@ public class EditTaskAct extends AppCompatActivity {
 
         // change deadline
         this.editDeadline.setOnClickListener(v -> {
-            final View dialogView = View.inflate(getApplicationContext(), R.layout.date_time_picker, null);
+            final View dialogView = View.inflate(context, R.layout.date_time_picker, null);
             final AlertDialog alertDialog = new AlertDialog.Builder(EditTaskAct.this).create();
 
             DatePicker datePicker = dialogView.findViewById(R.id.date_picker);
@@ -97,6 +110,46 @@ public class EditTaskAct extends AppCompatActivity {
             alertDialog.show();
         });
 
+
+        // edit Colour
+        this.colourId = getIntent().getIntExtra("colourId", Task.colours[0]);
+        this.editColour = findViewById(R.id.editColour);
+        ((GradientDrawable) editColour.getDrawable()).setColor(
+                ContextCompat.getColor(context, this.colourId));
+
+        this.editColour.setOnClickListener(v -> {
+            final View dialogView = View.inflate(context, R.layout.dial_colour_picker, null);
+            final BottomSheetDialog dialog = new BottomSheetDialog(EditTaskAct.this);
+
+            LinearLayout layout = dialogView.findViewById(R.id.colourPicker_image_layout);
+
+            for (int i = 0; i < layout.getChildCount(); i++) {
+
+                ImageView imageView = (ImageView) layout.getChildAt(i);
+                GradientDrawable tmp = (GradientDrawable) AppCompatResources
+                        .getDrawable(context, R.drawable.button_color_picker);
+
+                int c = Task.colours[i];
+
+                if (tmp != null) {
+                    tmp.setColor(ContextCompat.getColor(context, c));
+                    imageView.setImageDrawable(tmp);
+                }
+
+                imageView.setOnClickListener(v12 -> {
+                    this.colourId = c;
+                    ((GradientDrawable) editColour.getDrawable()).setColor(
+                            ContextCompat.getColor(context, c));
+                    dialog.dismiss();
+                });
+            }
+
+            dialog.setContentView(dialogView);
+            dialog.show();
+        });
+
+
+
         // save button
         Button saveBtn = findViewById(R.id.save_button);
         saveBtn.setOnClickListener(v -> {
@@ -119,7 +172,7 @@ public class EditTaskAct extends AppCompatActivity {
                 if (child.isChecked()) {
                     remRef.document(String.valueOf(i)).set(
                             Map.of("alarmId",
-                                    new Task("", deadline, "", "", Task.colours[0]).getAlarmTime(i)));
+                                    new Task("", deadline, "", "", null).getAlarmTime(i)));
                 } else {
                     remRef.document(String.valueOf(i)).delete();
                 }
@@ -129,7 +182,8 @@ public class EditTaskAct extends AppCompatActivity {
             MainActivity.userDoc.collection("Tasks").document(key)
                     .update("taskName", name,
                             "taskDeadline", deadline,
-                            "taskDesc", desc)
+                            "taskDesc", desc,
+                            "colourId", colourId)
                     .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Save Failed", Toast.LENGTH_SHORT).show());
             MainActivity.backToMain(EditTaskAct.this);
         });
