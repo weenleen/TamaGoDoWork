@@ -8,7 +8,10 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+import static android.content.ContentValues.TAG;
+
 public class RoomActivity extends AppCompatActivity {
 
     private int[] wallpapers;
@@ -35,7 +40,7 @@ public class RoomActivity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.room_viewpager);
         loadWallpapers();
 
-        RoomViewpagerAdapter adapter = new RoomViewpagerAdapter(getApplicationContext(), wallpapers);
+        InfinitePagerAdapter adapter = new InfinitePagerAdapter(new RoomViewpagerAdapter(getApplicationContext(), wallpapers));
         viewPager.setAdapter(adapter);
 
 
@@ -63,8 +68,11 @@ public class RoomActivity extends AppCompatActivity {
         // done
         Button doneButton = findViewById(R.id.room_done);
         doneButton.setOnClickListener(v -> {
+            // viewPager.getCurrentItem() will exceed array length if you over scroll the wallpaper length
+            Log.d(TAG, String.valueOf(viewPager.getCurrentItem()));
             MainActivity.userDoc.collection("Pet").document("Room").set(
-                    Map.of("wallpaper", wallpapers[viewPager.getCurrentItem()])
+                    // mod the wallpaper length to prevent array exceeding issues
+                    Map.of("wallpaper", wallpapers[viewPager.getCurrentItem() % wallpapers.length])
             );
 
             startActivity(new Intent(RoomActivity.this, MainActivity.class));
@@ -134,6 +142,121 @@ public class RoomActivity extends AppCompatActivity {
         @Override
         public boolean isViewFromObject(@NonNull @NotNull View view, @NonNull @NotNull Object object) {
             return view.equals(object);
+        }
+    }
+
+
+    /**
+     * A PagerAdapter that wraps around another PagerAdapter to handle paging wrap-around.
+     * INFINITE SCROLLING
+     */
+    public class InfinitePagerAdapter extends PagerAdapter {
+
+        private static final boolean DEBUG = false;
+
+        private PagerAdapter adapter;
+
+        public InfinitePagerAdapter(PagerAdapter adapter) {
+            this.adapter = adapter;
+        }
+
+        @Override
+        public int getCount() {
+            if (getRealCount() == 0) {
+                return 0;
+            }
+            // reduce the page scroll to 500 to reduce lag
+            return 500;
+        }
+
+        // get the real count of the outer adapter - infinite page adapter
+        public int getRealCount() {
+            return adapter.getCount();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            int virtualPosition = position % getRealCount();
+            debug("instantiateItem: real position: " + position);
+            debug("instantiateItem: virtual position: " + virtualPosition);
+
+            // only expose virtual position to the inner adapter
+            return adapter.instantiateItem(container, virtualPosition);
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            int virtualPosition = position % getRealCount();
+            debug("destroyItem: real position: " + position);
+            debug("destroyItem: virtual position: " + virtualPosition);
+            adapter.destroyItem(container, virtualPosition, object);
+        }
+
+        @Override
+        public void finishUpdate(ViewGroup container) {
+            adapter.finishUpdate(container);
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return adapter.isViewFromObject(view, object);
+        }
+
+        @Override
+        public void restoreState(Parcelable bundle, ClassLoader classLoader) {
+            adapter.restoreState(bundle, classLoader);
+        }
+
+        @Override
+        public Parcelable saveState() {
+            return adapter.saveState();
+        }
+
+        @Override
+        public void startUpdate(ViewGroup container) {
+            adapter.startUpdate(container);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            int virtualPosition = position % getRealCount();
+            return adapter.getPageTitle(virtualPosition);
+        }
+
+        @Override
+        public float getPageWidth(int position) {
+            return adapter.getPageWidth(position);
+        }
+
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            adapter.setPrimaryItem(container, position, object);
+        }
+
+        @Override
+        public void unregisterDataSetObserver(DataSetObserver observer) {
+            adapter.unregisterDataSetObserver(observer);
+        }
+
+        @Override
+        public void registerDataSetObserver(DataSetObserver observer) {
+            adapter.registerDataSetObserver(observer);
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return adapter.getItemPosition(object);
+        }
+
+        private void debug(String message) {
+            if (DEBUG) {
+                Log.d(TAG, message);
+            }
         }
     }
 }
