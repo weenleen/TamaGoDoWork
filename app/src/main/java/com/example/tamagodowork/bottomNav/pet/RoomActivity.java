@@ -98,7 +98,8 @@ public class RoomActivity extends AppCompatActivity {
                 R.drawable.wallpaper_orange,
                 R.drawable.wallpaper_purple,
                 R.drawable.wallpaper_exercise,
-                R.drawable.wallpaper_ocean
+                R.drawable.wallpaper_ocean,
+                R.drawable.wallpaper_gym
         };
     }
 
