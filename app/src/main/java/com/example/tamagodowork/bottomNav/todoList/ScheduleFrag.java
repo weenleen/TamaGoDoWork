@@ -72,7 +72,7 @@ public class ScheduleFrag extends Fragment {
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.schedule_frag, container, false);
+        View view = inflater.inflate(R.layout.frag_schedule, container, false);
 
 
         // grid
@@ -187,7 +187,7 @@ public class ScheduleFrag extends Fragment {
     }
 
     /**
-     *
+     * Sets up the grid view and calendar view.
      */
     private void SetUpCalendar() {
         // set the month text

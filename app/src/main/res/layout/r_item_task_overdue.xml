@@ -35,7 +35,7 @@
             android:id="@+id/taskDeadline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="OVERDUE"
+            android:text="@string/overdue"
             android:textSize="15sp"
             android:drawablePadding="10dp"
             android:maxLines="1"
@@ -60,13 +60,13 @@
     </LinearLayout>
 
     <ImageButton
+        android:id="@+id/taskAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_baseline_close_24"
-        android:paddingEnd="10dp"
+        android:padding="10dp"
         android:background="@android:color/transparent"
         android:layout_gravity="center"
-        android:id="@+id/overdue_dismiss"
-        android:contentDescription="dismiss overdue">
+        android:contentDescription="@string/overdue">
     </ImageButton>
 </LinearLayout>

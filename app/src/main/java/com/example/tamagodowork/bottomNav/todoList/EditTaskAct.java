@@ -39,6 +39,7 @@ public class EditTaskAct extends AppCompatActivity {
 
     private EditText editName, editDeadline, editDesc;
     private ImageButton editColour;
+
     private String key;
     private long deadline;
     private int colourId;
@@ -46,7 +47,7 @@ public class EditTaskAct extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_task);
+        setContentView(R.layout.activity_task_edit);
 
         this.context = getApplicationContext();
 
@@ -56,7 +57,7 @@ public class EditTaskAct extends AppCompatActivity {
         this.editDeadline = findViewById(R.id.editDeadline);
 
         this.key = getIntent().getStringExtra("key");
-        final String deadlineStr = getIntent().getStringExtra("deadline");
+        final String deadlineStr = getIntent().getStringExtra("deadlineStr");
 
         // set the text in the views
         this.editName.setText(getIntent().getStringExtra("name"));
@@ -84,7 +85,7 @@ public class EditTaskAct extends AppCompatActivity {
 
         // change deadline
         this.editDeadline.setOnClickListener(v -> {
-            final View dialogView = View.inflate(context, R.layout.date_time_picker, null);
+            final View dialogView = View.inflate(context, R.layout.dial_date_time_picker, null);
             final AlertDialog alertDialog = new AlertDialog.Builder(EditTaskAct.this).create();
 
             DatePicker datePicker = dialogView.findViewById(R.id.date_picker);

@@ -35,7 +35,7 @@ public class RoomActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_room);
+        setContentView(R.layout.activity_pet_room);
 
         ViewPager viewPager = findViewById(R.id.room_viewpager);
         loadWallpapers();
@@ -97,7 +97,7 @@ public class RoomActivity extends AppCompatActivity {
                 R.drawable.wallpaper_blue,
                 R.drawable.wallpaper_orange,
                 R.drawable.wallpaper_purple,
-                R.drawable.exercise
+                R.drawable.wallpaper_exercise
         };
     }
 

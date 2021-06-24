@@ -13,16 +13,20 @@
     <string name="login_failed">"Login failed"</string>
 
     <string name="level">Level %1$d</string>
+    <string name="time_left_display">in %1$s</string>
 
     <string name="create">Create</string>
     <string name="edit">Edit</string>
     <string name="done">Done!</string>
     <string name="cancel">Cancel</string>
     <string name="saveChanges">Save Changes</string>
+    <string name="delete">Delete</string>
 
     <string name="name">Name</string>
     <string name="deadline">Deadline</string>
     <string name="description">Description</string>
+
+    <string name="overdue">Overdue</string>
 
     <string name="reminders">Reminders</string>
     <string name="colorPicker">Choose a Colour:</string>

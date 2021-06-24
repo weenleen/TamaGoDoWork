@@ -38,7 +38,7 @@ public class PetFrag extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.pet_frag, container, false);
+        View view = inflater.inflate(R.layout.frag_pet, container, false);
 
         // wallpaper
         ImageView wallpaperBG = view.findViewById(R.id.pet_frag_wallpaper);

@@ -38,12 +38,12 @@ public class AddTaskAct extends AppCompatActivity {
     private ImageButton addColour;
     private long deadline;
 
-    private static Integer colourId;
+    private static Integer colourId = Task.colours[0];
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_task);
+        setContentView(R.layout.activity_task_add);
 
         this.context = getApplicationContext();
 
@@ -52,7 +52,7 @@ public class AddTaskAct extends AppCompatActivity {
 
         this.addDeadline = findViewById(R.id.addDeadline);
         this.addDeadline.setOnClickListener(v -> {
-            final View dialogView = View.inflate(context, R.layout.date_time_picker, null);
+            final View dialogView = View.inflate(context, R.layout.dial_date_time_picker, null);
             final AlertDialog alertDialog = new AlertDialog.Builder(AddTaskAct.this).create();
 
             Button setDateTimeBtn = dialogView.findViewById(R.id.date_time_set_btn);

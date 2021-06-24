@@ -35,28 +35,28 @@
                 android:layout_width="0dp"
                 android:layout_weight="0"
                 android:layout_height="wrap_content"
-                android:src="@drawable/button_color_picker_yellow"
+                android:src="@drawable/ic_event_indicator"
                 android:paddingHorizontal="1dp"/>
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_weight="0"
                 android:layout_height="wrap_content"
-                android:src="@drawable/button_color_picker_yellow"
+                android:src="@drawable/ic_event_indicator"
                 android:paddingHorizontal="1dp"/>
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_weight="0"
                 android:layout_height="wrap_content"
-                android:src="@drawable/button_color_picker_yellow"
+                android:src="@drawable/ic_event_indicator"
                 android:paddingHorizontal="1dp"/>
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_weight="0"
                 android:layout_height="wrap_content"
-                android:src="@drawable/button_color_picker_yellow"
+                android:src="@drawable/ic_event_indicator"
                 android:paddingHorizontal="1dp"/>
 
             <ImageView

@@ -8,11 +8,22 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 
 /**
  * Supposed to be the logic of each task in the task list
  */
 public class Task implements Comparable<Task> {
+
+    public enum Status {
+        ONGOING(0), OVERDUE(1);
+
+        private final int num;
+
+        Status(int num) { this.num = num; }
+
+        int getNum() { return this.num; }
+    }
 
     public static final int[] colours = new int[] {
             R.color.peach,
@@ -22,7 +33,8 @@ public class Task implements Comparable<Task> {
             R.color.purple
     };
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter formatter
+            = DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm", Locale.ENGLISH);
 
     private String taskName, taskDesc, key;
     private Long taskDeadline;
@@ -142,7 +154,11 @@ public class Task implements Comparable<Task> {
         }
     }
 
-    public boolean isOverdue() {
-        return this.taskDeadline - System.currentTimeMillis() <= 0;
+    public Status getStatus() {
+        if (this.taskDeadline - System.currentTimeMillis() <= 0) {
+            return Status.OVERDUE;
+        } else {
+            return Status.ONGOING;
+        }
     }
 }

@@ -61,7 +61,7 @@ public class GridAdapter extends BaseAdapter {
         View view = convertView;
         if (view == null) {
             LayoutInflater inflater = LayoutInflater.from(this.context);
-            view = inflater.inflate(R.layout.single_cell_layout, parent, false);
+            view = inflater.inflate(R.layout.schedule_grid_item, parent, false);
         }
 
 

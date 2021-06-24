@@ -12,10 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
@@ -34,126 +31,91 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView taskName, taskDesc, taskDeadline;
+        private final View taskAction;
+        private final Task.Status status;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, Task.Status status) {
             super(itemView);
             this.taskName = itemView.findViewById(R.id.taskName);
             this.taskDesc = itemView.findViewById(R.id.taskDesc);
             this.taskDeadline = itemView.findViewById(R.id.taskDeadline);
-        }
-    }
-
-    // Non overdue tasks
-    public static class ViewHolderNormal extends ViewHolder {
-        private final CheckBox checkBox;
-
-        public ViewHolderNormal(@NonNull View itemView) {
-            super(itemView);
-            this.checkBox = itemView.findViewById(R.id.taskCheckBox);
-        }
-    }
-
-    // overdue tasks
-    public static class ViewHolderOverdue extends ViewHolder {
-        private final ImageButton imageButton;
-
-        public ViewHolderOverdue(@NonNull View itemView) {
-            super(itemView);
-            this.imageButton = itemView.findViewById(R.id.overdue_dismiss);
+            this.taskAction = itemView.findViewById(R.id.taskAction);
+            this.status = status;
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (this.taskList.get(position).isOverdue()) return 1;
-        else return 0;
+        return this.taskList.get(position).getStatus().getNum();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == 1) { // overdue
-            return new ViewHolderOverdue(
-                    LayoutInflater.from(this.context).inflate(R.layout.overdue_item, parent, false));
+        if (viewType == Task.Status.OVERDUE.getNum()) { // overdue
+            return new ViewHolder(
+                    LayoutInflater.from(this.context).inflate(R.layout.r_item_task_overdue, parent, false),
+                    Task.Status.OVERDUE);
         } else {
-            return new ViewHolderNormal(
-                    LayoutInflater.from(this.context).inflate(R.layout.task_item, parent, false));
+            return new ViewHolder(
+                    LayoutInflater.from(this.context).inflate(R.layout.r_item_task_ongoing, parent, false),
+                    Task.Status.ONGOING);
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final String key = taskList.get(position).getKey();
-        final String name = taskList.get(position).getTaskName();
-        final String deadlineStr = taskList.get(position).getDeadlineString();
-        final String desc = taskList.get(position).getTaskDesc();
-        final int colourId = taskList.get(position).getColourId();
-        final int viewType = holder.getItemViewType();
+        final Task task = taskList.get(position);
 
         TaskAdapter adapter = this;
 
-        holder.taskName.setText(name);
+        holder.taskName.setText(task.getTaskName());
         GradientDrawable indicator = (GradientDrawable) AppCompatResources.getDrawable(context,
                 R.drawable.button_color_picker_small);
         if (indicator != null) {
-            indicator.setColor(ContextCompat.getColor(context, colourId));
+            indicator.setColor(ContextCompat.getColor(context, task.getColourId()));
             holder.taskName.setCompoundDrawablesWithIntrinsicBounds(indicator, null, null, null);
         }
 
+        holder.taskDesc.setText(task.getTaskDesc());
 
-        holder.taskDesc.setText(desc);
-
-        if (viewType == 1) { // overdue
-
-            holder.taskDeadline.setText("OVERDUE");
-
-            // dialogs
-            holder.itemView.setOnClickListener(v -> {
-                OverdueDetailsDial dialog = new OverdueDetailsDial(name, deadlineStr, desc, colourId);
-                dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
-                        "Show task details");
-            });
-
-            // dismiss button
-            ((ViewHolderOverdue) holder).imageButton.setOnClickListener(v -> {
-                MainActivity.userDoc.collection("Tasks").document(key).delete();
-                adapter.notifyDataSetChanged();
-            });
-
-        } else { // not overdue
-
-            holder.taskDeadline.setText("in " + taskList.get(position).getTimeLeft());
-
-            // dialogs
-            holder.itemView.setOnClickListener(v -> {
-                TaskDetailsDial dialog = new TaskDetailsDial(name, deadlineStr, desc, key, colourId);
-                dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
-                        "Show task details");
-            });
+        // dialog
+        holder.itemView.setOnClickListener(v -> {
+            DialogTaskDetails dialog = DialogTaskDetails.newInstance(taskList.get(position));
+            dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
+                    DialogTaskDetails.TAG);
+        });
 
 
-            // checkbox
-            ((ViewHolderNormal) holder).checkBox.setOnClickListener(v -> {
-                Animation anim = AnimationUtils.loadAnimation(context, R.anim.anim_task_complete);
-                anim.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) { }
-                    @Override
-                    public void onAnimationRepeat(Animation animation) { }
+        Animation anim;
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        taskList.remove(position);
-                        adapter.notifyDataSetChanged();
-                        MainActivity.userDoc.collection("Tasks").document(key).delete()
-                                .addOnSuccessListener(unused -> MainActivity.incrXP())
-                                .addOnFailureListener(e -> Toast.makeText(context, "Complete Failed", Toast.LENGTH_SHORT).show());
-                    }
-                });
-
-                holder.itemView.startAnimation(anim);
-            });
+        if (holder.status == Task.Status.ONGOING) {
+            holder.taskDeadline.setText(context.getString(R.string.time_left_display,
+                    task.getTimeLeft()));
+            anim = AnimationUtils.loadAnimation(context, R.anim.anim_task_complete);
+        } else {
+            anim = AnimationUtils.loadAnimation(context, R.anim.anim_task_dismiss);
         }
+
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) { }
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                taskList.remove(position);
+                adapter.notifyDataSetChanged();
+                MainActivity.userDoc.collection("Tasks")
+                        .document(task.getKey()).delete()
+                        .addOnSuccessListener(unused -> {
+                            if (holder.status == Task.Status.ONGOING) MainActivity.incrXP();
+                        });
+            }
+        });
+
+        holder.taskAction.setOnClickListener(v -> holder.itemView.startAnimation(anim));
     }
 
     @Override

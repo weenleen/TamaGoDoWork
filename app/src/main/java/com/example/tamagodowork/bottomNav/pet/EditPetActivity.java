@@ -32,7 +32,7 @@ public class EditPetActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_pet);
+        setContentView(R.layout.activity_pet_edit);
 
         // view pager stuff
         viewPager = findViewById(R.id.edit_pet_viewpager);

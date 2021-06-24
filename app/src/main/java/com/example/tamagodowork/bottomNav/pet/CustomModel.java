@@ -24,12 +24,13 @@ public class CustomModel {
             case COLOUR:
                 this.content = new int[] {
                         R.color.egg_beige,
-                        R.color.yellow,
-                        R.color.blue,
                         R.color.peach,
+                        R.color.yellow,
+                        R.color.green,
                         R.color.teal_200,
+                        R.color.blue,
+                        R.color.purple,
                         R.color.grey,
-                        R.color.purple_200
                 };
                 break;
             case HEAD:
