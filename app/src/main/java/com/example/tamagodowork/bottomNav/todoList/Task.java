@@ -1,8 +1,10 @@
 package com.example.tamagodowork.bottomNav.todoList;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.example.tamagodowork.R;
 
-import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -14,7 +16,7 @@ import java.util.Locale;
 /**
  * Supposed to be the logic of each task in the task list
  */
-public class Task implements Comparable<Task> {
+public class Task implements Comparable<Task>, Parcelable {
 
     public enum Status {
         ONGOING(0), OVERDUE(1);
@@ -34,6 +36,8 @@ public class Task implements Comparable<Task> {
             R.color.purple
     };
 
+    public static final String parcelKey = "TaskParcelKey";
+
     public static final DateTimeFormatter formatter
             = DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm", Locale.ENGLISH);
 
@@ -50,6 +54,22 @@ public class Task implements Comparable<Task> {
         this.taskDesc = taskDesc;
         this.key = key;
         this.colourId = colourId;
+    }
+
+    protected Task(Parcel in) {
+        taskName = in.readString();
+        taskDesc = in.readString();
+        key = in.readString();
+        if (in.readByte() == 0) {
+            taskDeadline = null;
+        } else {
+            taskDeadline = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            colourId = null;
+        } else {
+            colourId = in.readInt();
+        }
     }
 
     // added getters
@@ -162,4 +182,45 @@ public class Task implements Comparable<Task> {
             return Status.ONGOING;
         }
     }
+
+
+    /**
+     * Parcelable methods.
+     */
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(taskName);
+        dest.writeString(taskDesc);
+        dest.writeString(key);
+        if (taskDeadline == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(taskDeadline);
+        }
+        if (colourId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(colourId);
+        }
+    }
+
+    public static final Creator<Task> CREATOR = new Creator<Task>() {
+        @Override
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+
+        @Override
+        public Task createFromParcel(Parcel source) {
+            return new Task(source);
+        }
+    };
 }

@@ -46,6 +46,7 @@ public class ScheduleFrag extends Fragment {
     private GridAdapter gridAdapter;
     private RecyclerView recyclerView;
     private TaskAdapter recyclerAdapter;
+    private ArrayList<Task> recyclerList;
 
     // Data
     private final ArrayList<Date> dates = new ArrayList<>();

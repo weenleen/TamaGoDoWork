@@ -106,12 +106,7 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
             Button editBtn = view.findViewById(R.id.edit_button);
             editBtn.setOnClickListener(v -> {
                 Intent intent = new Intent(super.context, EditTaskAct.class);
-                intent.putExtra("name", super.task.getTaskName());
-                intent.putExtra("deadline", super.task.getTaskDeadline());
-                intent.putExtra("deadlineStr", super.task.getDeadlineString());
-                intent.putExtra("desc", super.task.getTaskDesc());
-                intent.putExtra("key", super.task.getKey());
-                intent.putExtra("colourId", super.task.getColourId());
+                intent.putExtra(Task.parcelKey, super.task);
                 startActivity(intent);
             });
 

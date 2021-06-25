@@ -50,33 +50,33 @@ public class EditTaskAct extends AppCompatActivity {
         this.editDesc = findViewById(R.id.editDesc);
         this.editDeadline = findViewById(R.id.editDeadline);
 
-        this.key = getIntent().getStringExtra("key");
-        final String deadlineStr = getIntent().getStringExtra("deadlineStr");
+        Task task = getIntent().getParcelableExtra(Task.parcelKey);
 
         // set the text in the views
-        this.editName.setText(getIntent().getStringExtra("name"));
-        this.editDeadline.setText(deadlineStr);
-        this.editDesc.setText(getIntent().getStringExtra("desc"));
+        this.editName.setText(task.getTaskName());
+        this.editDeadline.setText(task.getDeadlineString());
+        this.editDesc.setText(task.getTaskDesc());
+        this.key = task.getKey();
 
         // set deadline to previous deadline
-        LocalDateTime prevDate = LocalDateTime.parse(deadlineStr, Task.formatter);
-        this.deadline = prevDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        this.deadline = task.getTaskDeadline();
 
         // Check reminders Checkboxes
         LinearLayout remLayout = findViewById(R.id.reminders);
         CollectionReference remRef = MainActivity.userDoc.collection("Tasks")
                 .document(key).collection("Reminders");
-        remRef.get().addOnCompleteListener(task -> {
-            if (!task.isSuccessful() || task.getResult() == null) return;
+        remRef.get().addOnCompleteListener(t -> {
+            if (!t.isSuccessful() || t.getResult() == null) return;
 
             // alarmId
-            for (QueryDocumentSnapshot doc : task.getResult()) {
+            for (QueryDocumentSnapshot doc : t.getResult()) {
                 ((CheckBox) remLayout.getChildAt(Integer.parseInt(doc.getId()))).setChecked(true);
             }
         });
 
 
         // change deadline
+        LocalDateTime prevDate = task.getDateTime();
         this.editDeadline.setOnClickListener(v -> {
             final View dialogView = View.inflate(context, R.layout.dial_date_time_picker, null);
             final AlertDialog alertDialog = new AlertDialog.Builder(EditTaskAct.this).create();
@@ -106,7 +106,7 @@ public class EditTaskAct extends AppCompatActivity {
 
 
         // edit Colour
-        this.colourId = getIntent().getIntExtra("colourId", Task.colours[0]);
+        this.colourId = task.getColourId();
         this.editColour = findViewById(R.id.editColour);
         this.editColour.setOnClickListener(v -> {
             DialogColourPicker dialogColourPicker = new DialogColourPicker(
