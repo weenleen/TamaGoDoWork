@@ -3,6 +3,7 @@ package com.example.tamagodowork.bottomNav.todoList;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
@@ -69,9 +71,11 @@ public class AddTaskAct extends AppCompatActivity {
 
         // add colour
         this.addColour = findViewById(R.id.addColour);
+        ((GradientDrawable) this.addColour.getDrawable()).setColor(
+                ContextCompat.getColor(context, colourId));
         this.addColour.setOnClickListener(v -> {
             DialogColourPicker dialogColourPicker = new DialogColourPicker(
-                    AddTaskAct.this, this.addColour, Task.colours[0]);
+                    AddTaskAct.this, this.addColour);
             dialogColourPicker.show(getSupportFragmentManager(), DialogColourPicker.TAG);
         });
 

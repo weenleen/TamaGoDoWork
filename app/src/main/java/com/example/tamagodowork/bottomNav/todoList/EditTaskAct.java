@@ -2,9 +2,11 @@ package com.example.tamagodowork.bottomNav.todoList;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -108,9 +110,11 @@ public class EditTaskAct extends AppCompatActivity {
         // edit Colour
         this.colourId = task.getColourId();
         this.editColour = findViewById(R.id.editColour);
+        ((GradientDrawable) this.editColour.getDrawable()).setColor(
+                ContextCompat.getColor(context, colourId));
         this.editColour.setOnClickListener(v -> {
             DialogColourPicker dialogColourPicker = new DialogColourPicker(
-                    EditTaskAct.this, this.editColour, this.colourId);
+                    EditTaskAct.this, this.editColour);
             dialogColourPicker.show(getSupportFragmentManager(), DialogColourPicker.TAG);
         });
 

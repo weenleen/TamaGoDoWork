@@ -46,11 +46,10 @@ public class ScheduleFrag extends Fragment {
     private GridAdapter gridAdapter;
     private RecyclerView recyclerView;
     private TaskAdapter recyclerAdapter;
-    private ArrayList<Task> recyclerList;
 
     // Data
     private final ArrayList<Date> dates = new ArrayList<>();
-    private HashMap<Integer, ArrayList<Task>> monthTaskMap = new HashMap<>();
+    private final HashMap<Integer, ArrayList<Task>> monthTaskMap = new HashMap<>();
 
     private Context context;
     private int gridSelectedPos = 0;
@@ -197,7 +196,7 @@ public class ScheduleFrag extends Fragment {
 
         // set up data and adapters
         dates.clear();
-        this.monthTaskMap = new HashMap<>();
+        this.monthTaskMap.clear();
         this.gridAdapter = new GridAdapter(context, dates, calendar, monthTaskMap);
         this.gridView.setAdapter(gridAdapter);
 

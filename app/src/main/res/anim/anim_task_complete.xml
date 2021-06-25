@@ -11,10 +11,18 @@
         android:repeatMode="reverse"
         android:toDegrees="2" />
 
+    <rotate
+        android:fillAfter="false"
+        android:duration="50"
+        android:fromDegrees="2"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toDegrees="-2" />
+
     <scale
         android:fillAfter="true"
         android:duration="250"
-        android:startOffset="600"
+        android:startOffset="700"
         android:fromXScale="1.0"
         android:fromYScale="1.0"
         android:pivotX="50%"

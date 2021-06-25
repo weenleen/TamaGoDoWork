@@ -27,12 +27,10 @@ public class DialogColourPicker extends BottomSheetDialogFragment {
 
     private final Context context;
     private final ImageButton initButton;
-    private final int initColourId;
 
-    public DialogColourPicker(Context context, ImageButton initButton, int initColourId) {
+    public DialogColourPicker(Context context, ImageButton initButton) {
         this.context = context;
         this.initButton = initButton;
-        this.initColourId = initColourId;
     }
 
     @NonNull
@@ -40,9 +38,6 @@ public class DialogColourPicker extends BottomSheetDialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         super.onCreateDialog(savedInstanceState);
-
-        ((GradientDrawable) initButton.getDrawable()).setColor(
-                ContextCompat.getColor(context, initColourId));
 
         final View dialogView = View.inflate(context, R.layout.dial_colour_picker, null);
         final BottomSheetDialog dialog = new BottomSheetDialog(context);
