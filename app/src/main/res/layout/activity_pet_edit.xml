@@ -28,7 +28,7 @@
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_baseline_arrow_back_24"
-                android:background="@android:color/transparent"/>
+                android:background="?attr/selectableItemBackgroundBorderless"/>
 
             <TextView
                 android:id="@+id/edit_content_name"
@@ -46,7 +46,7 @@
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_baseline_arrow_forward_24"
-                android:background="@android:color/transparent"/>
+                android:background="?attr/selectableItemBackgroundBorderless"/>
         </LinearLayout>
 
         <androidx.viewpager.widget.ViewPager

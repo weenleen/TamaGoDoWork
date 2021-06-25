@@ -3,7 +3,6 @@ package com.example.tamagodowork.bottomNav.todoList;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,19 +11,15 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.content.ContextCompat;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.alarm.AlarmReceiver;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.time.LocalDateTime;
@@ -38,7 +33,7 @@ public class AddTaskAct extends AppCompatActivity {
     private ImageButton addColour;
     private long deadline;
 
-    private static Integer colourId = Task.colours[0];
+    private Integer colourId = Task.colours[0];
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,37 +69,10 @@ public class AddTaskAct extends AppCompatActivity {
 
         // add colour
         this.addColour = findViewById(R.id.addColour);
-        ((GradientDrawable) addColour.getDrawable()).setColor(
-                ContextCompat.getColor(context, Task.colours[0]));
         this.addColour.setOnClickListener(v -> {
-            final View dialogView = View.inflate(context, R.layout.dial_colour_picker, null);
-            final BottomSheetDialog dialog = new BottomSheetDialog(AddTaskAct.this);
-
-            LinearLayout layout = dialogView.findViewById(R.id.colourPicker_image_layout);
-
-            for (int i = 0; i < layout.getChildCount(); i++) {
-
-                ImageView imageView = (ImageView) layout.getChildAt(i);
-                GradientDrawable tmp = (GradientDrawable) AppCompatResources
-                        .getDrawable(context, R.drawable.button_color_picker);
-
-                int c = Task.colours[i];
-
-                if (tmp != null) {
-                    tmp.setColor(ContextCompat.getColor(context, c));
-                    imageView.setImageDrawable(tmp);
-                }
-
-                imageView.setOnClickListener(v12 -> {
-                    colourId = c;
-                    ((GradientDrawable) addColour.getDrawable()).setColor(
-                            ContextCompat.getColor(context, c));
-                    dialog.dismiss();
-                });
-            }
-
-            dialog.setContentView(dialogView);
-            dialog.show();
+            DialogColourPicker dialogColourPicker = new DialogColourPicker(
+                    AddTaskAct.this, this.addColour, Task.colours[0]);
+            dialogColourPicker.show(getSupportFragmentManager(), DialogColourPicker.TAG);
         });
 
 
@@ -161,5 +129,9 @@ public class AddTaskAct extends AppCompatActivity {
         // cancel button
         Button cancelBtn = findViewById(R.id.cancel_add_button);
         cancelBtn.setOnClickListener(v -> MainActivity.backToMain(AddTaskAct.this));
+    }
+
+    public void setColourId(int colourId) {
+        this.colourId = colourId;
     }
 }

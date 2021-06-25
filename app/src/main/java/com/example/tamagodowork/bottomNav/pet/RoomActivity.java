@@ -15,12 +15,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +50,7 @@ public class RoomActivity extends AppCompatActivity {
         petArea.addView(petCanvas);
 
         // prev button
-        ImageButton prevButton = findViewById(R.id.room_prev_button);
+        FloatingActionButton prevButton = findViewById(R.id.room_prev_button);
         prevButton.setOnClickListener(v -> {
             int position = viewPager.getCurrentItem() - 1;
             if (position < 0) position = wallpapers.length - 1;
@@ -58,7 +58,7 @@ public class RoomActivity extends AppCompatActivity {
         });
 
         // next button
-        ImageButton nextButton = findViewById(R.id.room_next_button);
+        FloatingActionButton nextButton = findViewById(R.id.room_next_button);
         nextButton.setOnClickListener(v -> {
             int position = viewPager.getCurrentItem() + 1;
             if (position >= wallpapers.length) position = 0;

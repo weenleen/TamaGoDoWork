@@ -2,12 +2,9 @@ package com.example.tamagodowork.bottomNav.todoList;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,20 +13,17 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 
@@ -65,8 +59,7 @@ public class EditTaskAct extends AppCompatActivity {
         this.editDesc.setText(getIntent().getStringExtra("desc"));
 
         // set deadline to previous deadline
-        LocalDateTime prevDate = LocalDateTime.parse(deadlineStr,
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm") );
+        LocalDateTime prevDate = LocalDateTime.parse(deadlineStr, Task.formatter);
         this.deadline = prevDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
         // Check reminders Checkboxes
@@ -115,38 +108,10 @@ public class EditTaskAct extends AppCompatActivity {
         // edit Colour
         this.colourId = getIntent().getIntExtra("colourId", Task.colours[0]);
         this.editColour = findViewById(R.id.editColour);
-        ((GradientDrawable) editColour.getDrawable()).setColor(
-                ContextCompat.getColor(context, this.colourId));
-
         this.editColour.setOnClickListener(v -> {
-            final View dialogView = View.inflate(context, R.layout.dial_colour_picker, null);
-            final BottomSheetDialog dialog = new BottomSheetDialog(EditTaskAct.this);
-
-            LinearLayout layout = dialogView.findViewById(R.id.colourPicker_image_layout);
-
-            for (int i = 0; i < layout.getChildCount(); i++) {
-
-                ImageView imageView = (ImageView) layout.getChildAt(i);
-                GradientDrawable tmp = (GradientDrawable) AppCompatResources
-                        .getDrawable(context, R.drawable.button_color_picker);
-
-                int c = Task.colours[i];
-
-                if (tmp != null) {
-                    tmp.setColor(ContextCompat.getColor(context, c));
-                    imageView.setImageDrawable(tmp);
-                }
-
-                imageView.setOnClickListener(v12 -> {
-                    this.colourId = c;
-                    ((GradientDrawable) editColour.getDrawable()).setColor(
-                            ContextCompat.getColor(context, c));
-                    dialog.dismiss();
-                });
-            }
-
-            dialog.setContentView(dialogView);
-            dialog.show();
+            DialogColourPicker dialogColourPicker = new DialogColourPicker(
+                    EditTaskAct.this, this.editColour, this.colourId);
+            dialogColourPicker.show(getSupportFragmentManager(), DialogColourPicker.TAG);
         });
 
 
@@ -192,5 +157,9 @@ public class EditTaskAct extends AppCompatActivity {
         // Cancel Button
         Button cancelBtn = findViewById(R.id.cancel_edit_button);
         cancelBtn.setOnClickListener(v -> MainActivity.backToMain(EditTaskAct.this));
+    }
+
+    public void setColourId(int colourId) {
+        this.colourId = colourId;
     }
 }

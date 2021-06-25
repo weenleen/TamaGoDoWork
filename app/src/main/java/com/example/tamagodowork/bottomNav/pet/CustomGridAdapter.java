@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.tamagodowork.R;
 
@@ -18,12 +19,15 @@ import com.example.tamagodowork.R;
  */
 public class CustomGridAdapter extends BaseAdapter {
 
+    private final FragmentActivity act;
+
     private final Context context;
     private final int[] arr;
     private final Pet.custom custom;
 
-    public CustomGridAdapter(Context context, int[] arr, Pet.custom custom) {
-        this.context = context;
+    public CustomGridAdapter(FragmentActivity act, int[] arr, Pet.custom custom) {
+        this.act = act;
+        this.context = (Context) act;
         this.arr = arr;
         this.custom = custom;
     }
@@ -67,8 +71,8 @@ public class CustomGridAdapter extends BaseAdapter {
 
         // on click
         imageView.setOnClickListener(v -> {
-            if (EditPetActivity.petCanvas == null) return;
-            EditPetActivity.petCanvas.setCustom(this.custom, this.arr[position]);
+            if (!(this.act instanceof EditPetActivity)) return;
+            ((EditPetActivity)act).setPetCanvas(this.custom, this.arr[position]);
         });
 
         return imageView;

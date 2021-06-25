@@ -65,8 +65,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_baseline_close_24"
         android:padding="10dp"
-        android:background="@android:color/transparent"
         android:layout_gravity="center"
-        android:contentDescription="@string/overdue">
-    </ImageButton>
+        android:contentDescription="@string/overdue"
+        android:background="?attr/selectableItemBackgroundBorderless"/>
 </LinearLayout>

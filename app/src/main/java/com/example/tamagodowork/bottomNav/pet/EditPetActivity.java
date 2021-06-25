@@ -27,7 +27,7 @@ public class EditPetActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private ArrayList<CustomModel> lst;
 
-    public static PetCanvas petCanvas;
+    public PetCanvas petCanvas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +111,8 @@ public class EditPetActivity extends AppCompatActivity {
             gridView.setNumColumns(3);
             gridView.setHorizontalSpacing(30);
             gridView.setVerticalSpacing(30);
-            CustomGridAdapter adapter = new CustomGridAdapter(getApplicationContext(),
+            gridView.setDrawSelectorOnTop(true);
+            CustomGridAdapter adapter = new CustomGridAdapter(EditPetActivity.this,
                     lst.get(position).content, lst.get(position).getCustom());
             gridView.setAdapter(adapter);
 
@@ -133,5 +134,9 @@ public class EditPetActivity extends AppCompatActivity {
         public boolean isViewFromObject(@NonNull @NotNull View view, @NonNull @NotNull Object object) {
             return view.equals(object);
         }
+    }
+
+    public void setPetCanvas(Pet.custom custom, int id) {
+        this.petCanvas.setCustom(custom, id);
     }
 }

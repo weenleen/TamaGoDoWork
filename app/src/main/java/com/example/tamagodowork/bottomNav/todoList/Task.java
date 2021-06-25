@@ -2,6 +2,7 @@ package com.example.tamagodowork.bottomNav.todoList;
 
 import com.example.tamagodowork.R;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -33,7 +34,7 @@ public class Task implements Comparable<Task> {
             R.color.purple
     };
 
-    private static final DateTimeFormatter formatter
+    public static final DateTimeFormatter formatter
             = DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm", Locale.ENGLISH);
 
     private String taskName, taskDesc, key;
