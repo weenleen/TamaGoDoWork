@@ -1,6 +1,7 @@
 package com.example.tamagodowork.bottomNav.pet;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
@@ -65,8 +66,13 @@ public class CustomGridAdapter extends BaseAdapter {
             } else return imageView;
 
         } else { // SOMETHING ELSE
-            imageView.setImageBitmap(
-                    BitmapFactory.decodeResource(context.getResources(), this.arr[position]));
+            // code for the head and the necklace
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), this.arr[position]);
+            // allows for resize of the way the bitmap appears on the selection option
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 150, 150, true);
+            imageView.setImageBitmap(resizedBitmap);
+
+            // imageView.setImageBitmap(bitmap);
         }
 
         // on click

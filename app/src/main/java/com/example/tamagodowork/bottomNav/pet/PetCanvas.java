@@ -4,11 +4,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -19,6 +21,9 @@ import android.os.Handler;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
+
+import static android.content.ContentValues.TAG;
+
 
 public class PetCanvas extends View {
 
@@ -178,8 +183,8 @@ public class PetCanvas extends View {
         if (this.bitmapEyes == null) return;
         canvas.drawBitmap(
                 this.bitmapEyes,
-                width_middle - 150f,
-                height_middle - 300f + offset,
+                width_middle - 215f,
+                height_middle - 290f + offset,
                 null);
     }
 
@@ -187,8 +192,8 @@ public class PetCanvas extends View {
         if (this.bitmapBody == null) return;
         canvas.drawBitmap(
                 this.bitmapBody,
-                width_middle - 220f,
-                height_middle - 100f + offset,
+                width_middle - 215f,
+                height_middle - 80f + offset,
                 null);
     }
 
@@ -218,11 +223,17 @@ public class PetCanvas extends View {
         if (id == null || id == R.mipmap.none) {
             this.acc_head = null;
             this.bitmapHead = null;
-            return;
+        } else if (id == R.mipmap.acc_head_scar) {
+            this.acc_head = id;
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), id);
+            // resize the bitmap
+            this.bitmapHead = getResizedBitmap(bitmap, 100, 430);
+        } else {
+            this.acc_head = id;
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), id);
+            // resize the bitmap
+            this.bitmapHead = getResizedBitmap(bitmap, 150, 430);
         }
-
-        this.acc_head = id;
-        this.bitmapHead = BitmapFactory.decodeResource(getResources(), id);
     }
 
     public void setCustomEyes(Integer id) {
@@ -233,7 +244,10 @@ public class PetCanvas extends View {
         }
 
         this.acc_eyes = id;
-        this.bitmapEyes = BitmapFactory.decodeResource(getResources(), id);
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), id);
+        // resize the bitmap
+        this.bitmapEyes = getResizedBitmap(bitmap, 175, 430);
     }
 
     public void setCustomBody(Integer id) {
@@ -244,11 +258,30 @@ public class PetCanvas extends View {
         }
 
         this.acc_body = id;
-        this.bitmapBody = BitmapFactory.decodeResource(getResources(), id);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), id);
+        // resize the bitmap
+        this.bitmapBody = getResizedBitmap(bitmap, 160, 430);
+
     }
+
 
     public void save() {
         MainActivity.userDoc.collection("Pet").document("Customisation")
                 .set(new Pet(this.bodyColour, this.acc_head, this.acc_eyes, this.acc_body));
+    }
+
+    // function that is used to resize the bitmap
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // create a matrix for the manipulation
+        Matrix matrix = new Matrix();
+        // resize the bit map
+        matrix.postScale(scaleWidth, scaleHeight);
+        // recreate and return the new Bitmap
+        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+
     }
 }
