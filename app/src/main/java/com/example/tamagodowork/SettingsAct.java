@@ -25,7 +25,7 @@ public class SettingsAct extends AppCompatActivity {
             finish();
         });
 
-        this.themesBtn = findViewById(R.id.btn_themes);
+//        this.themesBtn = findViewById(R.id.btn_themes);
 
         this.logoutBtn = findViewById(R.id.btn_logout);
         this.logoutBtn.setOnClickListener(v -> {

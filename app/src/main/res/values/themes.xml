@@ -42,6 +42,8 @@
     <style name="MyDatePickerStyle" parent="android:Widget.Material.Light.DatePicker">
         <item name="android:headerBackground">?attr/colorPrimary</item>
         <item name="android:colorAccent">?attr/colorPrimary</item>
+        <item name="colorControlActivated">?attr/colorPrimary</item>
+        <item name="colorControlHighlight">?attr/colorPrimary</item>
     </style>
 
     <!-- TimePickerStyle Theme. -->

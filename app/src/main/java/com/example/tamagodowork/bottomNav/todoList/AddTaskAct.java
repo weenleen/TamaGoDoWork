@@ -1,19 +1,15 @@
 package com.example.tamagodowork.bottomNav.todoList;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,43 +25,27 @@ import java.time.ZoneId;
 
 public class AddTaskAct extends AppCompatActivity {
 
-    private Context context;
-
     private EditText addName, addDeadline, addDesc;
     private ImageButton addColour;
     private long deadline;
 
     private Integer colourId = Task.colours[0];
+    private LocalDateTime prevDate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_add);
 
-        this.context = getApplicationContext();
+        Context context = getApplicationContext();
 
         this.addName = findViewById(R.id.addName);
         this.addDesc = findViewById(R.id.addDesc);
 
         this.addDeadline = findViewById(R.id.addDeadline);
         this.addDeadline.setOnClickListener(v -> {
-            final View dialogView = View.inflate(context, R.layout.dial_date_time_picker, null);
-            final AlertDialog alertDialog = new AlertDialog.Builder(AddTaskAct.this).create();
-
-            Button setDateTimeBtn = dialogView.findViewById(R.id.date_time_set_btn);
-            setDateTimeBtn.setOnClickListener(v1 -> {
-                DatePicker datePicker = dialogView.findViewById(R.id.date_picker);
-                TimePicker timePicker = dialogView.findViewById(R.id.time_picker);
-
-                deadline = LocalDateTime.of(
-                        datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth(),
-                        timePicker.getCurrentHour(), timePicker.getCurrentMinute()).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-                addDeadline.setText(Task.getDeadlineString(deadline));
-                alertDialog.dismiss();
-            });
-
-            alertDialog.setView(dialogView);
-            alertDialog.show();
+            DialogDateTimePicker dialog = new DialogDateTimePicker(AddTaskAct.this, prevDate);
+            dialog.show(getSupportFragmentManager(), DialogDateTimePicker.TAG);
         });
 
 
@@ -119,10 +99,10 @@ public class AddTaskAct extends AppCompatActivity {
                     Intent alarmIntent = new Intent(AddTaskAct.this, AlarmReceiver.class);
                     alarmIntent.putExtra("key", key);
                     alarmIntent.putExtra("taskName", name);
-                    alarmIntent.putExtra("timeLeft", String.valueOf(i));
+                    alarmIntent.putExtra("alarmType", i);
                     alarmIntent.putExtra("alarmTime", alarmTime);
 
-                    new AlarmReceiver().setAlarm(getApplicationContext(), alarmIntent);
+                    new AlarmReceiver().setAlarm(AddTaskAct.this, alarmIntent);
                 }
             }
 
@@ -137,5 +117,11 @@ public class AddTaskAct extends AppCompatActivity {
 
     public void setColourId(int colourId) {
         this.colourId = colourId;
+    }
+
+    public void setDeadline(LocalDateTime updated) {
+        this.deadline = updated.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        this.addDeadline.setText(Task.getDeadlineString(deadline));
+        this.prevDate = updated;
     }
 }

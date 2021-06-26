@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/month_navigation_previous"
             android:src="@drawable/ic_baseline_arrow_back_24"
-            android:background="@android:color/transparent"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_margin="7dp" />
 
         <TextView
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/month_navigation_next"
             android:src="@drawable/ic_baseline_arrow_forward_24"
-            android:background="@android:color/transparent"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_margin="7dp"/>
 
     </LinearLayout>

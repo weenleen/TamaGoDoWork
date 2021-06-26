@@ -26,32 +26,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/peach"
-        android:text="Reset"
-        android:textColor="@android:color/white" />
+        android:text="Reset Pet" />
 
     <Button
         android:id="@+id/change_pwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/peach"
-        android:text="Change Password"
-        android:textColor="@android:color/white" />
-
-    <Button
-        android:id="@+id/btn_themes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/peach"
-        android:text="Themes"
-        android:textColor="@android:color/white" />
+        android:text="@string/change_password" />
 
     <Button
         android:id="@+id/btn_logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/peach"
-        android:text="Log out"
-        android:textColor="@android:color/white" />
+        android:text="@string/action_logout" />
 
     <Button
         android:id="@+id/btn_back"

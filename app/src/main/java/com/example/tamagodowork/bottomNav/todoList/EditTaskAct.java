@@ -4,34 +4,29 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
+import com.example.tamagodowork.alarm.AlarmReceiver;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Map;
-
 
 public class EditTaskAct extends AppCompatActivity {
-
-    private Context context;
 
     private EditText editName, editDeadline, editDesc;
     private ImageButton editColour;
@@ -40,12 +35,14 @@ public class EditTaskAct extends AppCompatActivity {
     private long deadline;
     private int colourId;
 
+    private LocalDateTime prevDate;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_edit);
 
-        this.context = getApplicationContext();
+        Context context = getApplicationContext();
 
         // Set Views
         this.editName = findViewById(R.id.editName);
@@ -78,32 +75,10 @@ public class EditTaskAct extends AppCompatActivity {
 
 
         // change deadline
-        LocalDateTime prevDate = task.getDateTime();
+        prevDate = task.getDateTime();
         this.editDeadline.setOnClickListener(v -> {
-            final View dialogView = View.inflate(context, R.layout.dial_date_time_picker, null);
-            final AlertDialog alertDialog = new AlertDialog.Builder(EditTaskAct.this).create();
-
-            DatePicker datePicker = dialogView.findViewById(R.id.date_picker);
-            TimePicker timePicker = dialogView.findViewById(R.id.time_picker);
-
-            // make pickers display previous deadline
-            datePicker.updateDate(prevDate.getYear(), prevDate.getMonthValue() - 1, prevDate.getDayOfMonth());
-            timePicker.setCurrentHour(prevDate.getHour());
-            timePicker.setCurrentMinute(prevDate.getMinute());
-
-            // set date button
-            Button setDateTimeBtn = dialogView.findViewById(R.id.date_time_set_btn);
-            setDateTimeBtn.setOnClickListener(v1 -> {
-                deadline = LocalDateTime.of(
-                        datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth(),
-                        timePicker.getCurrentHour(), timePicker.getCurrentMinute())
-                        .atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-                editDeadline.setText(Task.getDeadlineString(deadline));
-                alertDialog.dismiss();
-            });
-
-            alertDialog.setView(dialogView);
-            alertDialog.show();
+            DialogDateTimePicker dialog = new DialogDateTimePicker(EditTaskAct.this, prevDate);
+            dialog.show(getSupportFragmentManager(), DialogDateTimePicker.TAG);
         });
 
 
@@ -134,18 +109,35 @@ public class EditTaskAct extends AppCompatActivity {
                 return;
             }
 
+            Task updatedTask = new Task(name, deadline, desc, key, colourId);
             // update alarms in Firestore
             for (int i = 0; i < remLayout.getChildCount(); i++) {
                 // TODO
                 // alarmId
                 CheckBox child = (CheckBox) remLayout.getChildAt(i);
-                if (child.isChecked()) {
-                    remRef.document(String.valueOf(i)).set(
-                            Map.of("alarmId",
-                                    new Task("", deadline, "", "", null).getAlarmTime(i)));
-                } else {
-                    remRef.document(String.valueOf(i)).delete();
-                }
+                Intent alarmIntent = new Intent(EditTaskAct.this, AlarmReceiver.class);
+                alarmIntent.putExtra("key", key);
+                alarmIntent.putExtra("taskName", name);
+                alarmIntent.putExtra("alarmType", i);
+
+                long alarmTime = updatedTask.getAlarmTime(i);
+                alarmIntent.putExtra("alarmTime", alarmTime);
+
+                DocumentReference ref = remRef.document(String.valueOf(i));
+                ref.get().addOnSuccessListener(documentSnapshot -> {
+                    Integer requestCode = null;
+                    if (documentSnapshot != null) {
+                        requestCode = documentSnapshot.get("requestCode", Integer.class);
+                    }
+
+                    if (child.isChecked() && requestCode != null) {
+                        alarmIntent.putExtra("requestCode", requestCode);
+                        new AlarmReceiver().setAlarm(EditTaskAct.this, alarmIntent);
+                    } else if (requestCode != null) {
+                        new AlarmReceiver().cancelAlarmIfExists(EditTaskAct.this,
+                                requestCode, ref, alarmIntent);
+                    }
+                });
             }
 
             // update tasks in Firestore
@@ -165,5 +157,11 @@ public class EditTaskAct extends AppCompatActivity {
 
     public void setColourId(int colourId) {
         this.colourId = colourId;
+    }
+
+    public void setDeadline(LocalDateTime updated) {
+        this.deadline = updated.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        this.editDeadline.setText(Task.getDeadlineString(deadline));
+        this.prevDate = updated;
     }
 }

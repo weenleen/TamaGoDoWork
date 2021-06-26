@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
@@ -98,8 +97,7 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            View view = ((FragmentActivity) super.context).getLayoutInflater()
-                    .inflate(R.layout.dial_task_ongoing, null, false);
+            View view = View.inflate(super.context, R.layout.dial_task_ongoing, null);
             super.setViews(view);
 
             // edit button
@@ -134,8 +132,7 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            View view = ((FragmentActivity) super.context).getLayoutInflater()
-                    .inflate(R.layout.dial_task_overdue, null, false);
+            View view = View.inflate(super.context, R.layout.dial_task_overdue, null);
             super.setViews(view);
 
             return super.dialog;

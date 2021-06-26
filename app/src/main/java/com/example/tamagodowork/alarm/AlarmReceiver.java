@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -37,11 +39,15 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         String key = intent.getStringExtra("key");
         String taskName = intent.getStringExtra("taskName");
-        String timeLeft = intent.getStringExtra("timeLeft");
-        if (timeLeft == null) return;
-        String message = alarmMessages.get(Integer.parseInt(timeLeft));
+        int alarmType = intent.getIntExtra("alarmType", 0);
+        String message = alarmMessages.get(alarmType);
 
-        if (key == null || key.isEmpty()) return;
+        if (key == null || key.isEmpty()) {
+            Log.e("onReceive", "key is null");
+            return;
+        }
+
+        Log.e("onReceive", "received");
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         DocumentReference ref = firebaseFirestore.collection("Users").document(Uid)
@@ -51,7 +57,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         showNotification(context, taskName, message);
 
         // delete alarm info from Firestore
-        ref.collection("Reminders").document(timeLeft).delete();
+        ref.collection("Reminders").document(String.valueOf(alarmType)).delete();
     }
 
     private void showNotification(Context context, String taskName, String message) {
@@ -59,6 +65,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context, 0, intent, 0);
+
+        Log.e("notification shown", taskName);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "tamagodowork")
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -75,38 +83,53 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     // Intents should have the extras
     // "key" : ID of the Task
-    // "timeLeft": the type of alarm
+    // "taskName" : name of task
+    // "alarmType": the type of alarm
     // "alarmTime": the time in millis the thing should ring
+    //
+    // "requestCode" : only for edits
     public void setAlarm(Context context, Intent intent) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        long alarmId = System.currentTimeMillis();
+        long currTime = System.currentTimeMillis();
         long alarmTime = intent.getLongExtra("alarmTime", -1);
 
-        if (alarmTime - alarmId < 0) return;
+        if (alarmTime - currTime < 0) return;
 
         String taskName = intent.getStringExtra("taskName");
-        String timeLeft = intent.getStringExtra("timeLeft");
+        int alarmType = intent.getIntExtra("alarmType", 0);
         String key = intent.getStringExtra("key");
+        int requestCode = intent.getIntExtra("requestCode", (int) currTime);
 
         Intent i = new Intent(context, AlarmReceiver.class);
         i.putExtra("taskName", taskName);
         i.putExtra("key", key);
-        i.putExtra("timeLeft", timeLeft);
-        PendingIntent pi = PendingIntent.getBroadcast(context,
-                (int) alarmId, i, PendingIntent.FLAG_ONE_SHOT);
+        i.putExtra("alarmType", alarmType);
+
+        DocumentReference ref = MainActivity.userDoc.collection("Tasks").document(key)
+                .collection("Reminders").document(String.valueOf(alarmType));
+
+        cancelAlarmIfExists(context, requestCode, ref, i);
+
+        PendingIntent pi = PendingIntent.getBroadcast(context, requestCode, i,
+                PendingIntent.FLAG_ONE_SHOT);
 
         am.setExact(AlarmManager.RTC_WAKEUP, alarmTime, pi);
+        Log.e("setAlarm", "alarm set");
 
-        DocumentReference ref = MainActivity.userDoc.collection("Tasks").document(key);
-        ref.collection("Reminders").document(timeLeft)
-                .set(Map.of("alarmId", alarmId));
+        ref.set(Map.of("requestCode", requestCode));
     }
 
-    public void cancelAlarm(Context context) {
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(sender);
+    public void cancelAlarmIfExists(Context context, int requestCode, DocumentReference ref, Intent intent) {
+        try {
+            Log.e("cancel", "cancel if exists");
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_ONE_SHOT);
+            AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            am.cancel(pendingIntent);
+            ref.delete();
+        } catch (Exception e) {
+            Log.e("cancel", "exception");
+            e.printStackTrace();
+        }
     }
 }

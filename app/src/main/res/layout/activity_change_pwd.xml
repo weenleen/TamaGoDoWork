@@ -4,24 +4,25 @@
     android:layout_height="match_parent"
     android:background="@color/off_white"
     android:paddingHorizontal="20dp"
-    android:paddingVertical="40dp" >
+    android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/chngpwd_container"
         android:background="@drawable/bg_task_item"
-        android:padding="20dp"
+        android:paddingVertical="40dp"
+        android:paddingHorizontal="20dp"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Change Password"
+            android:text="@string/change_password"
             android:textSize="30sp"
             android:textColor="@color/peach"
             android:gravity="center"
-            android:paddingBottom="30dp">
+            android:paddingBottom="40dp">
         </TextView>
 
 
@@ -29,51 +30,40 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableTint="@color/peach"
-            android:drawablePadding="20dp"
             android:hint="Old Password"
             android:textSize="15sp"
             android:id="@+id/oldPwd"
             android:maxLines="8"
-            android:inputType="text">
+            android:inputType="text"
+            android:layout_marginBottom="30dp">
         </EditText>
 
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableTint="@color/peach"
-            android:drawablePadding="20dp"
             android:hint="New Password"
             android:textSize="15sp"
             android:id="@+id/newPwd"
             android:maxLines="8"
-            android:inputType="text">
+            android:inputType="text"
+            android:layout_marginBottom="50dp">
         </EditText>
 
-
-        <LinearLayout
+        <Button
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="bottom">
+            android:layout_height="wrap_content"
+            android:id="@+id/pwd_save_button"
+            android:text="@string/saveChanges" >
+        </Button>
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/pwd_save_button"
-                android:text="Save Changes" >
-            </Button>
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/cancel_button"
-                android:text="Cancel"
-                android:textColor="@color/peach"
-                android:backgroundTint="@color/off_white">
-            </Button>
-        </LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cancel_button"
+            android:text="@string/cancel"
+            android:textColor="@color/peach"
+            android:backgroundTint="@color/off_white">
+        </Button>
     </LinearLayout>
 </RelativeLayout>
