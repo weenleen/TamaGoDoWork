@@ -10,7 +10,6 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -21,8 +20,6 @@ import android.os.Handler;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
-
-import static android.content.ContentValues.TAG;
 
 
 public class PetCanvas extends View {
@@ -192,7 +189,7 @@ public class PetCanvas extends View {
         if (this.bitmapBody == null) return;
         canvas.drawBitmap(
                 this.bitmapBody,
-                width_middle - 215f,
+                width_middle - 275f,
                 height_middle - 80f + offset,
                 null);
     }
@@ -223,17 +220,14 @@ public class PetCanvas extends View {
         if (id == null || id == R.mipmap.none) {
             this.acc_head = null;
             this.bitmapHead = null;
-        } else if (id == R.mipmap.acc_head_scar) {
-            this.acc_head = id;
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), id);
-            // resize the bitmap
-            this.bitmapHead = getResizedBitmap(bitmap, 100, 430);
-        } else {
-            this.acc_head = id;
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), id);
-            // resize the bitmap
-            this.bitmapHead = getResizedBitmap(bitmap, 150, 430);
+            return;
         }
+
+        this.acc_head = id;
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), id);
+        // resize the bitmap
+        this.bitmapHead = getResizedBitmap(bitmap, 150, 430);
+
     }
 
     public void setCustomEyes(Integer id) {
@@ -260,8 +254,7 @@ public class PetCanvas extends View {
         this.acc_body = id;
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), id);
         // resize the bitmap
-        this.bitmapBody = getResizedBitmap(bitmap, 160, 430);
-
+        this.bitmapBody = getResizedBitmap(bitmap, 300, 550);
     }
 
 
