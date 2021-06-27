@@ -126,12 +126,12 @@ public class EditTaskAct extends AppCompatActivity {
                 DocumentReference ref = remRef.document(String.valueOf(i));
                 ref.get().addOnSuccessListener(documentSnapshot -> {
                     Integer requestCode = null;
-                    if (documentSnapshot != null) {
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
                         requestCode = documentSnapshot.get("requestCode", Integer.class);
+                        alarmIntent.putExtra("requestCode", requestCode);
                     }
 
-                    if (child.isChecked() && requestCode != null) {
-                        alarmIntent.putExtra("requestCode", requestCode);
+                    if (child.isChecked()) {
                         new AlarmReceiver().setAlarm(EditTaskAct.this, alarmIntent);
                     } else if (requestCode != null) {
                         new AlarmReceiver().cancelAlarmIfExists(EditTaskAct.this,

@@ -117,7 +117,7 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
                 final int index = i;
                 ref.collection("Reminders").document(String.valueOf(i)).get()
                         .addOnSuccessListener(documentSnapshot -> {
-                            if (documentSnapshot == null) return;
+                            if (documentSnapshot == null || !documentSnapshot.exists()) return;
                             if (reminderTxt.contentEquals("None")) {
                                 reminderTxt = Task.getReminderString(index);
                             } else {
