@@ -120,7 +120,15 @@ public class GridAdapter extends BaseAdapter {
             GradientDrawable tmp = (GradientDrawable) indicator.getDrawable();
 
             if (tmp != null) {
-                tmp.setColor(ContextCompat.getColor(context, dayTaskList.get(i).getColourId()));
+                int color;
+                try {
+                    color = ContextCompat.getColor(context, dayTaskList.get(i).getColourId());
+                } catch (Exception e) {
+                    dayTaskList.get(i).setColourId(Task.colours[0]);
+                    color = ContextCompat.getColor(context, Task.colours[0]);
+                }
+
+                tmp.setColor(color);
             }
         }
 

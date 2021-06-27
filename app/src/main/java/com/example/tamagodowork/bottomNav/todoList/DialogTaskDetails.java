@@ -61,7 +61,14 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
         GradientDrawable indicator = (GradientDrawable) AppCompatResources.getDrawable(this.context,
                 R.drawable.button_color_picker_small);
         if (indicator != null) {
-            indicator.setColor(ContextCompat.getColor(this.context, task.getColourId()));
+            int color;
+            try {
+                color = ContextCompat.getColor(context, task.getColourId());
+            } catch (Exception e) {
+                task.setColourId(Task.colours[0]);
+                color = ContextCompat.getColor(context, Task.colours[0]);
+            }
+            indicator.setColor(color);
             nameView.setCompoundDrawablesWithIntrinsicBounds(indicator, null, null, null);
         }
 

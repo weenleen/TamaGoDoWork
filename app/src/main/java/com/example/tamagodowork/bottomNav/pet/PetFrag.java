@@ -2,6 +2,7 @@ package com.example.tamagodowork.bottomNav.pet;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -46,8 +47,13 @@ public class PetFrag extends Fragment {
                 .addOnSuccessListener(documentSnapshot -> {
                     wallpaper = documentSnapshot.get("wallpaper", Integer.class);
                     if (wallpaper != null && wallpaper != -1) {
-                        wallpaperBG.setImageDrawable(AppCompatResources.getDrawable(
-                                context, wallpaper));
+                        Drawable drawable;
+                        try {
+                            drawable = AppCompatResources.getDrawable(context, wallpaper);
+                        } catch (Exception e) {
+                            return;
+                        }
+                        wallpaperBG.setImageDrawable(drawable);
                     }
                 });
 

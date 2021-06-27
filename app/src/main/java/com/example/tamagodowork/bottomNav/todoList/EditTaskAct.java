@@ -83,10 +83,17 @@ public class EditTaskAct extends AppCompatActivity {
 
 
         // edit Colour
-        this.colourId = task.getColourId();
+        int color;
+        try {
+            color = ContextCompat.getColor(context, task.getColourId());
+            colourId = task.getColourId();
+        } catch (Exception e) {
+            task.setColourId(Task.colours[0]);
+            colourId = Task.colours[0];
+            color = ContextCompat.getColor(context, Task.colours[0]);
+        }
         this.editColour = findViewById(R.id.editColour);
-        ((GradientDrawable) this.editColour.getDrawable()).setColor(
-                ContextCompat.getColor(context, colourId));
+        ((GradientDrawable) this.editColour.getDrawable()).setColor(color);
         this.editColour.setOnClickListener(v -> {
             DialogColourPicker dialogColourPicker = new DialogColourPicker(
                     EditTaskAct.this, this.editColour);

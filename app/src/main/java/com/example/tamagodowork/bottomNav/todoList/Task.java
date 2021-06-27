@@ -117,6 +117,8 @@ public class Task implements Comparable<Task>, Parcelable {
         this.taskDesc = taskDesc;
     }
 
+    public void setColourId(int colourId) { this.colourId = colourId; }
+
     // others
     @Override
     public int compareTo(Task o) {
