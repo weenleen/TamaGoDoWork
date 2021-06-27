@@ -23,8 +23,8 @@
         android:id="@+id/date_time_set_btn"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:text="@string/saveChanges"
-        android:textColor="@color/peach"/>
+        style="@style/ButtonDarkStyle"
+        android:layout_marginBottom="20dp"
+        android:text="@string/saveChanges" />
 
 </LinearLayout>

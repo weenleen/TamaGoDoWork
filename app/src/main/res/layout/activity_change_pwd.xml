@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/off_white"
     android:paddingHorizontal="20dp"
     android:gravity="center">
@@ -53,6 +54,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/ButtonDarkStyle"
             android:id="@+id/pwd_save_button"
             android:text="@string/saveChanges" >
         </Button>
@@ -60,10 +62,10 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/ButtonLightStyle"
             android:id="@+id/cancel_button"
             android:text="@string/cancel"
-            android:textColor="@color/peach"
-            android:backgroundTint="@color/off_white">
+            app:backgroundTint="@color/off_white">
         </Button>
     </LinearLayout>
 </RelativeLayout>

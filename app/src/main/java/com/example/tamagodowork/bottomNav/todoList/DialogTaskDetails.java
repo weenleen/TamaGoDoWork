@@ -16,8 +16,11 @@ import androidx.core.content.ContextCompat;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -66,7 +69,11 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
         deadlineView.setText(this.task.getDeadlineString());
 
         TextView descView = view.findViewById(R.id.taskDesc);
-        descView.setText(this.task.getTaskDesc());
+        String tmp = this.task.getTaskDesc();
+        if (tmp.contentEquals("")) {
+            tmp = "-";
+        }
+        descView.setText(tmp);
 
         this.dialog.setContentView(view);
     }
@@ -90,6 +97,8 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
      */
     public static class OngoingDial extends DialogTaskDetails {
 
+        private String reminderTxt = "None";
+
         public OngoingDial(Task task) {
             super(task);
         }
@@ -99,6 +108,25 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
             View view = View.inflate(super.context, R.layout.dial_task_ongoing, null);
             super.setViews(view);
+
+            final DocumentReference ref = MainActivity.userDoc.collection("Tasks").document(super.task.getKey());
+
+            // Reminders
+            TextView reminderView = view.findViewById(R.id.taskReminders);
+            for (int i = 0; i < 3; i++) {
+                final int index = i;
+                ref.collection("Reminders").document(String.valueOf(i)).get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            if (documentSnapshot == null) return;
+                            if (reminderTxt.contentEquals("None")) {
+                                reminderTxt = Task.getReminderString(index);
+                            } else {
+                                reminderTxt += ", " + Task.getReminderString(index);
+                            }
+                            reminderView.setText(reminderTxt);
+                        });
+            }
+
 
             // edit button
             Button editBtn = view.findViewById(R.id.edit_button);
@@ -111,7 +139,7 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
             // delete button
             Button delBtn = view.findViewById(R.id.delete_button);
             delBtn.setOnClickListener(v -> {
-                MainActivity.userDoc.collection("Tasks").document(super.task.getKey()).delete();
+                ref.delete();
                 this.dismiss();
             });
 

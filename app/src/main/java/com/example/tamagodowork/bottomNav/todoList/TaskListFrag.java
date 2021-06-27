@@ -34,7 +34,7 @@ public class TaskListFrag extends Fragment {
         taskListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         list = new ArrayList<>();
-        adapter = new TaskAdapter(getActivity(), this.list);
+        adapter = new TaskAdapter(getActivity(), this.list, TaskAdapter.AdapterType.TASK_LIST);
         taskListView.setAdapter(adapter);
 
         // Read data from Firestore
@@ -47,7 +47,7 @@ public class TaskListFrag extends Fragment {
 
                     list.clear();
 
-                    assert value != null;
+                    if (value == null) return;
                     for (QueryDocumentSnapshot doc : value) {
                         Long tmp = doc.get("taskDeadline", Long.class);
                         if (tmp == null) continue;

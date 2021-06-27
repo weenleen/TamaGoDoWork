@@ -80,6 +80,7 @@
 
         <Button
             android:id="@+id/room_done"
+            style="@style/ButtonDarkStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -88,7 +89,8 @@
 
         <Button
             android:id="@+id/room_cancel"
-            android:backgroundTint="@color/light_pink"
+            style="@style/ButtonLightStyle"
+            app:backgroundTint="@color/white"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"

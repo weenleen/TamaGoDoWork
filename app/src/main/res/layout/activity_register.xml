@@ -71,6 +71,7 @@
 
         <Button
             android:id="@+id/btn_register"
+            style="@style/ButtonDarkStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/action_register" />

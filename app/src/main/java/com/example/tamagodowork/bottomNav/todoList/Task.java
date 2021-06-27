@@ -28,6 +28,15 @@ public class Task implements Comparable<Task>, Parcelable {
         int getNum() { return this.num; }
     }
 
+    public static String getReminderString(int num) {
+        switch(num) {
+            case 0: return "1 hour before";
+            case 1: return "1 day before";
+            case 2: return "2 days before";
+            default: return "";
+        }
+    }
+
     public static final int[] colours = new int[] {
             R.color.peach,
             R.color.yellow,
@@ -40,6 +49,9 @@ public class Task implements Comparable<Task>, Parcelable {
 
     public static final DateTimeFormatter formatter
             = DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm", Locale.ENGLISH);
+
+    public static final DateTimeFormatter timeFormatter
+            = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH);
 
     private String taskName, taskDesc, key;
     private Long taskDeadline;
@@ -124,6 +136,11 @@ public class Task implements Comparable<Task>, Parcelable {
         return getDeadlineString(this.taskDeadline);
     }
 
+    public String getTimeString() {
+        LocalDateTime tmp = LocalDateTime.ofInstant(Instant.ofEpochMilli(this.taskDeadline), ZoneId.systemDefault());
+        return tmp.format(timeFormatter);
+    }
+
     /**
      * Returns the time at which the alarm for this task should ring
      *
@@ -153,7 +170,7 @@ public class Task implements Comparable<Task>, Parcelable {
      *
      * @return Returns the string stating the amount of time left to complete a non-overdue task.
      */
-    public String getTimeLeft() {
+    public String getDateTimeLeft() {
         LocalDateTime fromDate = LocalDateTime.now();
         LocalDateTime toDate = this.getDateTime();
 

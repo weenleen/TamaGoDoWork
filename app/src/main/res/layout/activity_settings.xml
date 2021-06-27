@@ -23,6 +23,7 @@
 
     <Button
         android:id="@+id/btn_reset"
+        style="@style/ButtonDarkStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/peach"
@@ -30,6 +31,7 @@
 
     <Button
         android:id="@+id/change_pwd"
+        style="@style/ButtonDarkStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/peach"
@@ -37,6 +39,7 @@
 
     <Button
         android:id="@+id/btn_logout"
+        style="@style/ButtonDarkStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/peach"
@@ -44,9 +47,10 @@
 
     <Button
         android:id="@+id/btn_back"
+        style="@style/ButtonLightStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/off_white"
+        app:backgroundTint="@color/off_white"
         android:text="back"
         android:textColor="@color/peach" />
 

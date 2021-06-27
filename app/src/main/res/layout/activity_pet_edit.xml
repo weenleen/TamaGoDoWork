@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/off_white"
     android:layout_gravity="center|bottom"
     android:orientation="vertical"
@@ -72,6 +73,7 @@
 
         <Button
             android:id="@+id/edit_pet_done"
+            style="@style/ButtonDarkStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -80,7 +82,8 @@
 
         <Button
             android:id="@+id/edit_pet_cancel"
-            android:backgroundTint="@color/light_pink"
+            style="@style/ButtonLightStyle"
+            app:backgroundTint="@color/white"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"

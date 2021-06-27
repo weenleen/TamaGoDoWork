@@ -133,7 +133,7 @@ public class ScheduleFrag extends Fragment {
                 dayTaskList = new ArrayList<>();
             }
 
-            recyclerAdapter = new TaskAdapter(context, dayTaskList);
+            recyclerAdapter = new TaskAdapter(context, dayTaskList, TaskAdapter.AdapterType.SCHEDULE);
             recyclerView.setAdapter(recyclerAdapter);
         });
 
@@ -215,7 +215,7 @@ public class ScheduleFrag extends Fragment {
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        this.recyclerAdapter = new TaskAdapter(context, new ArrayList<>());
+        this.recyclerAdapter = new TaskAdapter(context, new ArrayList<>(), TaskAdapter.AdapterType.SCHEDULE);
         this.recyclerView.setAdapter(recyclerAdapter);
     }
 }

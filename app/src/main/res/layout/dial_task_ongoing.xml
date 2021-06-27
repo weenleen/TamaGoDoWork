@@ -46,9 +46,9 @@
                 android:textSize="15sp"/>
 
             <TextView
+                android:id="@+id/taskReminders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=""
                 android:layout_marginBottom="20dp"/>
 
             <TextView

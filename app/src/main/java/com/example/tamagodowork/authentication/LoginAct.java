@@ -67,7 +67,7 @@ public class LoginAct extends AppCompatActivity {
             passwordResetDialog.setView(reset);
 
 
-            passwordResetDialog.setPositiveButton("Yes", (dialog, which) -> {
+            passwordResetDialog.setPositiveButton("Reset", (dialog, which) -> {
                 String email = reset.getText().toString();
 
                 firebaseAuth.sendPasswordResetEmail(email).addOnSuccessListener(unused -> Toast.makeText(LoginAct.this, "Reset Link has been sent to your email", Toast.LENGTH_SHORT).show()).addOnFailureListener(e -> Toast.makeText(LoginAct.this, "Reset attempt unsuccessful.", Toast.LENGTH_SHORT).show());
@@ -75,7 +75,7 @@ public class LoginAct extends AppCompatActivity {
                 dialog.dismiss();
             });
 
-            passwordResetDialog.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
+            passwordResetDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
             passwordResetDialog.show();
         });

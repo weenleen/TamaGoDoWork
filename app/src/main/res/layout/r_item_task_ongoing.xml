@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="10dp"
+    android:paddingVertical="15dp"
     android:paddingHorizontal="20dp"
     android:background="@drawable/bg_task_item"
     android:foreground="?android:attr/selectableItemBackground"
@@ -28,7 +28,8 @@
             android:textSize="20sp"
             android:maxLines="1"
             android:drawablePadding="10dp"
-            android:ellipsize="end" >
+            android:ellipsize="end"
+            android:layout_marginBottom="7dp">
         </TextView>
 
         <!-- Deadline. -->
@@ -41,19 +42,6 @@
             android:maxLines="1"
             android:ellipsize="end"
             app:drawableStartCompat="@drawable/ic_baseline_access_time_24">
-        </TextView>
-
-        <!-- Desc. -->
-        <TextView
-            android:id="@+id/taskDesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:drawablePadding="10dp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:drawableTint="?attr/colorPrimary"
-            app:drawableStartCompat="@drawable/ic_baseline_assignment_24">
         </TextView>
     </LinearLayout>
 

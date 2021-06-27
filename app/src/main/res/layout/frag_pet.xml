@@ -27,15 +27,17 @@
 
             <Button
                 android:id="@+id/pet_room_button"
+                style="@style/ButtonDarkStyle"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:text="ROOM"/>
 
             <Button
                 android:id="@+id/pet_edit_button"
+                style="@style/ButtonDarkStyle"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:text="CUSTOMISE"/>
+                android:text="Customise"/>
         </LinearLayout>
 
         <RelativeLayout

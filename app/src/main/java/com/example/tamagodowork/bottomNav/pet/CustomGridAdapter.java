@@ -71,8 +71,6 @@ public class CustomGridAdapter extends BaseAdapter {
             // allows for resize of the way the bitmap appears on the selection option
             Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, 150, 150, true);
             imageView.setImageBitmap(resizedBitmap);
-
-            // imageView.setImageBitmap(bitmap);
         }
 
         // on click

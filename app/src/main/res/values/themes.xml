@@ -17,33 +17,22 @@
         <item name="colorSecondary">@color/off_white</item>
         <item name="colorOnSecondary">@color/peach</item>
 
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
-
         <!-- Customize your theme here. -->
-        <item name="android:buttonStyle">@style/ButtonDarkStyle</item>
-        <item name="android:datePickerStyle">@style/MyDatePickerStyle</item>
         <item name="android:timePickerStyle">@style/MyTimePickerStyle</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
     <!-- Button Styles. -->
-    <style name="ButtonDarkStyle" parent="android:Widget.Holo.Button">
-        <item name="colorButtonNormal">?attr/colorPrimary</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+    <style name="ButtonDarkStyle" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/bg_date_highlight</item>
+        <item name="android:layout_margin">5dp</item>
     </style>
 
-    <style name="ButtonLightStyle" parent="android:Widget.Holo.Button">
-        <item name="colorButtonNormal">?attr/colorSecondary</item>
-        <item name="android:textColor">?attr/colorOnSecondary</item>
-    </style>
-
-    <!-- DatePickerStyle Theme. -->
-    <style name="MyDatePickerStyle" parent="android:Widget.Material.Light.DatePicker">
-        <item name="android:headerBackground">?attr/colorPrimary</item>
-        <item name="android:colorAccent">?attr/colorPrimary</item>
-        <item name="colorControlActivated">?attr/colorPrimary</item>
-        <item name="colorControlHighlight">?attr/colorPrimary</item>
+    <style name="ButtonLightStyle" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/peach</item>
+        <item name="android:background">@drawable/bg_task_item</item>
+        <item name="android:layout_margin">5dp</item>
     </style>
 
     <!-- TimePickerStyle Theme. -->

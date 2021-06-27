@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
@@ -21,23 +22,26 @@ import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
+    public enum AdapterType { TASK_LIST, SCHEDULE }
+
     private final Context context;
     private final ArrayList<Task> taskList;
+    private final AdapterType adapterType;
 
-    public TaskAdapter(Context context, ArrayList<Task> taskList) {
+    public TaskAdapter(Context context, ArrayList<Task> taskList, AdapterType adapterType) {
         this.taskList = taskList;
         this.context = context;
+        this.adapterType = adapterType;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView taskName, taskDesc, taskDeadline;
+        private final TextView taskName, taskDeadline;
         private final View taskAction;
         private final Task.Status status;
 
         public ViewHolder(@NonNull View itemView, Task.Status status) {
             super(itemView);
             this.taskName = itemView.findViewById(R.id.taskName);
-            this.taskDesc = itemView.findViewById(R.id.taskDesc);
             this.taskDeadline = itemView.findViewById(R.id.taskDeadline);
             this.taskAction = itemView.findViewById(R.id.taskAction);
             this.status = status;
@@ -77,8 +81,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             holder.taskName.setCompoundDrawablesWithIntrinsicBounds(indicator, null, null, null);
         }
 
-        holder.taskDesc.setText(task.getTaskDesc());
-
         // dialog
         holder.itemView.setOnClickListener(v -> {
             DialogTaskDetails dialog = DialogTaskDetails.newInstance(taskList.get(position));
@@ -90,8 +92,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         Animation anim;
 
         if (holder.status == Task.Status.ONGOING) {
-            holder.taskDeadline.setText(context.getString(R.string.time_left_display,
-                    task.getTimeLeft()));
+            String deadlineStr;
+            if (this.adapterType == AdapterType.TASK_LIST) {
+                deadlineStr = context.getString(R.string.time_left_display, task.getDateTimeLeft());
+            } else {
+                deadlineStr = task.getTimeString();
+            }
+            holder.taskDeadline.setText(deadlineStr);
             anim = AnimationUtils.loadAnimation(context, R.anim.anim_task_complete);
         } else {
             anim = AnimationUtils.loadAnimation(context, R.anim.anim_task_dismiss);
