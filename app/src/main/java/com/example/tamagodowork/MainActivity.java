@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.tamagodowork.authentication.RegisterAct;
 import com.example.tamagodowork.bottomNav.pet.PetFrag;
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         // Set default fragment to the task list fragment
         userDoc.get().addOnSuccessListener(documentSnapshot -> {
             int selectedIndex = R.id.navigation_taskList;
-            if (documentSnapshot != null) {
+            if (documentSnapshot != null && documentSnapshot.exists()) {
                 Integer tmp = documentSnapshot.get("selectedFrag", Integer.class);
                 if (tmp != null) selectedIndex = tmp;
             }
@@ -83,10 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         // XP stuff
         userDoc.addSnapshotListener((value, error) -> {
-            if (error != null || value == null) {
-                Toast.makeText(getApplicationContext(), "XP error", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            if (error != null || value == null) return;
 
             Integer tmp = value.get("XP", Integer.class);
             if (tmp == null) {

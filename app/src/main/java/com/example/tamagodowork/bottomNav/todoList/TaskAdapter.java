@@ -129,4 +129,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public int getItemCount() {
         return this.taskList.size();
     }
+
+    public void clear() {
+        this.taskList.clear();
+        this.notifyDataSetChanged();
+    }
 }

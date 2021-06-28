@@ -15,10 +15,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:gravity="center"
             android:layout_weight="1"
@@ -28,14 +29,14 @@
             <Button
                 android:id="@+id/pet_room_button"
                 style="@style/ButtonDarkStyle"
-                android:layout_width="130dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="ROOM"/>
 
             <Button
                 android:id="@+id/pet_edit_button"
                 style="@style/ButtonDarkStyle"
-                android:layout_width="130dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Customise"/>
         </LinearLayout>

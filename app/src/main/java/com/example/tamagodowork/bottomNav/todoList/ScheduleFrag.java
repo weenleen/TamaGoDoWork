@@ -29,6 +29,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -131,6 +132,8 @@ public class ScheduleFrag extends Fragment {
 
             if (dayTaskList == null || month != calendar.get(Calendar.MONTH) + 1) {
                 dayTaskList = new ArrayList<>();
+            } else {
+                Collections.sort(dayTaskList);
             }
 
             recyclerAdapter = new TaskAdapter(context, dayTaskList, TaskAdapter.AdapterType.SCHEDULE);
@@ -182,7 +185,9 @@ public class ScheduleFrag extends Fragment {
                                 doc.get("colourId", Integer.class)));
                     }
 
+                    this.recyclerAdapter.clear();
                     this.gridView.setAdapter(this.gridAdapter);
+                    this.recyclerView.setAdapter(this.recyclerAdapter);
                 });
     }
 

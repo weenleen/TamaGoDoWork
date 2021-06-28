@@ -54,11 +54,11 @@ public class DialogDateTimePicker extends DialogFragment {
         }
 
         this.updYear = prevDate.getYear();
-        this.updMonth = prevDate.getMonthValue() - 1;
+        this.updMonth = prevDate.getMonthValue();
         this.updDay = prevDate.getDayOfMonth();
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, updYear);
-        calendar.set(Calendar.MONTH, updMonth);
+        calendar.set(Calendar.MONTH, updMonth - 1);
         calendar.set(Calendar.DAY_OF_MONTH, updDay);
         calendarView.setDate(calendar.getTimeInMillis(), true, true);
         timePicker.setCurrentHour(prevDate.getHour());
