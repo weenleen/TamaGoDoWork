@@ -32,15 +32,15 @@ public class GridAdapter extends BaseAdapter {
 
     private final List<Date> dates;
     private final Calendar currentDate;
-    private final HashMap<Integer, ArrayList<Task>> monthTaskMap;
+    private final HashMap<Integer, ArrayList<Todo>> monthTodoMap;
     private final Context context;
 
     public GridAdapter(@NonNull @NotNull Context context, List<Date> dates, Calendar currentDate,
-                       HashMap<Integer, ArrayList<Task>> monthTaskMap) {
+                       HashMap<Integer, ArrayList<Todo>> monthTodoMap) {
         this.context = context;
         this.dates = dates;
         this.currentDate = currentDate;
-        this.monthTaskMap = monthTaskMap;
+        this.monthTodoMap = monthTodoMap;
     }
 
     @NonNull
@@ -94,17 +94,17 @@ public class GridAdapter extends BaseAdapter {
 
 
 
-        // retrieve tasks for this day
-        ArrayList<Task> dayTaskList = this.monthTaskMap.get(displayDay);
-        int numOfTasks;
+        // retrieve todos for this day
+        ArrayList<Todo> dayTodoList = this.monthTodoMap.get(displayDay);
+        int numOfTodos;
 
-        if (dayTaskList == null) return view;
-        else numOfTasks = dayTaskList.size();
+        if (dayTodoList == null) return view;
+        else numOfTodos = dayTodoList.size();
 
         LinearLayout indicatorLayout = view.findViewById(R.id.schedule_task_indicator);
 
-        // for every task for this day
-        for (int i = 0; i < numOfTasks; i++) {
+        // for every todo for this day
+        for (int i = 0; i < numOfTodos; i++) {
             if (i >= 5) break; // maximum 4 indicators and a plus symbol
 
 
@@ -112,7 +112,7 @@ public class GridAdapter extends BaseAdapter {
             LinearLayout.LayoutParams childLayoutParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT,
-                    1f / numOfTasks);
+                    1f / numOfTodos);
             indicator.setLayoutParams(childLayoutParams);
 
             if (i >= 4) break; // below is for the circles and not plus sign
@@ -122,10 +122,10 @@ public class GridAdapter extends BaseAdapter {
             if (tmp != null) {
                 int color;
                 try {
-                    color = ContextCompat.getColor(context, dayTaskList.get(i).getColourId());
+                    color = ContextCompat.getColor(context, dayTodoList.get(i).getColourId());
                 } catch (Exception e) {
-                    dayTaskList.get(i).setColourId(Task.colours[0]);
-                    color = ContextCompat.getColor(context, Task.colours[0]);
+                    dayTodoList.get(i).setColourId(Todo.colours[0]);
+                    color = ContextCompat.getColor(context, Todo.colours[0]);
                 }
 
                 tmp.setColor(color);

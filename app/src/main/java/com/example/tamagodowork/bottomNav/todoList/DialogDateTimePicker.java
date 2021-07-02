@@ -77,10 +77,10 @@ public class DialogDateTimePicker extends DialogFragment {
             LocalDateTime updated = LocalDateTime.of(
                     this.updYear, this.updMonth, this.updDay,
                     timePicker.getCurrentHour(), timePicker.getCurrentMinute());
-            if (activity instanceof AddTaskAct) {
-                ((AddTaskAct) activity).setDeadline(updated);
-            } else if (activity instanceof EditTaskAct) {
-                ((EditTaskAct) activity).setDeadline(updated);
+            if (activity instanceof AddTodoActivity) {
+                ((AddTodoActivity) activity).setDeadline(updated);
+            } else if (activity instanceof EditTodoActivity) {
+                ((EditTodoActivity) activity).setDeadline(updated);
             }
             alertDialog.dismiss();
         });

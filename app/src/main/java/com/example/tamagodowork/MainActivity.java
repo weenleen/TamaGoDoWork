@@ -17,9 +17,9 @@ import android.widget.TextView;
 
 import com.example.tamagodowork.authentication.RegisterAct;
 import com.example.tamagodowork.bottomNav.pet.PetFrag;
-import com.example.tamagodowork.bottomNav.todoList.AddTaskAct;
+import com.example.tamagodowork.bottomNav.todoList.AddTodoActivity;
 import com.example.tamagodowork.bottomNav.todoList.ScheduleFrag;
-import com.example.tamagodowork.bottomNav.todoList.TaskListFrag;
+import com.example.tamagodowork.bottomNav.todoList.TodoListFrag;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         // fab
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
-            startActivity(new Intent(getApplicationContext(), AddTaskAct.class));
+            startActivity(new Intent(getApplicationContext(), AddTodoActivity.class));
             finish();
         });
     }
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (num == R.id.navigation_schedule) {
             return new ScheduleFrag();
         } else {
-            return new TaskListFrag();
+            return new TodoListFrag();
         }
     }
 
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             selectedFrag = new ScheduleFrag();
         } else {
             fab.setVisibility(View.VISIBLE);
-            selectedFrag = new TaskListFrag();
+            selectedFrag = new TodoListFrag();
         }
 
         userDoc.update("selectedFrag", tmp);

@@ -19,10 +19,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class TaskListFrag extends Fragment {
+public class TodoListFrag extends Fragment {
 
-    private TaskAdapter adapter;
-    private ArrayList<Task> list;
+    private TodoAdapter adapter;
+    private ArrayList<Todo> list;
 
     @Nullable
     @Override
@@ -34,11 +34,11 @@ public class TaskListFrag extends Fragment {
         taskListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         list = new ArrayList<>();
-        adapter = new TaskAdapter(getActivity(), this.list, TaskAdapter.AdapterType.TASK_LIST);
+        adapter = new TodoAdapter(getActivity(), this.list, TodoAdapter.AdapterType.TASK_LIST);
         taskListView.setAdapter(adapter);
 
         // Read data from Firestore
-        MainActivity.userDoc.collection("Tasks")
+        MainActivity.userDoc.collection("Todos")
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
                         // error
@@ -49,12 +49,12 @@ public class TaskListFrag extends Fragment {
 
                     if (value == null) return;
                     for (QueryDocumentSnapshot doc : value) {
-                        Long tmp = doc.get("taskDeadline", Long.class);
+                        Long tmp = doc.get("deadline", Long.class);
                         if (tmp == null) continue;
-                        list.add(new Task(doc.getString("taskName"),
+                        list.add(new Todo(doc.getString("name"),
                                 tmp,
-                                doc.getString("taskDesc"),
-                                doc.getId(),
+                                doc.getString("desc"),
+                                Integer.parseInt(doc.getId()),
                                 doc.get("colourId", Integer.class)));
                     }
 

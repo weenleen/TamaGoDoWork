@@ -16,22 +16,20 @@ import androidx.core.content.ContextCompat;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
-public class DialogTaskDetails extends BottomSheetDialogFragment {
+public class DialogTodoDetails extends BottomSheetDialogFragment {
 
-    public static final String TAG = "Task Details Dialog";
+    public static final String TAG = "Todo Details Dialog";
 
     private BottomSheetDialog dialog;
 
     private Context context;
-    private final Task task;
+    private final Todo todo;
 
     @Override
     public void onAttach(@NonNull @NotNull Context context) {
@@ -42,10 +40,10 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
     /**
      * Private constructor.
      *
-     * @param task The task that is shown on the dialog.
+     * @param todo The todo that is shown on the dialog.
      */
-    private DialogTaskDetails(Task task) {
-        this.task = task;
+    private DialogTodoDetails(Todo todo) {
+        this.todo = todo;
     }
 
     /**
@@ -57,26 +55,26 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
         this.dialog = new BottomSheetDialog(this.context);
 
         TextView nameView = view.findViewById(R.id.taskName);
-        nameView.setText(this.task.getTaskName());
+        nameView.setText(this.todo.getName());
         GradientDrawable indicator = (GradientDrawable) AppCompatResources.getDrawable(this.context,
                 R.drawable.button_color_picker_small);
         if (indicator != null) {
             int color;
             try {
-                color = ContextCompat.getColor(context, task.getColourId());
+                color = ContextCompat.getColor(context, todo.getColourId());
             } catch (Exception e) {
-                task.setColourId(Task.colours[0]);
-                color = ContextCompat.getColor(context, Task.colours[0]);
+                todo.setColourId(Todo.colours[0]);
+                color = ContextCompat.getColor(context, Todo.colours[0]);
             }
             indicator.setColor(color);
             nameView.setCompoundDrawablesWithIntrinsicBounds(indicator, null, null, null);
         }
 
         TextView deadlineView = view.findViewById(R.id.taskDeadline);
-        deadlineView.setText(this.task.getDeadlineString());
+        deadlineView.setText(this.todo.getDeadlineString());
 
         TextView descView = view.findViewById(R.id.taskDesc);
-        String tmp = this.task.getTaskDesc();
+        String tmp = this.todo.getDesc();
         if (tmp.contentEquals("")) {
             tmp = "-";
         }
@@ -88,26 +86,26 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
     /**
      * Factory method that determines what type of dialog is shown.
      *
-     * @param task The task that is shown on the dialog.
+     * @param todo The todo that is shown on the dialog.
      * @return A dialog fragment.
      */
-    public static DialogTaskDetails newInstance(Task task) {
-        if (task.getStatus() == Task.Status.ONGOING) {
-            return new OngoingDial(task);
+    public static DialogTodoDetails newInstance(Todo todo) {
+        if (todo.getStatus() == Todo.Status.ONGOING) {
+            return new OngoingDial(todo);
         } else {
-            return new OverdueDial(task);
+            return new OverdueDial(todo);
         }
     }
 
     /**
-     * Class for ongoing tasks.
+     * Class for ongoing todos.
      */
-    public static class OngoingDial extends DialogTaskDetails {
+    public static class OngoingDial extends DialogTodoDetails {
 
         private String reminderTxt = "None";
 
-        public OngoingDial(Task task) {
-            super(task);
+        public OngoingDial(Todo todo) {
+            super(todo);
         }
 
         @NonNull
@@ -116,7 +114,8 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
             View view = View.inflate(super.context, R.layout.dial_task_ongoing, null);
             super.setViews(view);
 
-            final DocumentReference ref = MainActivity.userDoc.collection("Tasks").document(super.task.getKey());
+            final DocumentReference ref = MainActivity.userDoc.collection("Todos")
+                    .document(String.valueOf(super.todo.getKey()));
 
             // Reminders
             TextView reminderView = view.findViewById(R.id.taskReminders);
@@ -126,9 +125,9 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
                         .addOnSuccessListener(documentSnapshot -> {
                             if (documentSnapshot == null || !documentSnapshot.exists()) return;
                             if (reminderTxt.contentEquals("None")) {
-                                reminderTxt = Task.getReminderString(index);
+                                reminderTxt = Todo.getReminderString(index);
                             } else {
-                                reminderTxt += ", " + Task.getReminderString(index);
+                                reminderTxt += ", " + Todo.getReminderString(index);
                             }
                             reminderView.setText(reminderTxt);
                         });
@@ -138,8 +137,8 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
             // edit button
             Button editBtn = view.findViewById(R.id.edit_button);
             editBtn.setOnClickListener(v -> {
-                Intent intent = new Intent(super.context, EditTaskAct.class);
-                intent.putExtra(Task.parcelKey, super.task);
+                Intent intent = new Intent(super.context, EditTodoActivity.class);
+                intent.putExtra(Todo.parcelKey, super.todo);
                 startActivity(intent);
             });
 
@@ -156,12 +155,12 @@ public class DialogTaskDetails extends BottomSheetDialogFragment {
 
 
     /**
-     * Class for overdue tasks.
+     * Class for overdue todos.
      */
-    public static class OverdueDial extends DialogTaskDetails {
+    public static class OverdueDial extends DialogTodoDetails {
 
-        public OverdueDial(Task task) {
-            super(task);
+        public OverdueDial(Todo todo) {
+            super(todo);
         }
 
         @NonNull

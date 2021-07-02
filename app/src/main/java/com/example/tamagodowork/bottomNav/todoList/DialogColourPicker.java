@@ -50,7 +50,7 @@ public class DialogColourPicker extends BottomSheetDialogFragment {
             GradientDrawable tmp = (GradientDrawable) AppCompatResources
                     .getDrawable(context, R.drawable.button_color_picker);
 
-            int selectedId = Task.colours[i];
+            int selectedId = Todo.colours[i];
 
             if (tmp != null) {
                 tmp.setColor(ContextCompat.getColor(context, selectedId));
@@ -63,10 +63,10 @@ public class DialogColourPicker extends BottomSheetDialogFragment {
 
                 FragmentActivity act = getActivity();
 
-                if (act instanceof AddTaskAct) {
-                    ((AddTaskAct) act).setColourId(selectedId);
-                } else if (act instanceof EditTaskAct) {
-                    ((EditTaskAct) act).setColourId(selectedId);
+                if (act instanceof AddTodoActivity) {
+                    ((AddTodoActivity) act).setColourId(selectedId);
+                } else if (act instanceof EditTodoActivity) {
+                    ((EditTodoActivity) act).setColourId(selectedId);
                 }
 
                 dialog.dismiss();

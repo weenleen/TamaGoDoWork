@@ -46,11 +46,11 @@ public class ScheduleFrag extends Fragment {
     private GridView gridView;
     private GridAdapter gridAdapter;
     private RecyclerView recyclerView;
-    private TaskAdapter recyclerAdapter;
+    private TodoAdapter recyclerAdapter;
 
     // Data
     private final ArrayList<Date> dates = new ArrayList<>();
-    private final HashMap<Integer, ArrayList<Task>> monthTaskMap = new HashMap<>();
+    private final HashMap<Integer, ArrayList<Todo>> monthTodoMap = new HashMap<>();
 
     private Context context;
     private int gridSelectedPos = 0;
@@ -128,15 +128,15 @@ public class ScheduleFrag extends Fragment {
             int day = selectedDate.toInstant().atZone(ZoneId.systemDefault()).getDayOfMonth();
             int month = selectedDate.toInstant().atZone(ZoneId.systemDefault()).getMonthValue();
 
-            ArrayList<Task> dayTaskList = monthTaskMap.get(day);
+            ArrayList<Todo> dayTodoList = monthTodoMap.get(day);
 
-            if (dayTaskList == null || month != calendar.get(Calendar.MONTH) + 1) {
-                dayTaskList = new ArrayList<>();
+            if (dayTodoList == null || month != calendar.get(Calendar.MONTH) + 1) {
+                dayTodoList = new ArrayList<>();
             } else {
-                Collections.sort(dayTaskList);
+                Collections.sort(dayTodoList);
             }
 
-            recyclerAdapter = new TaskAdapter(context, dayTaskList, TaskAdapter.AdapterType.SCHEDULE);
+            recyclerAdapter = new TodoAdapter(context, dayTodoList, TodoAdapter.AdapterType.SCHEDULE);
             recyclerView.setAdapter(recyclerAdapter);
         });
 
@@ -150,16 +150,16 @@ public class ScheduleFrag extends Fragment {
      * @param month Month of the calendar.
      * @param year Year of the calendar.
      */
-    private void collectTasksPerMonth(int month, int year) {
-        MainActivity.userDoc.collection("Tasks")
+    private void collectTodosPerMonth(int month, int year) {
+        MainActivity.userDoc.collection("Todos")
                 .addSnapshotListener((value, error) -> {
                     if (error != null) return;
 
-                    this.monthTaskMap.clear();
+                    this.monthTodoMap.clear();
 
                     assert value != null;
                     for (QueryDocumentSnapshot doc : value) {
-                        Long tmp = doc.get("taskDeadline", Long.class);
+                        Long tmp = doc.get("deadline", Long.class);
                         if (tmp == null) {
                             continue;
                         }
@@ -171,17 +171,17 @@ public class ScheduleFrag extends Fragment {
                         }
 
                         int dayOfMonth = dateTime.getDayOfMonth();
-                        ArrayList<Task> dayTaskList = this.monthTaskMap.get(dayOfMonth);
+                        ArrayList<Todo> dayTodoList = this.monthTodoMap.get(dayOfMonth);
 
-                        if (dayTaskList == null) {
-                            dayTaskList = new ArrayList<>();
-                            this.monthTaskMap.put(dayOfMonth, dayTaskList);
+                        if (dayTodoList == null) {
+                            dayTodoList = new ArrayList<>();
+                            this.monthTodoMap.put(dayOfMonth, dayTodoList);
                         }
 
-                        dayTaskList.add(new Task(doc.getString("taskName"),
+                        dayTodoList.add(new Todo(doc.getString("name"),
                                 tmp,
-                                doc.getString("taskDesc"),
-                                doc.getId(),
+                                doc.getString("desc"),
+                                Integer.parseInt(doc.getId()),
                                 doc.get("colourId", Integer.class)));
                     }
 
@@ -201,8 +201,8 @@ public class ScheduleFrag extends Fragment {
 
         // set up data and adapters
         dates.clear();
-        this.monthTaskMap.clear();
-        this.gridAdapter = new GridAdapter(context, dates, calendar, monthTaskMap);
+        this.monthTodoMap.clear();
+        this.gridAdapter = new GridAdapter(context, dates, calendar, monthTodoMap);
         this.gridView.setAdapter(gridAdapter);
 
         // clones a month calendar
@@ -212,7 +212,7 @@ public class ScheduleFrag extends Fragment {
         int firstDayOfMonth = monthCalendar.get(Calendar.DAY_OF_WEEK) - 1;
         monthCalendar.add(Calendar.DAY_OF_MONTH, -firstDayOfMonth);
 
-        collectTasksPerMonth(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
+        collectTodosPerMonth(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
 
         while (dates.size() < MAX_CALENDAR_DAY) {
             Date gridDate = monthCalendar.getTime();
@@ -220,7 +220,7 @@ public class ScheduleFrag extends Fragment {
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        this.recyclerAdapter = new TaskAdapter(context, new ArrayList<>(), TaskAdapter.AdapterType.SCHEDULE);
+        this.recyclerAdapter = new TodoAdapter(context, new ArrayList<>(), TodoAdapter.AdapterType.SCHEDULE);
         this.recyclerView.setAdapter(recyclerAdapter);
     }
 }

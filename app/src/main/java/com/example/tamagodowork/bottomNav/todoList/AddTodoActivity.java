@@ -18,18 +18,17 @@ import androidx.core.content.ContextCompat;
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.alarm.AlarmReceiver;
-import com.google.firebase.firestore.DocumentReference;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-public class AddTaskAct extends AppCompatActivity {
+public class AddTodoActivity extends AppCompatActivity {
 
     private EditText addName, addDeadline, addDesc;
     private ImageButton addColour;
     private long deadline;
 
-    private Integer colourId = Task.colours[0];
+    private Integer colourId = Todo.colours[0];
     private LocalDateTime prevDate;
 
     @Override
@@ -39,12 +38,14 @@ public class AddTaskAct extends AppCompatActivity {
 
         Context context = getApplicationContext();
 
+
+
         this.addName = findViewById(R.id.addName);
         this.addDesc = findViewById(R.id.addDesc);
 
         this.addDeadline = findViewById(R.id.addDeadline);
         this.addDeadline.setOnClickListener(v -> {
-            DialogDateTimePicker dialog = new DialogDateTimePicker(AddTaskAct.this, prevDate);
+            DialogDateTimePicker dialog = new DialogDateTimePicker(AddTodoActivity.this, prevDate);
             dialog.show(getSupportFragmentManager(), DialogDateTimePicker.TAG);
         });
 
@@ -55,7 +56,7 @@ public class AddTaskAct extends AppCompatActivity {
                 ContextCompat.getColor(context, colourId));
         this.addColour.setOnClickListener(v -> {
             DialogColourPicker dialogColourPicker = new DialogColourPicker(
-                    AddTaskAct.this, this.addColour);
+                    AddTodoActivity.this, this.addColour);
             dialogColourPicker.show(getSupportFragmentManager(), DialogColourPicker.TAG);
         });
 
@@ -66,11 +67,8 @@ public class AddTaskAct extends AppCompatActivity {
 
         Button createBtn = findViewById(R.id.create_button);
         createBtn.setOnClickListener(v -> {
-            DocumentReference ref = MainActivity.userDoc.collection("Tasks").document();
-
             String name = addName.getText().toString();
             String desc = addDesc.getText().toString();
-            String key = ref.getId();
 
 
             // check if name and deadline are filled in
@@ -82,37 +80,44 @@ public class AddTaskAct extends AppCompatActivity {
                 return;
             }
 
-            // Put Task in Firestore
-            Task addedTask = new Task(name, deadline, desc, key, colourId);
-            ref.set(addedTask);
+            // Put Todo in Firestore
+            MainActivity.userDoc.get().addOnSuccessListener(documentSnapshot -> {
+                Integer key = documentSnapshot.get("lastIndex", Integer.class);
+                if (key != null) key += 1;
+                else key = Todo.minBound;
+                MainActivity.userDoc.update("lastIndex", key);
 
-            // reminders
-            for (int i = 0; i < remLayout.getChildCount(); i++) {
-                CheckBox child = (CheckBox) remLayout.getChildAt(i);
+                Todo addedTodo = new Todo(name, deadline, desc, key, colourId);
+                MainActivity.userDoc.collection("Todos").document(addedTodo.getKeyStr()).set(addedTodo);
 
-                // there are reminder alarms
-                if (child.isChecked()) {
-                    // time to ring
-                    long alarmTime = addedTask.getAlarmTime(i);
+                // reminders
+                for (int i = 0; i < remLayout.getChildCount(); i++) {
+                    CheckBox child = (CheckBox) remLayout.getChildAt(i);
 
-                    // set alarm intents
-                    Intent alarmIntent = new Intent(AddTaskAct.this, AlarmReceiver.class);
-                    alarmIntent.putExtra("key", key);
-                    alarmIntent.putExtra("taskName", name);
-                    alarmIntent.putExtra("alarmType", i);
-                    alarmIntent.putExtra("alarmTime", alarmTime);
+                    // there are reminder alarms
+                    if (child.isChecked()) {
+                        // time to ring
+                        long alarmTime = addedTodo.getAlarmTime(i);
 
-                    new AlarmReceiver().setAlarm(AddTaskAct.this, alarmIntent);
+                        // set alarm intents
+                        Intent alarmIntent = new Intent(AddTodoActivity.this, AlarmReceiver.class);
+                        alarmIntent.putExtra("key", key);
+                        alarmIntent.putExtra("name", name);
+                        alarmIntent.putExtra("alarmType", i);
+                        alarmIntent.putExtra("alarmTime", alarmTime);
+
+                        new AlarmReceiver().setAlarm(AddTodoActivity.this, alarmIntent);
+                    }
                 }
-            }
+            });
 
-            MainActivity.backToMain(AddTaskAct.this);
+            MainActivity.backToMain(AddTodoActivity.this);
         });
 
 
         // cancel button
         Button cancelBtn = findViewById(R.id.cancel_add_button);
-        cancelBtn.setOnClickListener(v -> MainActivity.backToMain(AddTaskAct.this));
+        cancelBtn.setOnClickListener(v -> MainActivity.backToMain(AddTodoActivity.this));
     }
 
     public void setColourId(int colourId) {
@@ -121,7 +126,7 @@ public class AddTaskAct extends AppCompatActivity {
 
     public void setDeadline(LocalDateTime updated) {
         this.deadline = updated.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        this.addDeadline.setText(Task.getDeadlineString(deadline));
+        this.addDeadline.setText(Todo.getDeadlineString(deadline));
         this.prevDate = updated;
     }
 }

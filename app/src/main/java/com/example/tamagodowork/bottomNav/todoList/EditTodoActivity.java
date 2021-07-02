@@ -26,12 +26,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-public class EditTaskAct extends AppCompatActivity {
+public class EditTodoActivity extends AppCompatActivity {
 
     private EditText editName, editDeadline, editDesc;
     private ImageButton editColour;
 
-    private String key;
+    private int key;
     private long deadline;
     private int colourId;
 
@@ -49,21 +49,21 @@ public class EditTaskAct extends AppCompatActivity {
         this.editDesc = findViewById(R.id.editDesc);
         this.editDeadline = findViewById(R.id.editDeadline);
 
-        Task task = getIntent().getParcelableExtra(Task.parcelKey);
+        Todo todo = getIntent().getParcelableExtra(Todo.parcelKey);
 
         // set the text in the views
-        this.editName.setText(task.getTaskName());
-        this.editDeadline.setText(task.getDeadlineString());
-        this.editDesc.setText(task.getTaskDesc());
-        this.key = task.getKey();
+        this.editName.setText(todo.getName());
+        this.editDeadline.setText(todo.getDeadlineString());
+        this.editDesc.setText(todo.getDesc());
+        this.key = todo.getKey();
 
         // set deadline to previous deadline
-        this.deadline = task.getTaskDeadline();
+        this.deadline = todo.getDeadline();
 
         // Check reminders Checkboxes
         LinearLayout remLayout = findViewById(R.id.reminders);
-        CollectionReference remRef = MainActivity.userDoc.collection("Tasks")
-                .document(key).collection("Reminders");
+        CollectionReference remRef = MainActivity.userDoc.collection("Todos")
+                .document(String.valueOf(key)).collection("Reminders");
         remRef.get().addOnCompleteListener(t -> {
             if (!t.isSuccessful() || t.getResult() == null) return;
 
@@ -75,9 +75,9 @@ public class EditTaskAct extends AppCompatActivity {
 
 
         // change deadline
-        prevDate = task.getDateTime();
+        prevDate = todo.getDateTime();
         this.editDeadline.setOnClickListener(v -> {
-            DialogDateTimePicker dialog = new DialogDateTimePicker(EditTaskAct.this, prevDate);
+            DialogDateTimePicker dialog = new DialogDateTimePicker(EditTodoActivity.this, prevDate);
             dialog.show(getSupportFragmentManager(), DialogDateTimePicker.TAG);
         });
 
@@ -85,18 +85,18 @@ public class EditTaskAct extends AppCompatActivity {
         // edit Colour
         int color;
         try {
-            color = ContextCompat.getColor(context, task.getColourId());
-            colourId = task.getColourId();
+            color = ContextCompat.getColor(context, todo.getColourId());
+            colourId = todo.getColourId();
         } catch (Exception e) {
-            task.setColourId(Task.colours[0]);
-            colourId = Task.colours[0];
-            color = ContextCompat.getColor(context, Task.colours[0]);
+            todo.setColourId(Todo.colours[0]);
+            colourId = Todo.colours[0];
+            color = ContextCompat.getColor(context, Todo.colours[0]);
         }
         this.editColour = findViewById(R.id.editColour);
         ((GradientDrawable) this.editColour.getDrawable()).setColor(color);
         this.editColour.setOnClickListener(v -> {
             DialogColourPicker dialogColourPicker = new DialogColourPicker(
-                    EditTaskAct.this, this.editColour);
+                    EditTodoActivity.this, this.editColour);
             dialogColourPicker.show(getSupportFragmentManager(), DialogColourPicker.TAG);
         });
 
@@ -116,18 +116,18 @@ public class EditTaskAct extends AppCompatActivity {
                 return;
             }
 
-            Task updatedTask = new Task(name, deadline, desc, key, colourId);
+            Todo updatedTodo = new Todo(name, deadline, desc, key, colourId);
             // update alarms in Firestore
             for (int i = 0; i < remLayout.getChildCount(); i++) {
                 // TODO
                 // alarmId
                 CheckBox child = (CheckBox) remLayout.getChildAt(i);
-                Intent alarmIntent = new Intent(EditTaskAct.this, AlarmReceiver.class);
+                Intent alarmIntent = new Intent(EditTodoActivity.this, AlarmReceiver.class);
                 alarmIntent.putExtra("key", key);
-                alarmIntent.putExtra("taskName", name);
+                alarmIntent.putExtra("name", name);
                 alarmIntent.putExtra("alarmType", i);
 
-                long alarmTime = updatedTask.getAlarmTime(i);
+                long alarmTime = updatedTodo.getAlarmTime(i);
                 alarmIntent.putExtra("alarmTime", alarmTime);
 
                 DocumentReference ref = remRef.document(String.valueOf(i));
@@ -139,27 +139,27 @@ public class EditTaskAct extends AppCompatActivity {
                     }
 
                     if (child.isChecked()) {
-                        new AlarmReceiver().setAlarm(EditTaskAct.this, alarmIntent);
+                        new AlarmReceiver().setAlarm(EditTodoActivity.this, alarmIntent);
                     } else if (requestCode != null) {
-                        new AlarmReceiver().cancelAlarmIfExists(EditTaskAct.this,
-                                requestCode, ref, alarmIntent);
+                        new AlarmReceiver().cancelAlarmIfExists(EditTodoActivity.this,
+                                requestCode, alarmIntent);
                     }
                 });
             }
 
-            // update tasks in Firestore
-            MainActivity.userDoc.collection("Tasks").document(key)
-                    .update("taskName", name,
-                            "taskDeadline", deadline,
-                            "taskDesc", desc,
+            // update todos in Firestore
+            MainActivity.userDoc.collection("Todos").document(String.valueOf(key))
+                    .update("name", name,
+                            "deadline", deadline,
+                            "desc", desc,
                             "colourId", colourId)
                     .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Save Failed", Toast.LENGTH_SHORT).show());
-            MainActivity.backToMain(EditTaskAct.this);
+            MainActivity.backToMain(EditTodoActivity.this);
         });
 
         // Cancel Button
         Button cancelBtn = findViewById(R.id.cancel_edit_button);
-        cancelBtn.setOnClickListener(v -> MainActivity.backToMain(EditTaskAct.this));
+        cancelBtn.setOnClickListener(v -> MainActivity.backToMain(EditTodoActivity.this));
     }
 
     public void setColourId(int colourId) {
@@ -168,7 +168,7 @@ public class EditTaskAct extends AppCompatActivity {
 
     public void setDeadline(LocalDateTime updated) {
         this.deadline = updated.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        this.editDeadline.setText(Task.getDeadlineString(deadline));
+        this.editDeadline.setText(Todo.getDeadlineString(deadline));
         this.prevDate = updated;
     }
 }
