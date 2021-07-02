@@ -14,6 +14,10 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
 
+    <string name="pet_name">"Edit your pet name"</string>
+    <string name="room">"Room"</string>
+    <string name="Customise">"Customise"</string>
+
     <string name="level">Level %1$d</string>
     <string name="time_left_display">in %1$s</string>
 
