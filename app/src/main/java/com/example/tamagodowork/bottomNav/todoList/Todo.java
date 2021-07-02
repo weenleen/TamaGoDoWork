@@ -1,11 +1,12 @@
 package com.example.tamagodowork.bottomNav.todoList;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
-
 import com.example.tamagodowork.R;
+import com.example.tamagodowork.alarm.AlarmReceiver;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -16,7 +17,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 
 /**
  * Supposed to be the logic of each Todo in the Todo list
@@ -121,29 +121,27 @@ public class Todo implements Comparable<Todo>, Parcelable {
     @SuppressWarnings("unused")
     public Todo() { }
 
-    public Todo(String name, long deadline, String desc, int key, Integer colourId) {
-        this.name = name;
-        this.deadline = deadline;
-        this.desc = desc;
-        this.key = key;
-        this.colourId = colourId;
-        this.reminders = new ArrayList<>();
-    }
+//    public Todo(String name, long deadline, String desc, int key, Integer colourId) {
+//        this.name = name;
+//        this.deadline = deadline;
+//        this.desc = desc;
+//        this.key = key;
+//        this.colourId = colourId;
+//        this.reminders = new ArrayList<>();
+//    }
 
-    public Todo(String name, long deadline, String desc, int key, Integer colourId,
-                @NonNull List<Boolean> reminders) {
+    public Todo(String name, long deadline, String desc, int key, Integer colourId, List<Boolean> reminders) {
         this.name = name;
         this.deadline = deadline;
         this.desc = desc;
         this.key = key;
         this.colourId = colourId;
-        this.reminders = reminders;
+        if (reminders == null) this.reminders = List.of(false, false, false);
+        else this.reminders = reminders;
     }
 
     // added getters
-    public String getName() {
-        return this.name;
-    }
+    public String getName() { return this.name; }
 
     public String getDesc() {
         return this.desc;
@@ -162,6 +160,26 @@ public class Todo implements Comparable<Todo>, Parcelable {
         return this.colourId;
     }
 
+    public List<Boolean> getReminders() {
+        if (this.reminders == null) {
+            reminders = List.of(false, false, false);
+        }
+        return reminders;
+    }
+
+    public int getReqCode(int alarmType) {
+        return this.key * 10 + alarmType;
+    }
+
+    public boolean hasReminderAt(int position) {
+        if (this.reminders == null) {
+            this.reminders = List.of(false, false, false);
+            return false;
+        } else if (position < 0 || this.reminders.size() <= position) return false;
+
+        return this.reminders.get(position);
+    }
+
     // added setters
     public void setName(String name) {
         this.name = name;
@@ -171,11 +189,13 @@ public class Todo implements Comparable<Todo>, Parcelable {
         this.deadline = deadline;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
+    public void setDesc(String desc) { this.desc = desc; }
 
     public void setColourId(int colourId) { this.colourId = colourId; }
+
+    public void setKey(int key) { this.key = key; }
+
+    public void setReminders(List<Boolean> reminders) { this.reminders = reminders; }
 
     // others
     @Override
@@ -257,6 +277,19 @@ public class Todo implements Comparable<Todo>, Parcelable {
             return Status.OVERDUE;
         } else {
             return Status.ONGOING;
+        }
+    }
+
+    public void clearAlarms(Context context) {
+        if (reminders == null) return;
+        for (int i = 0; i < reminders.size(); i++) {
+            Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+            alarmIntent.putExtra("key", key);
+            alarmIntent.putExtra("name", name);
+            alarmIntent.putExtra("alarmType", i);
+            alarmIntent.putExtra("alarmTime", this.getAlarmTime(i));
+
+            new AlarmReceiver().cancelAlarmIfExists(context, this.getReqCode(i), alarmIntent);
         }
     }
 }

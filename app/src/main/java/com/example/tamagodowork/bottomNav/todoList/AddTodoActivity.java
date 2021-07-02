@@ -18,9 +18,11 @@ import androidx.core.content.ContextCompat;
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.alarm.AlarmReceiver;
+import com.google.firebase.firestore.DocumentReference;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 
 public class AddTodoActivity extends AppCompatActivity {
 
@@ -37,7 +39,6 @@ public class AddTodoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_task_add);
 
         Context context = getApplicationContext();
-
 
 
         this.addName = findViewById(R.id.addName);
@@ -80,15 +81,15 @@ public class AddTodoActivity extends AppCompatActivity {
                 return;
             }
 
-            // Put Todo in Firestore
+            // Put todos in Firestore
             MainActivity.userDoc.get().addOnSuccessListener(documentSnapshot -> {
                 Integer key = documentSnapshot.get("lastIndex", Integer.class);
                 if (key != null) key += 1;
                 else key = Todo.minBound;
                 MainActivity.userDoc.update("lastIndex", key);
 
-                Todo addedTodo = new Todo(name, deadline, desc, key, colourId);
-                MainActivity.userDoc.collection("Todos").document(addedTodo.getKeyStr()).set(addedTodo);
+                Todo tmp = new Todo(name, deadline, desc, key, colourId, null);
+                Boolean[] reminders = new Boolean[remLayout.getChildCount()];
 
                 // reminders
                 for (int i = 0; i < remLayout.getChildCount(); i++) {
@@ -96,8 +97,9 @@ public class AddTodoActivity extends AppCompatActivity {
 
                     // there are reminder alarms
                     if (child.isChecked()) {
+                        reminders[i] = true;
                         // time to ring
-                        long alarmTime = addedTodo.getAlarmTime(i);
+                        long alarmTime = tmp.getAlarmTime(i);
 
                         // set alarm intents
                         Intent alarmIntent = new Intent(AddTodoActivity.this, AlarmReceiver.class);
@@ -107,11 +109,15 @@ public class AddTodoActivity extends AppCompatActivity {
                         alarmIntent.putExtra("alarmTime", alarmTime);
 
                         new AlarmReceiver().setAlarm(AddTodoActivity.this, alarmIntent);
+                    } else {
+                        reminders[i] = false;
                     }
                 }
-            });
 
-            MainActivity.backToMain(AddTodoActivity.this);
+                Todo addedTodo = new Todo(name, deadline, desc, key, colourId, Arrays.asList(reminders));
+                DocumentReference ref = MainActivity.userDoc.collection("Todos").document(tmp.getKeyStr());
+                ref.set(addedTodo).addOnSuccessListener(unused -> MainActivity.backToMain(AddTodoActivity.this));
+            });
         });
 
 

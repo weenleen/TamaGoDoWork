@@ -28,14 +28,14 @@ import java.util.List;
 
 import static android.graphics.Typeface.BOLD;
 
-public class GridAdapter extends BaseAdapter {
+public class ScheduleGridAdapter extends BaseAdapter {
 
     private final List<Date> dates;
     private final Calendar currentDate;
     private final HashMap<Integer, ArrayList<Todo>> monthTodoMap;
     private final Context context;
 
-    public GridAdapter(@NonNull @NotNull Context context, List<Date> dates, Calendar currentDate,
+    public ScheduleGridAdapter(@NonNull @NotNull Context context, List<Date> dates, Calendar currentDate,
                        HashMap<Integer, ArrayList<Todo>> monthTodoMap) {
         this.context = context;
         this.dates = dates;

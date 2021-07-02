@@ -18,6 +18,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class TodoListFrag extends Fragment {
 
@@ -49,13 +50,15 @@ public class TodoListFrag extends Fragment {
 
                     if (value == null) return;
                     for (QueryDocumentSnapshot doc : value) {
-                        Long tmp = doc.get("deadline", Long.class);
-                        if (tmp == null) continue;
-                        list.add(new Todo(doc.getString("name"),
-                                tmp,
-                                doc.getString("desc"),
-                                Integer.parseInt(doc.getId()),
-                                doc.get("colourId", Integer.class)));
+                        list.add(doc.toObject(Todo.class));
+//                        Long tmp = doc.get("deadline", Long.class);
+//                        if (tmp == null) continue;
+//                        list.add(new Todo(doc.getString("name"),
+//                                tmp,
+//                                doc.getString("desc"),
+//                                Integer.parseInt(doc.getId()),
+//                                doc.get("colourId", Integer.class),
+//                                doc.get("reminders", List.class)));
                     }
 
                     // might want to change to SortedList for more efficiency

@@ -14,11 +14,14 @@ import androidx.core.app.NotificationManagerCompat;
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.bottomNav.todoList.Todo;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -96,25 +99,23 @@ public class AlarmReceiver extends BroadcastReceiver {
         String taskName = intent.getStringExtra("name");
         int alarmType = intent.getIntExtra("alarmType", 0);
         int key = intent.getIntExtra("key", Todo.minBound);
-        int requestCode = intent.getIntExtra("requestCode", (int) currTime);
+        int requestCode = key * 10 + alarmType;
 
         Intent i = new Intent(context, AlarmReceiver.class);
         i.putExtra("name", taskName);
         i.putExtra("key", key);
         i.putExtra("alarmType", alarmType);
 
-        DocumentReference ref = MainActivity.userDoc.collection("Todos")
-                .document(String.valueOf(key));
+//        DocumentReference ref = MainActivity.userDoc.collection("Todos")
+//                .document(String.valueOf(key));
 
-        cancelAlarmIfExists(context, requestCode, i);
+//        cancelAlarmIfExists(context, requestCode, i);
 
         PendingIntent pi = PendingIntent.getBroadcast(context, requestCode, i,
                 PendingIntent.FLAG_ONE_SHOT);
 
         am.setExact(AlarmManager.RTC_WAKEUP, alarmTime, pi);
         Log.e("setAlarm", "alarm set");
-
-        ref.update("reminders", FieldValue.arrayUnion("what"));
     }
 
     public void setOrCancel(Context context, Intent intent) {
@@ -135,8 +136,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         i.putExtra("key", key);
         i.putExtra("alarmType", alarmType);
 
-        DocumentReference ref = MainActivity.userDoc.collection("Todos")
-                .document(String.valueOf(key));
+//        DocumentReference ref = MainActivity.userDoc.collection("Todos")
+//                .document(String.valueOf(key));
 
         PendingIntent pi = PendingIntent.getBroadcast(context, requestCode, i,
                 PendingIntent.FLAG_ONE_SHOT);
@@ -144,7 +145,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         am.setExact(AlarmManager.RTC_WAKEUP, alarmTime, pi);
         Log.e("setAlarm", "alarm set");
 
-        ref.update("reminders", FieldValue.arrayUnion(true));
+
     }
 
     public void cancelAlarmIfExists(Context context, int requestCode, Intent intent) {

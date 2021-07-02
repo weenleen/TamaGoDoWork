@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -25,6 +26,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditTodoActivity extends AppCompatActivity {
 
@@ -55,23 +58,33 @@ public class EditTodoActivity extends AppCompatActivity {
         this.editName.setText(todo.getName());
         this.editDeadline.setText(todo.getDeadlineString());
         this.editDesc.setText(todo.getDesc());
+
+
+        // get values
+        this.deadline = todo.getDeadline();
         this.key = todo.getKey();
 
-        // set deadline to previous deadline
-        this.deadline = todo.getDeadline();
 
         // Check reminders Checkboxes
         LinearLayout remLayout = findViewById(R.id.reminders);
-        CollectionReference remRef = MainActivity.userDoc.collection("Todos")
-                .document(String.valueOf(key)).collection("Reminders");
-        remRef.get().addOnCompleteListener(t -> {
-            if (!t.isSuccessful() || t.getResult() == null) return;
-
-            // alarmId
-            for (QueryDocumentSnapshot doc : t.getResult()) {
-                ((CheckBox) remLayout.getChildAt(Integer.parseInt(doc.getId()))).setChecked(true);
+        for (int i = 0; i < remLayout.getChildCount(); i++) {
+            if (todo.hasReminderAt(i)) {
+                ((CheckBox) remLayout.getChildAt(i)).setChecked(true);
+                Log.e("edit reminders", "checked " + i);
+            } else {
+                Log.e("edit reminders", "unchecked " + i);
             }
-        });
+        }
+//        CollectionReference remRef = MainActivity.userDoc.collection("Todos")
+//                .document(String.valueOf(key)).collection("Reminders");
+//        remRef.get().addOnCompleteListener(t -> {
+//            if (!t.isSuccessful() || t.getResult() == null) return;
+//
+//            // alarmId
+//            for (QueryDocumentSnapshot doc : t.getResult()) {
+//                ((CheckBox) remLayout.getChildAt(Integer.parseInt(doc.getId()))).setChecked(true);
+//            }
+//        });
 
 
         // change deadline
@@ -116,11 +129,11 @@ public class EditTodoActivity extends AppCompatActivity {
                 return;
             }
 
-            Todo updatedTodo = new Todo(name, deadline, desc, key, colourId);
-            // update alarms in Firestore
+
+            // update alarms
+            List<Boolean> updatedRem= new ArrayList<>();
+            Todo updatedTodo = new Todo(name, deadline, desc, key, colourId, updatedRem);
             for (int i = 0; i < remLayout.getChildCount(); i++) {
-                // TODO
-                // alarmId
                 CheckBox child = (CheckBox) remLayout.getChildAt(i);
                 Intent alarmIntent = new Intent(EditTodoActivity.this, AlarmReceiver.class);
                 alarmIntent.putExtra("key", key);
@@ -128,23 +141,20 @@ public class EditTodoActivity extends AppCompatActivity {
                 alarmIntent.putExtra("alarmType", i);
 
                 long alarmTime = updatedTodo.getAlarmTime(i);
+                int requestCode = todo.getReqCode(i);
                 alarmIntent.putExtra("alarmTime", alarmTime);
 
-                DocumentReference ref = remRef.document(String.valueOf(i));
-                ref.get().addOnSuccessListener(documentSnapshot -> {
-                    Integer requestCode = null;
-                    if (documentSnapshot != null && documentSnapshot.exists()) {
-                        requestCode = documentSnapshot.get("requestCode", Integer.class);
-                        alarmIntent.putExtra("requestCode", requestCode);
-                    }
-
-                    if (child.isChecked()) {
+                if (child.isChecked()) {
+                    updatedRem.add(true);
+                    if (todo.hasReminderAt(i)) {
+                        new AlarmReceiver().setOrCancel(EditTodoActivity.this, alarmIntent);
+                    } else {
                         new AlarmReceiver().setAlarm(EditTodoActivity.this, alarmIntent);
-                    } else if (requestCode != null) {
-                        new AlarmReceiver().cancelAlarmIfExists(EditTodoActivity.this,
-                                requestCode, alarmIntent);
                     }
-                });
+                } else {
+                    updatedRem.add(false);
+                    new AlarmReceiver().cancelAlarmIfExists(EditTodoActivity.this, requestCode, alarmIntent);
+                }
             }
 
             // update todos in Firestore
@@ -152,9 +162,10 @@ public class EditTodoActivity extends AppCompatActivity {
                     .update("name", name,
                             "deadline", deadline,
                             "desc", desc,
-                            "colourId", colourId)
-                    .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Save Failed", Toast.LENGTH_SHORT).show());
-            MainActivity.backToMain(EditTodoActivity.this);
+                            "colourId", colourId,
+                            "reminders", updatedRem)
+                    .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Save Failed", Toast.LENGTH_SHORT).show())
+                    .addOnSuccessListener(unused -> MainActivity.backToMain(EditTodoActivity.this));
         });
 
         // Cancel Button

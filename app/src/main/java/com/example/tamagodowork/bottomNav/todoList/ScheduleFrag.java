@@ -44,7 +44,7 @@ public class ScheduleFrag extends Fragment {
     // views
     private TextView monthTextView;
     private GridView gridView;
-    private GridAdapter gridAdapter;
+    private ScheduleGridAdapter gridAdapter;
     private RecyclerView recyclerView;
     private TodoAdapter recyclerAdapter;
 
@@ -178,11 +178,7 @@ public class ScheduleFrag extends Fragment {
                             this.monthTodoMap.put(dayOfMonth, dayTodoList);
                         }
 
-                        dayTodoList.add(new Todo(doc.getString("name"),
-                                tmp,
-                                doc.getString("desc"),
-                                Integer.parseInt(doc.getId()),
-                                doc.get("colourId", Integer.class)));
+                        dayTodoList.add(doc.toObject(Todo.class));
                     }
 
                     this.recyclerAdapter.clear();
@@ -202,7 +198,7 @@ public class ScheduleFrag extends Fragment {
         // set up data and adapters
         dates.clear();
         this.monthTodoMap.clear();
-        this.gridAdapter = new GridAdapter(context, dates, calendar, monthTodoMap);
+        this.gridAdapter = new ScheduleGridAdapter(context, dates, calendar, monthTodoMap);
         this.gridView.setAdapter(gridAdapter);
 
         // clones a month calendar

@@ -18,7 +18,6 @@ import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.firestore.DocumentReference;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -102,8 +101,6 @@ public class DialogTodoDetails extends BottomSheetDialogFragment {
      */
     public static class OngoingDial extends DialogTodoDetails {
 
-        private String reminderTxt = "None";
-
         public OngoingDial(Todo todo) {
             super(todo);
         }
@@ -114,24 +111,16 @@ public class DialogTodoDetails extends BottomSheetDialogFragment {
             View view = View.inflate(super.context, R.layout.dial_task_ongoing, null);
             super.setViews(view);
 
-            final DocumentReference ref = MainActivity.userDoc.collection("Todos")
-                    .document(String.valueOf(super.todo.getKey()));
-
             // Reminders
             TextView reminderView = view.findViewById(R.id.taskReminders);
+            String reminderTxt = "-";
             for (int i = 0; i < 3; i++) {
-                final int index = i;
-                ref.collection("Reminders").document(String.valueOf(i)).get()
-                        .addOnSuccessListener(documentSnapshot -> {
-                            if (documentSnapshot == null || !documentSnapshot.exists()) return;
-                            if (reminderTxt.contentEquals("None")) {
-                                reminderTxt = Todo.getReminderString(index);
-                            } else {
-                                reminderTxt += ", " + Todo.getReminderString(index);
-                            }
-                            reminderView.setText(reminderTxt);
-                        });
+                if (reminderTxt.contentEquals("-")) {
+                    if (i == 0) reminderTxt = Todo.getReminderString(i);
+                    else reminderTxt += ", " + Todo.getReminderString(i);
+                }
             }
+            reminderView.setText(reminderTxt);
 
 
             // edit button
@@ -140,13 +129,16 @@ public class DialogTodoDetails extends BottomSheetDialogFragment {
                 Intent intent = new Intent(super.context, EditTodoActivity.class);
                 intent.putExtra(Todo.parcelKey, super.todo);
                 startActivity(intent);
+                this.dismiss();
             });
 
             // delete button
             Button delBtn = view.findViewById(R.id.delete_button);
             delBtn.setOnClickListener(v -> {
-                ref.delete();
-                this.dismiss();
+                super.todo.clearAlarms(super.context);
+                MainActivity.userDoc.collection("Todos")
+                        .document(String.valueOf(super.todo.getKey())).delete()
+                        .addOnCompleteListener(task -> this.dismiss());
             });
 
             return super.dialog;
