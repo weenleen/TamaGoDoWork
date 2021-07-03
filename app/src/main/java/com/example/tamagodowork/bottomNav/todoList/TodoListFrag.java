@@ -30,7 +30,7 @@ public class TodoListFrag extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view =  inflater.inflate(R.layout.frag_task_list, container, false);
+        View view =  inflater.inflate(R.layout.frag_todo_list, container, false);
         RecyclerView taskListView = view.findViewById(R.id.taskListView);
         taskListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
