@@ -55,27 +55,5 @@
                 android:id="@+id/pet_name"
                 />
         </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/pet_name_edit"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:textSize="12sp"
-                android:hint="@string/pet_name"
-                />
-            <Button
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_below="@+id/pet_name_edit"
-                android:id="@+id/name_change"
-                style="@style/ButtonDarkStyle"
-                android:textSize="12sp"
-                android:text="@string/saveChanges"
-                />
-        </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>

@@ -10,7 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TamaGoDoWork">
+        android:theme="@style/Theme.TamaGoDoWork"
+        >
         <activity android:name=".bottomNav.pet.RoomActivity"/>
         <activity android:name=".bottomNav.pet.EditPetActivity" />
         <activity android:name=".SettingsAct" />
@@ -19,6 +20,8 @@
         <activity android:name=".authentication.RegisterAct" />
         <activity android:name=".bottomNav.todoList.AddTodoActivity" />
         <activity android:name=".bottomNav.todoList.EditTodoActivity" />
+        <activity android:name=".misc.ChangeName" />
+
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
