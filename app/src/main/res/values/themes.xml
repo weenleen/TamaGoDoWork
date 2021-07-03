@@ -31,7 +31,7 @@
 
     <style name="ButtonLightStyle" parent="Widget.AppCompat.Button">
         <item name="android:textColor">@color/peach</item>
-        <item name="android:background">@drawable/bg_task_item</item>
+        <item name="android:background">@drawable/bg_rounded_shape_white</item>
         <item name="android:layout_margin">5dp</item>
     </style>
 

@@ -108,7 +108,7 @@ public class DialogTodoDetails extends BottomSheetDialogFragment {
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            View view = View.inflate(super.context, R.layout.dial_task_ongoing, null);
+            View view = View.inflate(super.context, R.layout.dial_todo_ongoing, null);
             super.setViews(view);
 
             // Reminders
@@ -158,7 +158,7 @@ public class DialogTodoDetails extends BottomSheetDialogFragment {
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            View view = View.inflate(super.context, R.layout.dial_task_overdue, null);
+            View view = View.inflate(super.context, R.layout.dial_todo_overdue, null);
             super.setViews(view);
 
             return super.dialog;

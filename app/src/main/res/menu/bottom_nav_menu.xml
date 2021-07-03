@@ -3,7 +3,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_taskList"
+        android:id="@+id/navigation_todoList"
         android:icon="@drawable/ic_baseline_assignment_24"
         android:checkable="true"
         android:title="@string/title_taskList" />

@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set default fragment to the task list fragment
         userDoc.get().addOnSuccessListener(documentSnapshot -> {
-            int selectedIndex = R.id.navigation_taskList;
+            int selectedIndex = R.id.navigation_todoList;
             if (documentSnapshot != null && documentSnapshot.exists()) {
                 Integer tmp = documentSnapshot.get("selectedFrag", Integer.class);
                 if (tmp != null) selectedIndex = tmp;

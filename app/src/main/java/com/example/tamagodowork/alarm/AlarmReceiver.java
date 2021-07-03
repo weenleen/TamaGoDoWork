@@ -14,17 +14,11 @@ import androidx.core.app.NotificationManagerCompat;
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.bottomNav.todoList.Todo;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -34,7 +28,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             "is due in 2 days");
 
     // Intents should have the extras
-    // "key" : ID of the Todo
+    // "key" : ID of the todos
     // "timeLeft": the type of alarm
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -82,7 +76,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     // Intents should have the extras
-    // "key" : ID of the Todo
+    // "key" : ID of the Todos
     // "taskName" : name of task
     // "alarmType": the type of alarm
     // "alarmTime": the time in millis the thing should ring

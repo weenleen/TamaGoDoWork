@@ -57,11 +57,11 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == Todo.Status.OVERDUE.getNum()) { // overdue
             return new ViewHolder(
-                    LayoutInflater.from(this.context).inflate(R.layout.r_item_task_overdue, parent, false),
+                    LayoutInflater.from(this.context).inflate(R.layout.todo_item_overdue, parent, false),
                     Todo.Status.OVERDUE);
         } else {
             return new ViewHolder(
-                    LayoutInflater.from(this.context).inflate(R.layout.r_item_task_ongoing, parent, false),
+                    LayoutInflater.from(this.context).inflate(R.layout.todo_item_ongoing, parent, false),
                     Todo.Status.ONGOING);
         }
     }
@@ -98,9 +98,9 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
                 deadlineStr = todo.getTimeString();
             }
             holder.todoDeadline.setText(deadlineStr);
-            anim = AnimationUtils.loadAnimation(context, R.anim.anim_task_complete);
+            anim = AnimationUtils.loadAnimation(context, R.anim.anim_todo_complete);
         } else {
-            anim = AnimationUtils.loadAnimation(context, R.anim.anim_task_dismiss);
+            anim = AnimationUtils.loadAnimation(context, R.anim.anim_todo_dismiss);
         }
 
         anim.setAnimationListener(new Animation.AnimationListener() {
