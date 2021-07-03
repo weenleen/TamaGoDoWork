@@ -22,6 +22,14 @@
     </TextView>
 
     <Button
+        android:id="@+id/change_pet_name"
+        style="@style/ButtonDarkStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/peach"
+        android:text="@string/pet_name" />
+
+    <Button
         android:id="@+id/btn_reset"
         style="@style/ButtonDarkStyle"
         android:layout_width="match_parent"
