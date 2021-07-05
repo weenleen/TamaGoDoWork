@@ -1,10 +1,10 @@
 package com.example.tamagodowork.misc;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +16,7 @@ import com.google.firebase.firestore.DocumentReference;
 import java.util.Map;
 
 
-public class changeName extends AppCompatActivity{
-    private EditText petName;
+public class ChangeName extends AppCompatActivity{
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,30 +24,27 @@ public class changeName extends AppCompatActivity{
         // edit pet name
         EditText editPetName = findViewById(R.id.edit_pet_name);
         Button saveChanges = findViewById(R.id.name_save_button);
+        Button cancelChanges = findViewById(R.id.cancel_name_button);
+        saveChanges.setOnClickListener(v -> saveName(editPetName));
+        cancelChanges.setOnClickListener(v -> goBack());
 
 
+
+    }
+
+    public void saveName(EditText editPetName) {
         DocumentReference ref = MainActivity.userDoc.collection("Pet").document("Name");
-        saveChanges.setOnClickListener(v -> {
-                    String name = editPetName.getText().toString();
-                    if (!TextUtils.isEmpty(name)) {
-                        ref.set(Map.of("name", name));
-                        petName.setText(name);
-                    }
-                }
-        );
+        String name = editPetName.getText().toString();
+        if (!TextUtils.isEmpty(name)) {
+            ref.set(Map.of("name", name));
+        }
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
+    }
 
-        MainActivity.userDoc.collection("Pet").document("Name").addSnapshotListener(
-                (value, error) -> {
-                    if (error != null || value == null) return;
-
-                    String tmp = value.get("name", String.class);
-                    if (tmp == null) {
-                        petName.setText("");
-                        ref.update("name", "");
-                        return;
-                    }
-                    petName.setText(tmp);
-                });
+    public void goBack() {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
     }
 
 }

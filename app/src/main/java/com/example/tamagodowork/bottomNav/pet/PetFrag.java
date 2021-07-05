@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,7 +26,7 @@ import com.google.firebase.firestore.DocumentReference;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
+
 
 
 public class PetFrag extends Fragment {
@@ -83,18 +80,7 @@ public class PetFrag extends Fragment {
 
         TextView petName = view.findViewById(R.id.pet_name);
 
-        EditText editPetName = view.findViewById(R.id.pet_name_edit);
-        Button saveChanges = view.findViewById(R.id.name_change);
         DocumentReference ref = MainActivity.userDoc.collection("Pet").document("Name");
-        saveChanges.setOnClickListener(v -> {
-                    String name = editPetName.getText().toString();
-                    if (!TextUtils.isEmpty(name)) {
-                        ref.set(Map.of("name", name));
-                        petName.setText(name);
-                    }
-                }
-        );
-
         MainActivity.userDoc.collection("Pet").document("Name").addSnapshotListener(
                 (value, error) -> {
                     if (error != null || value == null) return;

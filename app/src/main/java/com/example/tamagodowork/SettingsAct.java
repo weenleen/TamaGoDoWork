@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import com.example.tamagodowork.authentication.*;
-//import com.example.tamagodowork.misc.changeName;
+import com.example.tamagodowork.misc.ChangeName;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsAct extends AppCompatActivity {
 
-    Button resetBtn, logoutBtn, backBtn, chgPwdBtn;
+    Button resetBtn, logoutBtn, backBtn, changeNameBtn, chgPwdBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +42,14 @@ public class SettingsAct extends AppCompatActivity {
             finish();
         });
 
-        /*
-        // change pet name button
+
+        //change pet name button
         this.changeNameBtn = findViewById(R.id.change_pet_name);
         this.changeNameBtn.setOnClickListener(v -> {
-            startActivity(new Intent(getApplicationContext(), changeName.class));
+            startActivity(new Intent(getApplicationContext(), ChangeName.class));
             finish();
         });
-        */
+
 
 
 
