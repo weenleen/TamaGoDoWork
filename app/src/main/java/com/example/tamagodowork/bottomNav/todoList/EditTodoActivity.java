@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -20,9 +19,6 @@ import android.widget.Toast;
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.alarm.AlarmReceiver;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -68,23 +64,8 @@ public class EditTodoActivity extends AppCompatActivity {
         // Check reminders Checkboxes
         LinearLayout remLayout = findViewById(R.id.reminders);
         for (int i = 0; i < remLayout.getChildCount(); i++) {
-            if (todo.hasReminderAt(i)) {
-                ((CheckBox) remLayout.getChildAt(i)).setChecked(true);
-                Log.e("edit reminders", "checked " + i);
-            } else {
-                Log.e("edit reminders", "unchecked " + i);
-            }
+            if (todo.getReminders().get(i)) ((CheckBox) remLayout.getChildAt(i)).setChecked(true);
         }
-//        CollectionReference remRef = MainActivity.userDoc.collection("Todos")
-//                .document(String.valueOf(key)).collection("Reminders");
-//        remRef.get().addOnCompleteListener(t -> {
-//            if (!t.isSuccessful() || t.getResult() == null) return;
-//
-//            // alarmId
-//            for (QueryDocumentSnapshot doc : t.getResult()) {
-//                ((CheckBox) remLayout.getChildAt(Integer.parseInt(doc.getId()))).setChecked(true);
-//            }
-//        });
 
 
         // change deadline

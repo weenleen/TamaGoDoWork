@@ -103,7 +103,7 @@ public class ScheduleGridAdapter extends BaseAdapter {
 
         LinearLayout indicatorLayout = view.findViewById(R.id.schedule_task_indicator);
 
-        // for every todo for this day
+        // all todos for this day
         for (int i = 0; i < numOfTodos; i++) {
             if (i >= 5) break; // maximum 4 indicators and a plus symbol
 

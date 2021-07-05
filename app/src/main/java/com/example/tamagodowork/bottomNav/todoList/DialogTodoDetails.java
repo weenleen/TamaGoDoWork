@@ -113,14 +113,19 @@ public class DialogTodoDetails extends BottomSheetDialogFragment {
 
             // Reminders
             TextView reminderView = view.findViewById(R.id.taskReminders);
-            String reminderTxt = "-";
+            StringBuilder sb = new StringBuilder();
+            sb.append("-");
             for (int i = 0; i < 3; i++) {
-                if (reminderTxt.contentEquals("-")) {
-                    if (i == 0) reminderTxt = Todo.getReminderString(i);
-                    else reminderTxt += ", " + Todo.getReminderString(i);
+                if (super.todo.hasReminderAt(i)) {
+                    if (sb.toString().contentEquals("-")) {
+                        sb = new StringBuilder();
+                    } else {
+                        sb.append(", ");
+                    }
+                    sb.append(Todo.getReminderString(i));
                 }
             }
-            reminderView.setText(reminderTxt);
+            reminderView.setText(sb.toString());
 
 
             // edit button
