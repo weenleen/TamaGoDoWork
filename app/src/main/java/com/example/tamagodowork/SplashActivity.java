@@ -29,4 +29,12 @@ public class SplashActivity extends AppCompatActivity {
             finish();
         }, 1000);
     }
+      /*
+        for (int i = 0; i < 2000; i++) {
+
+        }
+        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+        finish();
+
+     */
 }
