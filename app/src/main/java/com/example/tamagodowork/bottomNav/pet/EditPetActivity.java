@@ -112,8 +112,7 @@ public class EditPetActivity extends AppCompatActivity {
             gridView.setHorizontalSpacing(30);
             gridView.setVerticalSpacing(30);
             gridView.setDrawSelectorOnTop(true);
-            CustomGridAdapter adapter = new CustomGridAdapter(EditPetActivity.this,
-                    lst.get(position).content, lst.get(position).getCustom());
+            CustomGridAdapter adapter = new CustomGridAdapter(EditPetActivity.this, lst.get(position));
             gridView.setAdapter(adapter);
 
             container.addView(gridView, 0);

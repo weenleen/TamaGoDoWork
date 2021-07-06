@@ -12,9 +12,7 @@ public class Pet {
     public enum custom {
         COLOUR, HEAD, EYES, BODY;
 
-        @NonNull
-        @NotNull
-        @Override
+        @NonNull @NotNull @Override
         public String toString() {
             return super.toString().charAt(0) + super.toString().substring(1).toLowerCase();
         }
@@ -55,13 +53,9 @@ public class Pet {
     // getters
     public Integer getBodyColour() { return bodyColour; }
 
-    public Integer getAcc_head() {
-        return acc_head;
-    }
+    public Integer getAcc_head() { return acc_head; }
 
-    public Integer getAcc_eyes() {
-        return acc_eyes;
-    }
+    public Integer getAcc_eyes() { return acc_eyes; }
 
     public Integer getAcc_body() {
         return acc_body;

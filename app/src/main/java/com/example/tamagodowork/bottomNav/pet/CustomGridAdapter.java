@@ -26,11 +26,11 @@ public class CustomGridAdapter extends BaseAdapter {
     private final int[] arr;
     private final Pet.custom custom;
 
-    public CustomGridAdapter(FragmentActivity act, int[] arr, Pet.custom custom) {
+    public CustomGridAdapter(FragmentActivity act, CustomModel model) {
         this.act = act;
-        this.context = (Context) act;
-        this.arr = arr;
-        this.custom = custom;
+        this.context = act;
+        this.arr = model.getContent();
+        this.custom = model.getCustom();
     }
 
     @Override

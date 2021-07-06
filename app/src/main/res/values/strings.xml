@@ -19,6 +19,7 @@
     <string name="Customise">"Customise"</string>
 
     <string name="level">Level %1$d</string>
+    <string name="unlock_level">LV %1$d</string>
     <string name="time_left_display">in %1$s</string>
 
     <string name="create">Create</string>
