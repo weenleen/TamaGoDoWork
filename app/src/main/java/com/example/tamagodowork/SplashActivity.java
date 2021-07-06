@@ -16,25 +16,8 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-        Handler handler = new Handler(Looper.getMainLooper());
-
-        handler.postDelayed(() -> {
-            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-            if (firebaseAuth.getCurrentUser() != null) {
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-            } else {
-                startActivity(new Intent(SplashActivity.this, RegisterAct.class));
-            }
-            finish();
-        }, 1000);
-    }
-      /*
-        for (int i = 0; i < 2000; i++) {
-
-        }
         startActivity(new Intent(SplashActivity.this, MainActivity.class));
         finish();
+    }
 
-     */
 }
