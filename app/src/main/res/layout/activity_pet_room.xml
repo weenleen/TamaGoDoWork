@@ -43,7 +43,7 @@
                 android:layout_gravity="top|center"
                 android:layout_marginVertical="20dp"
                 android:padding="10dp"
-                android:text=""
+                android:text="Wallpapers"
                 android:textAlignment="center"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="20sp"/>

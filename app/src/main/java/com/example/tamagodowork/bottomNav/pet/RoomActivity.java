@@ -97,8 +97,6 @@ public class RoomActivity extends AppCompatActivity {
                 R.drawable.wallpaper_space,
                 R.drawable.wallpaper_snow,
                 R.drawable.wallpaper_desert,
-                R.drawable.wallpaper_blue,
-                R.drawable.wallpaper_orange,
                 R.drawable.wallpaper_purple,
                 R.drawable.wallpaper_exercise,
                 R.drawable.wallpaper_ocean,
