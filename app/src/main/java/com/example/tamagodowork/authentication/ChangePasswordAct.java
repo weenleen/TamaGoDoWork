@@ -12,6 +12,7 @@ import com.example.tamagodowork.R;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.tamagodowork.SettingsAct;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,12 +33,9 @@ public class ChangePasswordAct extends AppCompatActivity {
         Button saveBtn = findViewById(R.id.pwd_save_button);
         Button cancelBtn = findViewById(R.id.cancel_button);
 
-
-
         saveBtn.setOnClickListener(v -> updatePassword());
- 
 
-        cancelBtn.setOnClickListener(v -> MainActivity.backToMain(ChangePasswordAct.this));
+        cancelBtn.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), SettingsAct.class)));
 
     }
 

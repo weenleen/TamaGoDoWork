@@ -62,8 +62,8 @@ public class DialogTodoDetails extends BottomSheetDialogFragment {
             try {
                 color = ContextCompat.getColor(context, todo.getColourId());
             } catch (Exception e) {
-                todo.setColourId(Todo.colours[0]);
-                color = ContextCompat.getColor(context, Todo.colours[0]);
+                todo.setColourKey("PEACH");
+                color = ContextCompat.getColor(context, todo.getColourId());
             }
             indicator.setColor(color);
             nameView.setCompoundDrawablesWithIntrinsicBounds(indicator, null, null, null);

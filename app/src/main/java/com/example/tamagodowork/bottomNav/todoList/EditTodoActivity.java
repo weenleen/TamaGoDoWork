@@ -32,7 +32,7 @@ public class EditTodoActivity extends AppCompatActivity {
 
     private int key;
     private long deadline;
-    private int colourId;
+    private String colourKey;
 
     private LocalDateTime prevDate;
 
@@ -80,11 +80,11 @@ public class EditTodoActivity extends AppCompatActivity {
         int color;
         try {
             color = ContextCompat.getColor(context, todo.getColourId());
-            colourId = todo.getColourId();
+            colourKey = todo.getColourKey();
         } catch (Exception e) {
-            todo.setColourId(Todo.colours[0]);
-            colourId = Todo.colours[0];
-            color = ContextCompat.getColor(context, Todo.colours[0]);
+            todo.setColourKey("PEACH");
+            colourKey = "PEACH";
+            color = ContextCompat.getColor(context, todo.getColourId());
         }
         this.editColour = findViewById(R.id.editColour);
         ((GradientDrawable) this.editColour.getDrawable()).setColor(color);
@@ -113,7 +113,7 @@ public class EditTodoActivity extends AppCompatActivity {
 
             // update alarms
             List<Boolean> updatedRem= new ArrayList<>();
-            Todo updatedTodo = new Todo(name, deadline, desc, key, colourId, updatedRem);
+            Todo updatedTodo = new Todo(name, deadline, desc, key, colourKey, updatedRem);
             for (int i = 0; i < remLayout.getChildCount(); i++) {
                 CheckBox child = (CheckBox) remLayout.getChildAt(i);
                 Intent alarmIntent = new Intent(EditTodoActivity.this, AlarmReceiver.class);
@@ -143,7 +143,7 @@ public class EditTodoActivity extends AppCompatActivity {
                     .update("name", name,
                             "deadline", deadline,
                             "desc", desc,
-                            "colourId", colourId,
+                            "colourKey", colourKey,
                             "reminders", updatedRem)
                     .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Save Failed", Toast.LENGTH_SHORT).show())
                     .addOnSuccessListener(unused -> MainActivity.backToMain(EditTodoActivity.this));
@@ -154,8 +154,8 @@ public class EditTodoActivity extends AppCompatActivity {
         cancelBtn.setOnClickListener(v -> MainActivity.backToMain(EditTodoActivity.this));
     }
 
-    public void setColourId(int colourId) {
-        this.colourId = colourId;
+    public void setColourKey(String colourKey) {
+        this.colourKey = colourKey;
     }
 
     public void setDeadline(LocalDateTime updated) {

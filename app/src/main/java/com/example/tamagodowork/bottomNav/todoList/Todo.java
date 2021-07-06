@@ -15,8 +15,10 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class Todo implements Comparable<Todo>, Parcelable {
@@ -42,13 +44,15 @@ public class Todo implements Comparable<Todo>, Parcelable {
         }
     }
 
-    public static final int[] colours = new int[] {
-            R.color.peach,
-            R.color.yellow,
-            R.color.green,
-            R.color.blue,
-            R.color.purple
-    };
+
+    public static final LinkedHashMap<String, Integer> colourMap = new LinkedHashMap<>();
+    static {
+        colourMap.put("PEACH", R.color.peach);
+        colourMap.put("YELLOW", R.color.yellow);
+        colourMap.put("GREEN", R.color.green);
+        colourMap.put("BLUE", R.color.blue);
+        colourMap.put("PURPLE", R.color.purple);
+    }
 
     public static final String parcelKey = "TodoParcelKey";
 
@@ -65,7 +69,7 @@ public class Todo implements Comparable<Todo>, Parcelable {
     private int key;
     private List<Boolean> reminders;
     private Long deadline;
-    private Integer colourId;
+    private String colourKey;
 
 
     /** Constructors. */
@@ -73,12 +77,12 @@ public class Todo implements Comparable<Todo>, Parcelable {
     @SuppressWarnings("unused")
     public Todo() { }
 
-    public Todo(String name, long deadline, String desc, int key, Integer colourId, List<Boolean> reminders) {
+    public Todo(String name, long deadline, String desc, int key, String colourKey, List<Boolean> reminders) {
         this.name = name;
         this.deadline = deadline;
         this.desc = desc;
         this.key = key;
-        this.colourId = colourId;
+        this.colourKey = colourKey;
 
         if (reminders == null) this.reminders = List.of(false, false, false);
         else this.reminders = reminders;
@@ -90,6 +94,7 @@ public class Todo implements Comparable<Todo>, Parcelable {
     protected Todo(Parcel in) {
         name = in.readString();
         desc = in.readString();
+        colourKey = in.readString();
         key = in.readInt();
 
         reminders = new ArrayList<>();
@@ -97,9 +102,6 @@ public class Todo implements Comparable<Todo>, Parcelable {
 
         if (in.readByte() == 0) deadline = null;
         else deadline = in.readLong();
-
-        if (in.readByte() == 0) colourId = null;
-        else colourId = in.readInt();
     }
 
     public static final Creator<Todo> CREATOR = new Creator<Todo>() {
@@ -117,17 +119,13 @@ public class Todo implements Comparable<Todo>, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(desc);
+        dest.writeString(colourKey);
         dest.writeInt(key);
         dest.writeList(reminders);
         if (deadline == null) dest.writeByte((byte) 0);
         else {
             dest.writeByte((byte) 1);
             dest.writeLong(deadline);
-        }
-        if (colourId == null) dest.writeByte((byte) 0);
-        else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(colourId);
         }
     }
 
@@ -144,9 +142,15 @@ public class Todo implements Comparable<Todo>, Parcelable {
 
     public String getKeyStr() { return String.valueOf(this.key); }
 
+    public String getColourKey() { return this.colourKey; }
+
     public int getColourId() {
-        if (this.colourId == null) this.colourId = colours[0];
-        return this.colourId;
+        Integer result = colourMap.get(colourKey);
+        if (result == null) {
+            colourKey = "PEACH";
+            return R.color.peach;
+        }
+        return result;
     }
 
     public List<Boolean> getReminders() {
@@ -178,7 +182,7 @@ public class Todo implements Comparable<Todo>, Parcelable {
 
     public void setDeadline(long deadline) { this.deadline = deadline; }
 
-    public void setColourId(int colourId) { this.colourId = colourId; }
+    public void setColourKey(String colourKey) { this.colourKey = colourKey; }
 
     public void setReminders(List<Boolean> reminders) { this.reminders = reminders; }
 

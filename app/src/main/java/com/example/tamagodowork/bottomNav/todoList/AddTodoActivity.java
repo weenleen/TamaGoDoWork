@@ -30,7 +30,7 @@ public class AddTodoActivity extends AppCompatActivity {
     private ImageButton addColour;
     private long deadline;
 
-    private Integer colourId = Todo.colours[0];
+    private String colourKey = "PEACH";
     private LocalDateTime prevDate;
 
     @Override
@@ -53,8 +53,8 @@ public class AddTodoActivity extends AppCompatActivity {
 
         // add colour
         this.addColour = findViewById(R.id.addColour);
-        ((GradientDrawable) this.addColour.getDrawable()).setColor(
-                ContextCompat.getColor(context, colourId));
+        ((GradientDrawable) this.addColour.getDrawable()).setColor(ContextCompat.getColor(
+                context, R.color.peach));
         this.addColour.setOnClickListener(v -> {
             DialogColourPicker dialogColourPicker = new DialogColourPicker(
                     AddTodoActivity.this, this.addColour);
@@ -88,7 +88,7 @@ public class AddTodoActivity extends AppCompatActivity {
                 else key = Todo.minBound;
                 MainActivity.userDoc.update("lastIndex", key);
 
-                Todo tmp = new Todo(name, deadline, desc, key, colourId, null);
+                Todo tmp = new Todo(name, deadline, desc, key, colourKey, null);
                 Boolean[] reminders = new Boolean[remLayout.getChildCount()];
 
                 // reminders
@@ -114,7 +114,7 @@ public class AddTodoActivity extends AppCompatActivity {
                     }
                 }
 
-                Todo addedTodo = new Todo(name, deadline, desc, key, colourId, Arrays.asList(reminders));
+                Todo addedTodo = new Todo(name, deadline, desc, key, colourKey, Arrays.asList(reminders));
                 DocumentReference ref = MainActivity.userDoc.collection("Todos").document(tmp.getKeyStr());
                 ref.set(addedTodo).addOnSuccessListener(unused -> MainActivity.backToMain(AddTodoActivity.this));
             });
@@ -126,8 +126,8 @@ public class AddTodoActivity extends AppCompatActivity {
         cancelBtn.setOnClickListener(v -> MainActivity.backToMain(AddTodoActivity.this));
     }
 
-    public void setColourId(int colourId) {
-        this.colourId = colourId;
+    public void setColourKey(String colourKey) {
+        this.colourKey = colourKey;
     }
 
     public void setDeadline(LocalDateTime updated) {

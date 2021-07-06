@@ -124,8 +124,8 @@ public class ScheduleGridAdapter extends BaseAdapter {
                 try {
                     color = ContextCompat.getColor(context, dayTodoList.get(i).getColourId());
                 } catch (Exception e) {
-                    dayTodoList.get(i).setColourId(Todo.colours[0]);
-                    color = ContextCompat.getColor(context, Todo.colours[0]);
+                    dayTodoList.get(i).setColourKey("PEACH");
+                    color = ContextCompat.getColor(context, R.color.peach);
                 }
 
                 tmp.setColor(color);
