@@ -75,15 +75,13 @@ public class RoomActivity extends AppCompatActivity {
                     Map.of("wallpaper", wallpapers[viewPager.getCurrentItem() % wallpapers.length])
             );
 
-            startActivity(new Intent(RoomActivity.this, MainActivity.class));
-            finish();
+            MainActivity.backToMain(RoomActivity.this);
         });
 
         // cancel
         Button cancelButton = findViewById(R.id.room_cancel);
         cancelButton.setOnClickListener(v -> {
-            startActivity(new Intent(RoomActivity.this, MainActivity.class));
-            finish();
+            MainActivity.backToMain(RoomActivity.this);
         });
     }
 

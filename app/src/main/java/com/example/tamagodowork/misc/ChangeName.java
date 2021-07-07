@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
+import com.example.tamagodowork.SettingsAct;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.Map;
@@ -38,12 +39,12 @@ public class ChangeName extends AppCompatActivity{
         if (!TextUtils.isEmpty(name)) {
             ref.set(Map.of("name", name));
         }
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        goBack();
         finish();
     }
 
     public void goBack() {
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        MainActivity.backToMain(ChangeName.this);
         finish();
     }
 

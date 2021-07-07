@@ -1,13 +1,18 @@
 package com.example.tamagodowork.bottomNav.pet;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
@@ -25,12 +30,15 @@ public class CustomGridAdapter extends BaseAdapter {
     private final Context context;
     private final int[] arr;
     private final Pet.custom custom;
+    private final int userLevel;
 
-    public CustomGridAdapter(FragmentActivity act, CustomModel model) {
+    public CustomGridAdapter(FragmentActivity act, CustomModel model, int userXP) {
         this.act = act;
         this.context = act;
         this.arr = model.getContent();
         this.custom = model.getCustom();
+        this.userLevel = userXP / 100 + 1;
+        Log.e("custom grid adapter", "Level " + userLevel + ", " + userXP + " xp");
     }
 
     @Override
@@ -50,9 +58,13 @@ public class CustomGridAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView != null) return convertView;
+        View view = convertView;
+        if (view == null) {
+            LayoutInflater inflater = LayoutInflater.from(this.context);
+            view = inflater.inflate(R.layout.pet_custom_grid_item, parent, false);
+        }
 
-        ImageView imageView = new ImageView(this.context);
+        ImageView imageView = view.findViewById(R.id.custom_item_imageView);
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
         if (this.custom == Pet.custom.COLOUR) { // COLOUR
@@ -73,12 +85,44 @@ public class CustomGridAdapter extends BaseAdapter {
             imageView.setImageBitmap(resizedBitmap);
         }
 
-        // on click
-        imageView.setOnClickListener(v -> {
-            if (!(this.act instanceof EditPetActivity)) return;
-            ((EditPetActivity)act).setPetCanvas(this.custom, this.arr[position]);
-        });
 
-        return imageView;
+        LinearLayout unlockLayout = view.findViewById(R.id.unlock_layout);
+        if (unlocked(position)) {
+            view.setOnClickListener(v -> {
+                if (!(this.act instanceof EditPetActivity)) return;
+                ((EditPetActivity)act).setPetCanvas(this.custom, this.arr[position]);
+            });
+            unlockLayout.setVisibility(View.GONE);
+        } else {
+            TextView txtView = view.findViewById(R.id.unlock_level_text);
+            int unlockLevel = getUnlockLevel(position);
+            txtView.setText(context.getString(R.string.unlock_level, unlockLevel));
+
+            final AlertDialog.Builder dialog = new AlertDialog.Builder(context, R.style.AlertDialogStyle);
+            dialog.setMessage(context.getString(R.string.unlock_message, unlockLevel));
+            view.setOnClickListener(v -> dialog.show());
+        }
+        return view;
+    }
+
+    /**
+     * Determines if an item is unlocked based on the user's XP.
+     *
+     * @param position The position of the item in the grid.
+     * @return Whether an item is unlocked.
+     */
+    private boolean unlocked(int position) {
+        return getUnlockLevel(position) <= userLevel;
+    }
+
+    /**
+     * Determines what level an item is unlocked.
+     * The first 3 items are always unlocked.
+     *
+     * @param position The position of the item in the grid.
+     * @return The level at which the item is unlocked.
+     */
+    private int getUnlockLevel(int position) {
+        return (position - 2) * 2;
     }
 }

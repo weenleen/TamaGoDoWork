@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -28,12 +30,35 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static DocumentReference userDoc;
-    private static Integer xp = 0;
+    public static final int FRAG_TODO_LIST = 0;
+    public static final int FRAG_SCHEDULE = 1;
+    public static final int FRAG_PET = 2;
 
+    private static Fragment getFrag(Integer num) {
+        switch (num) {
+            case FRAG_PET: return new PetFrag();
+            case FRAG_SCHEDULE: return new ScheduleFrag();
+            default: return new TodoListFrag();
+        }
+    }
+
+    private static int getFragId(Integer num) {
+        switch (num) {
+            case FRAG_PET: return R.id.navigation_pet;
+            case FRAG_SCHEDULE: return R.id.navigation_schedule;
+            default: return R.id.navigation_todoList;
+        }
+    }
+
+    public static DocumentReference userDoc;
+
+
+    private int xp;
     public ProgressBar xpBar;
     private TextView levelView;
     private FloatingActionButton fab;
+
+    private int selectedFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +70,12 @@ public class MainActivity extends AppCompatActivity {
         xpBar = findViewById(R.id.xpBar);
         this.levelView = findViewById(R.id.levelDisplay);
 
+        // fab
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), AddTodoActivity.class));
+            finish();
+        });
 
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -53,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), RegisterAct.class));
             finish();
         }
-
-
 
         // Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -65,38 +94,17 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
-        // Set default fragment to the task list fragment
-        userDoc.get().addOnSuccessListener(documentSnapshot -> {
-            int selectedIndex = R.id.navigation_todoList;
-            if (documentSnapshot != null && documentSnapshot.exists()) {
-                Integer tmp = documentSnapshot.get("selectedFrag", Integer.class);
-                if (tmp != null) selectedIndex = tmp;
-            }
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    getFrag(selectedIndex)).commit();
-            bottomNav.setSelectedItemId(selectedIndex);
-        });
-
+        selectedFrag = getIntent().getIntExtra("selectedFrag", FRAG_TODO_LIST);
+        if (selectedFrag == FRAG_PET) fab.setVisibility(View.GONE);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                getFrag(selectedFrag)).commit();
+        bottomNav.setSelectedItemId(getFragId(selectedFrag));
 
 
         // XP stuff
-        userDoc.addSnapshotListener((value, error) -> {
-            if (error != null || value == null) return;
-
-            Integer tmp = value.get("XP", Integer.class);
-            if (tmp == null) {
-                MainActivity.setXP(0);
-                return;
-            }
-
-            xp = tmp;
-            levelView.setText(getString(R.string.level, (xp/100 + 1)));
-            ObjectAnimator.ofInt(xpBar, "progress", xp % 100)
-                    .setDuration(200)
-                    .start();
-        });
-
+        this.xp = getIntent().getIntExtra("XP", 0);
+        levelView.setText(getString(R.string.level, (xp/100 + 1)));
+        xpBar.setProgress(xp % 100);
 
 
         // Settings
@@ -119,75 +127,77 @@ public class MainActivity extends AppCompatActivity {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-
-
-        // fab
-        fab = findViewById(R.id.fab);
-        fab.setOnClickListener(v -> {
-            startActivity(new Intent(getApplicationContext(), AddTodoActivity.class));
-            finish();
-        });
     }
 
-    private static Fragment getFrag(int num) {
-        if (num == R.id.navigation_pet) {
-            return new PetFrag();
-        } else if (num == R.id.navigation_schedule) {
-            return new ScheduleFrag();
-        } else {
-            return new TodoListFrag();
-        }
-    }
+
 
 
     /** Bottom Navigation Bar */
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener = item -> {
         int tmp = item.getItemId();
-        Fragment selectedFrag;
 
         if (tmp == R.id.navigation_pet) {
             fab.setVisibility(View.GONE);
-            selectedFrag = new PetFrag();
+            selectedFrag = FRAG_PET;
         } else if (tmp == R.id.navigation_schedule) {
             fab.setVisibility(View.VISIBLE);
-            selectedFrag = new ScheduleFrag();
+            selectedFrag = FRAG_SCHEDULE;
         } else {
             fab.setVisibility(View.VISIBLE);
-            selectedFrag = new TodoListFrag();
+            selectedFrag = FRAG_TODO_LIST;
         }
 
-        userDoc.update("selectedFrag", tmp);
+        userDoc.update("selectedFrag", selectedFrag);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                selectedFrag).commit();
+                getFrag(selectedFrag)).commit();
         return true;
     };
 
-    /**
-     * A method that updates the amount of xp locally and in Firestore.
-     *
-     * @param newXP The new value of xp.
-     */
-    public static void setXP(int newXP) {
-        xp = newXP;
-        userDoc.update("XP", newXP);
-    }
+
+
+    public int getXP() { return xp; }
 
     /**
      * A method that increments the amount of xp locally and in Firestore
      * after a task is completed. We can adjust this method if we ever want to
      * change how XP is calculated.
      */
-    public static void incrXP() {
+    public void incrementXP() {
         xp += 10;
         userDoc.update("XP", xp);
+        int level = xp/100 + 1;
+        levelView.setText(getString(R.string.level, level));
+        ObjectAnimator.ofInt(xpBar, "progress", xp % 100)
+                .setDuration(200).start();
+
+        if (xp % 100 == 0) {
+            final AlertDialog.Builder dialog = new AlertDialog.Builder(this, R.style.AlertDialogStyle);
+            dialog.setMessage(this.getString(R.string.level_up_message, level));
+            dialog.show();
+        }
     }
 
     /**
-     * Use this to go back to MainActivity
+     * A method that updates the amount of xp in Firestore only.
+     *
+     * @param newXP The new value of xp.
+     */
+    public static void setXP(int newXP) {
+        userDoc.update("XP", newXP);
+    }
+
+    /**
+     * Use this to go back to MainActivity.
      *
      * @param context Context from which we are going back to MainActivity.
      */
     public static void backToMain(Context context) {
-        context.startActivity(new Intent(context, MainActivity.class));
+        MainActivity.userDoc.get().addOnSuccessListener(documentSnapshot -> {
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.putExtra("selectedFrag", documentSnapshot.get("selectedFrag", Integer.class));
+            intent.putExtra("XP", documentSnapshot.get("XP", Integer.class));
+            context.startActivity(intent);
+            ((Activity) context).finish();
+        });
     }
 }

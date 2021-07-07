@@ -61,7 +61,7 @@ public class LoginAct extends AppCompatActivity {
         resetPwd = findViewById(R.id.reset_link);
         resetPwd.setOnClickListener(v -> {
             final EditText reset = new EditText(v.getContext());
-            final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
+            final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext(), R.style.AlertDialogStyle);
             passwordResetDialog.setTitle("Reset Password");
             passwordResetDialog.setMessage("Enter your email:");
             passwordResetDialog.setView(reset);

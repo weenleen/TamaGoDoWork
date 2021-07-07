@@ -1,6 +1,5 @@
 package com.example.tamagodowork.bottomNav.pet;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -24,26 +23,19 @@ import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.google.firebase.firestore.DocumentReference;
 
-import org.jetbrains.annotations.NotNull;
-
-
-
 
 public class PetFrag extends Fragment {
 
     private Integer wallpaper;
-    private Context context;
-
-    @Override
-    public void onAttach(@NonNull @NotNull Context context) {
-        super.onAttach(context);
-        this.context = context;
-    }
+    private MainActivity main;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        this.main = (MainActivity) getActivity();
+        if (main == null) return null;
 
         View view = inflater.inflate(R.layout.frag_pet, container, false);
 
@@ -55,7 +47,7 @@ public class PetFrag extends Fragment {
                     if (wallpaper != null && wallpaper != -1) {
                         Drawable drawable;
                         try {
-                            drawable = AppCompatResources.getDrawable(context, wallpaper);
+                            drawable = AppCompatResources.getDrawable(main, wallpaper);
                         } catch (Exception e) {
                             return;
                         }
@@ -65,18 +57,22 @@ public class PetFrag extends Fragment {
 
         // pet
         RelativeLayout relativeLayout = view.findViewById(R.id.pet_area);
-        PetCanvas petCanvas = new PetCanvas(context, new Pet());
+        PetCanvas petCanvas = new PetCanvas(main, new Pet());
         relativeLayout.addView(petCanvas);
 
         petCanvas.setOnClickListener(v -> Log.e("pet", "PET TOUCHED"));
 
         // room button
         Button roomButton = view.findViewById(R.id.pet_room_button);
-        roomButton.setOnClickListener(v -> startActivity(new Intent(context, RoomActivity.class)));
+        roomButton.setOnClickListener(v -> startActivity(new Intent(main, RoomActivity.class)));
 
         // edit pet button
         Button editButton = view.findViewById(R.id.pet_edit_button);
-        editButton.setOnClickListener(v -> startActivity(new Intent(context, EditPetActivity.class)));
+        editButton.setOnClickListener(v -> {
+            Intent intent = new Intent(main, EditPetActivity.class);
+            intent.putExtra("XP", main.getXP());
+            startActivity(intent);
+        });
 
         TextView petName = view.findViewById(R.id.pet_name);
 

@@ -20,6 +20,9 @@
 
     <string name="level">Level %1$d</string>
     <string name="unlock_level">LV %1$d</string>
+    <string name="unlock_message">You need to be Level %1$d to get this!</string>
+    <string name="level_up_message">Congratulations! You have reached Level %1$d.</string>
+
     <string name="time_left_display">in %1$s</string>
 
     <string name="create">Create</string>

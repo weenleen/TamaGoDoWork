@@ -18,7 +18,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class TodoListFrag extends Fragment {
 
@@ -35,7 +34,7 @@ public class TodoListFrag extends Fragment {
         taskListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         list = new ArrayList<>();
-        adapter = new TodoAdapter(getActivity(), this.list, TodoAdapter.AdapterType.TASK_LIST);
+        adapter = new TodoAdapter((MainActivity) getActivity(), this.list, TodoAdapter.AdapterType.TASK_LIST);
         taskListView.setAdapter(adapter);
 
         // Read data from Firestore

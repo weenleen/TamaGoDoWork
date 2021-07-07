@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -26,6 +27,7 @@ public class EditPetActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private ArrayList<CustomModel> lst;
+    private int XP;
 
     public PetCanvas petCanvas;
 
@@ -33,6 +35,9 @@ public class EditPetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet_edit);
+
+        this.XP = getIntent().getIntExtra("XP", 0);
+        Log.e("edit pet activity", "XP " + this.XP);
 
         // view pager stuff
         viewPager = findViewById(R.id.edit_pet_viewpager);
@@ -73,15 +78,13 @@ public class EditPetActivity extends AppCompatActivity {
         Button doneButton = findViewById(R.id.edit_pet_done);
         doneButton.setOnClickListener(v -> {
             petCanvas.save();
-            startActivity(new Intent(EditPetActivity.this, MainActivity.class));
-            finish();
+            MainActivity.backToMain(EditPetActivity.this);
         });
 
         // cancel button
         Button cancelButton = findViewById(R.id.edit_pet_cancel);
         cancelButton.setOnClickListener(v -> {
-            startActivity(new Intent(EditPetActivity.this, MainActivity.class));
-            finish();
+            MainActivity.backToMain(EditPetActivity.this);
         });
     }
 
@@ -112,7 +115,7 @@ public class EditPetActivity extends AppCompatActivity {
             gridView.setHorizontalSpacing(30);
             gridView.setVerticalSpacing(30);
             gridView.setDrawSelectorOnTop(true);
-            CustomGridAdapter adapter = new CustomGridAdapter(EditPetActivity.this, lst.get(position));
+            CustomGridAdapter adapter = new CustomGridAdapter(EditPetActivity.this, lst.get(position), XP);
             gridView.setAdapter(adapter);
 
             container.addView(gridView, 0);

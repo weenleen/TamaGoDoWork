@@ -53,6 +53,7 @@ public class ScheduleFrag extends Fragment {
     private final HashMap<Integer, ArrayList<Todo>> monthTodoMap = new HashMap<>();
 
     private Context context;
+    private MainActivity main;
     private int gridSelectedPos = 0;
 
     @Override
@@ -71,6 +72,8 @@ public class ScheduleFrag extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        this.main = (MainActivity) getActivity();
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.frag_schedule, container, false);
@@ -136,7 +139,7 @@ public class ScheduleFrag extends Fragment {
                 Collections.sort(dayTodoList);
             }
 
-            recyclerAdapter = new TodoAdapter(context, dayTodoList, TodoAdapter.AdapterType.SCHEDULE);
+            recyclerAdapter = new TodoAdapter(main, dayTodoList, TodoAdapter.AdapterType.SCHEDULE);
             recyclerView.setAdapter(recyclerAdapter);
         });
 
@@ -216,7 +219,7 @@ public class ScheduleFrag extends Fragment {
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        this.recyclerAdapter = new TodoAdapter(context, new ArrayList<>(), TodoAdapter.AdapterType.SCHEDULE);
+        this.recyclerAdapter = new TodoAdapter(main, new ArrayList<>(), TodoAdapter.AdapterType.SCHEDULE);
         this.recyclerView.setAdapter(recyclerAdapter);
     }
 }

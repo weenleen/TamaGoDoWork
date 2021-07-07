@@ -23,13 +23,13 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
 
     public enum AdapterType { TASK_LIST, SCHEDULE }
 
-    private final Context context;
+    private final MainActivity main;
     private final ArrayList<Todo> todoList;
     private final AdapterType adapterType;
 
-    public TodoAdapter(Context context, ArrayList<Todo> todoList, AdapterType adapterType) {
+    public TodoAdapter(MainActivity main, ArrayList<Todo> todoList, AdapterType adapterType) {
         this.todoList = todoList;
-        this.context = context;
+        this.main = main;
         this.adapterType = adapterType;
     }
 
@@ -57,11 +57,11 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == Todo.Status.OVERDUE.getNum()) { // overdue
             return new ViewHolder(
-                    LayoutInflater.from(this.context).inflate(R.layout.todo_item_overdue, parent, false),
+                    LayoutInflater.from(this.main).inflate(R.layout.todo_item_overdue, parent, false),
                     Todo.Status.OVERDUE);
         } else {
             return new ViewHolder(
-                    LayoutInflater.from(this.context).inflate(R.layout.todo_item_ongoing, parent, false),
+                    LayoutInflater.from(this.main).inflate(R.layout.todo_item_ongoing, parent, false),
                     Todo.Status.ONGOING);
         }
     }
@@ -73,18 +73,17 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
         TodoAdapter adapter = this;
 
         holder.todoName.setText(todo.getName());
-        GradientDrawable indicator = (GradientDrawable) AppCompatResources.getDrawable(context,
+        GradientDrawable indicator = (GradientDrawable) AppCompatResources.getDrawable(main,
                 R.drawable.button_color_picker_small);
         if (indicator != null) {
-            indicator.setColor(ContextCompat.getColor(context, todo.getColourId()));
+            indicator.setColor(ContextCompat.getColor(main, todo.getColourId()));
             holder.todoName.setCompoundDrawablesWithIntrinsicBounds(indicator, null, null, null);
         }
 
         // dialog
         holder.itemView.setOnClickListener(v -> {
             DialogTodoDetails dialog = DialogTodoDetails.newInstance(todoList.get(position));
-            dialog.show(((AppCompatActivity)context).getSupportFragmentManager(),
-                    DialogTodoDetails.TAG);
+            dialog.show(main.getSupportFragmentManager(), DialogTodoDetails.TAG);
         });
 
 
@@ -93,14 +92,14 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
         if (holder.status == Todo.Status.ONGOING) {
             String deadlineStr;
             if (this.adapterType == AdapterType.TASK_LIST) {
-                deadlineStr = context.getString(R.string.time_left_display, todo.getDateTimeLeft());
+                deadlineStr = main.getString(R.string.time_left_display, todo.getDateTimeLeft());
             } else {
                 deadlineStr = todo.getTimeString();
             }
             holder.todoDeadline.setText(deadlineStr);
-            anim = AnimationUtils.loadAnimation(context, R.anim.anim_todo_complete);
+            anim = AnimationUtils.loadAnimation(main, R.anim.anim_todo_complete);
         } else {
-            anim = AnimationUtils.loadAnimation(context, R.anim.anim_todo_dismiss);
+            anim = AnimationUtils.loadAnimation(main, R.anim.anim_todo_dismiss);
         }
 
         anim.setAnimationListener(new Animation.AnimationListener() {
@@ -116,7 +115,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
                 MainActivity.userDoc.collection("Todos")
                         .document(String.valueOf(todo.getKey())).delete()
                         .addOnSuccessListener(unused -> {
-                            if (holder.status == Todo.Status.ONGOING) MainActivity.incrXP();
+                            if (holder.status == Todo.Status.ONGOING) main.incrementXP();
                         });
             }
         });
