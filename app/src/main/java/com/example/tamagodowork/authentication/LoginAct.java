@@ -49,7 +49,7 @@ public class LoginAct extends AppCompatActivity {
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnSuccessListener(authResult -> {
                         Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        MainActivity.backToMain(getApplicationContext());
                     })
                     .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show());
 

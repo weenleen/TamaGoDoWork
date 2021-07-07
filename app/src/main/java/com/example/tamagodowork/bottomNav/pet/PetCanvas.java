@@ -96,18 +96,12 @@ public class PetCanvas extends View {
         this.mouthPaint.setStrokeCap(Paint.Cap.ROUND);
         this.mouthPaint.setStrokeWidth(20f);
 
-        update();
-
-        this.petIdle.run();
-    }
-
-    private void update() {
-        if (this.pet == null) return;
-
         setBodyColour(this.pet.getBodyColour());
         setCustomHead(this.pet.getAcc_head());
         setCustomEyes(this.pet.getAcc_eyes());
         setCustomBody(this.pet.getAcc_body());
+
+        this.petIdle.run();
     }
 
     @Override
@@ -120,7 +114,7 @@ public class PetCanvas extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         if (this.bodyColour == null) {
-            update();
+            handler.removeCallbacks(petIdle);
             return;
         }
 

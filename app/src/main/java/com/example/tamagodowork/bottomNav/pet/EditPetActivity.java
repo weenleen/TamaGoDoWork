@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -37,7 +35,8 @@ public class EditPetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pet_edit);
 
         this.XP = getIntent().getIntExtra("XP", 0);
-        Log.e("edit pet activity", "XP " + this.XP);
+        Pet pet = getIntent().getParcelableExtra(Pet.parcelKey);
+        if (pet == null) pet = Pet.defaultPet();
 
         // view pager stuff
         viewPager = findViewById(R.id.edit_pet_viewpager);
@@ -45,7 +44,7 @@ public class EditPetActivity extends AppCompatActivity {
 
         // show the pet
         RelativeLayout petArea = findViewById(R.id.edit_pet_area);
-        petCanvas = new PetCanvas(getApplicationContext(), new Pet());
+        petCanvas = new PetCanvas(getApplicationContext(), pet);
         petArea.addView(petCanvas);
 
         // prev button
@@ -83,9 +82,7 @@ public class EditPetActivity extends AppCompatActivity {
 
         // cancel button
         Button cancelButton = findViewById(R.id.edit_pet_cancel);
-        cancelButton.setOnClickListener(v -> {
-            MainActivity.backToMain(EditPetActivity.this);
-        });
+        cancelButton.setOnClickListener(v -> MainActivity.backToMain(EditPetActivity.this));
     }
 
     // Handles all the views for the viewpager.

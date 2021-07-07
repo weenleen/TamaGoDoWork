@@ -7,7 +7,6 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -40,13 +39,16 @@ public class RoomActivity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.room_viewpager);
         loadWallpapers();
 
+        Pet pet = getIntent().getParcelableExtra(Pet.parcelKey);
+        if (pet == null) pet = Pet.defaultPet();
+
         InfinitePagerAdapter adapter = new InfinitePagerAdapter(new RoomViewpagerAdapter(getApplicationContext(), wallpapers));
         viewPager.setAdapter(adapter);
 
 
         // show pet
         RelativeLayout petArea = findViewById(R.id.room_pet_area);
-        PetCanvas petCanvas = new PetCanvas(getApplicationContext(), new Pet());
+        PetCanvas petCanvas = new PetCanvas(getApplicationContext(), pet);
         petArea.addView(petCanvas);
 
         // prev button
@@ -80,9 +82,7 @@ public class RoomActivity extends AppCompatActivity {
 
         // cancel
         Button cancelButton = findViewById(R.id.room_cancel);
-        cancelButton.setOnClickListener(v -> {
-            MainActivity.backToMain(RoomActivity.this);
-        });
+        cancelButton.setOnClickListener(v -> MainActivity.backToMain(RoomActivity.this));
     }
 
 
