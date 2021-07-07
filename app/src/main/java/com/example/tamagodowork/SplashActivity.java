@@ -8,20 +8,15 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.example.tamagodowork.authentication.RegisterAct;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /** Create splash screen before the main activity **/
 public class SplashActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
         Handler handler = new Handler(Looper.getMainLooper());
-
         handler.postDelayed(() -> {
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
             if (firebaseAuth.getCurrentUser() != null && firebaseAuth.getUid() != null) {
@@ -31,11 +26,12 @@ public class SplashActivity extends AppCompatActivity {
                     intent.putExtra("selectedFrag", documentSnapshot.get("selectedFrag", Integer.class));
                     intent.putExtra("XP", documentSnapshot.get("XP", Integer.class));
                     startActivity(intent);
+                    finish();
                 });
             } else {
                 startActivity(new Intent(SplashActivity.this, RegisterAct.class));
+                finish();
             }
-            finish();
-        }, 1000);
+        }, 500);
     }
 }

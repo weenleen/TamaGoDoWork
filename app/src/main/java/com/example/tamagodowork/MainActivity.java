@@ -130,8 +130,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     /** Bottom Navigation Bar */
     private final BottomNavigationView.OnNavigationItemSelectedListener navListener = item -> {
         int tmp = item.getItemId();
@@ -152,8 +150,6 @@ public class MainActivity extends AppCompatActivity {
                 getFrag(selectedFrag)).commit();
         return true;
     };
-
-
 
     public int getXP() { return xp; }
 
