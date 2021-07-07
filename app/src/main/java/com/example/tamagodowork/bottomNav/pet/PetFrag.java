@@ -115,6 +115,13 @@ public class PetFrag extends Fragment {
             startActivity(intent);
         });
 
+
+        // online Button
+        Button onlineButton = view.findViewById(R.id.pet_online_button);
+        onlineButton.setOnClickListener(v -> {
+
+        });
+
         return view;
     }
 }

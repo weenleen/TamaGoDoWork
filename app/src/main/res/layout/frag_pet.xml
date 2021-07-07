@@ -10,7 +10,8 @@
         android:id="@+id/pet_frag_wallpaper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/title_pet" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,6 +39,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/Customise"/>
+
+            <Button
+                android:id="@+id/pet_online_button"
+                style="@style/ButtonDarkStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Online"/>
         </LinearLayout>
 
         <RelativeLayout

@@ -123,8 +123,7 @@ public class RoomActivity extends AppCompatActivity {
             ImageView view = new ImageView(this.context);
             view.setScaleType(ImageView.ScaleType.CENTER_CROP);
             if (wallpapers[position] != -1) {
-                view.setImageDrawable(
-                        AppCompatResources.getDrawable(this.context, wallpapers[position]));
+                view.setImageDrawable(AppCompatResources.getDrawable(this.context, wallpapers[position]));
             }
             container.addView(view, 0);
             return view;
