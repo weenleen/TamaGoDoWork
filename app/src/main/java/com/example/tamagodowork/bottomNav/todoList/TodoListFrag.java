@@ -23,7 +23,7 @@ public class TodoListFrag extends Fragment {
     private final TodoAdapter adapter;
     private final ArrayList<Todo> list;
 
-    public TodoListFrag(MainActivity main) {
+    public TodoListFrag(@NonNull MainActivity main) {
         this.list = new ArrayList<>();
         this.adapter = new TodoAdapter(main, this.list, TodoAdapter.AdapterType.TASK_LIST);
 
@@ -39,7 +39,6 @@ public class TodoListFrag extends Fragment {
 
                     // might want to change to SortedList for more efficiency
                     Collections.sort(list);
-
                     adapter.notifyDataSetChanged();
                 });
     }
@@ -53,30 +52,7 @@ public class TodoListFrag extends Fragment {
         RecyclerView taskListView = view.findViewById(R.id.taskListView);
         taskListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-//        list = new ArrayList<>();
-//        adapter = new TodoAdapter((MainActivity) getActivity(), this.list, TodoAdapter.AdapterType.TASK_LIST);
         taskListView.setAdapter(this.adapter);
-
-        // Read data from Firestore
-//        MainActivity.userDoc.collection("Todos")
-//                .addSnapshotListener((value, error) -> {
-//                    if (error != null) {
-//                        // error
-//                        Toast.makeText(view.getContext(), "No Data", Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    list.clear();
-//
-//                    if (value == null) return;
-//                    for (QueryDocumentSnapshot doc : value) {
-//                        list.add(doc.toObject(Todo.class));
-//                    }
-//
-//                    // might want to change to SortedList for more efficiency
-//                    Collections.sort(list);
-//
-//                    adapter.notifyDataSetChanged();
-//                });
 
         return view;
     }

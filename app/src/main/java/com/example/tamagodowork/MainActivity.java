@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
     private int selectedFrag;
 
     private final TodoListFrag todoListFrag = new TodoListFrag(this);
-    private final PetFrag petFrag = new PetFrag();
-    private final ScheduleFrag scheduleFrag = new ScheduleFrag();
+    private final PetFrag petFrag = new PetFrag(this);
+    private final ScheduleFrag scheduleFrag = new ScheduleFrag(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

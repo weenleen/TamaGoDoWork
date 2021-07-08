@@ -20,8 +20,14 @@ import androidx.fragment.app.Fragment;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -29,72 +35,83 @@ import java.util.List;
 public class PetFrag extends Fragment {
 
     private Integer wallpaper;
-    private MainActivity main;
+    private String name;
+    private final MainActivity main;
+    private final CollectionReference ref;
 
     private Pet pet;
+    private PetCanvas petCanvas;
+    private final Task<QuerySnapshot> task;
+
+    public PetFrag(@NonNull MainActivity main) {
+        this.main = main;
+
+        this.ref = MainActivity.userDoc.collection("Pet");
+        this.task = ref.get().addOnCompleteListener(t -> {
+            if (!t.isSuccessful()) return;
+            else if (t.getResult() == null) return;
+
+            List<DocumentSnapshot> documents = t.getResult().getDocuments();
+
+            for (DocumentSnapshot snapshot: documents) {
+                String id = snapshot.getId();
+                switch(id) {
+                    case "Room": {
+                        this.wallpaper = snapshot.get("wallpaper", Integer.class);
+                        break;
+                    }
+                    case "Customisation": {
+                        this.pet = snapshot.toObject(Pet.class);
+                        if (this.pet == null) {
+                            this.pet = Pet.defaultPet();
+                            ref.document("Customisation").set(pet);
+                        }
+                        this.petCanvas = new PetCanvas(main, pet);
+                        break;
+                    }
+                    case "Name": {
+                        this.name = snapshot.get("name", String.class);
+                        if (this.name == null) {
+                            this.name = "";
+                            this.ref.document("Name").update("name", this.name);
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        this.main = (MainActivity) getActivity();
-        if (main == null) return null;
-
         View view = inflater.inflate(R.layout.frag_pet, container, false);
-
-
 
         //  getting data
         ImageView wallpaperBG = view.findViewById(R.id.pet_frag_wallpaper);
-
         TextView petName = view.findViewById(R.id.pet_name);
-        CollectionReference ref = MainActivity.userDoc.collection("Pet");
+        RelativeLayout relativeLayout = view.findViewById(R.id.pet_area);
 
-        ref.get().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) return;
-            else if (task.getResult() == null) return;
+        this.task.addOnCompleteListener(task -> {
+            petName.setText(name);
 
-            List<DocumentSnapshot> documents = task.getResult().getDocuments();
-
-            for (DocumentSnapshot snapshot: documents) {
-                String id = snapshot.getId();
-                switch(id) {
-                    case "Room": {
-                        wallpaper = snapshot.get("wallpaper", Integer.class);
-                        if (wallpaper != null && wallpaper != -1) {
-                            Drawable drawable;
-                            try {
-                                drawable = AppCompatResources.getDrawable(main, wallpaper);
-                            } catch (Exception e) { return; }
-                            wallpaperBG.setImageDrawable(drawable);
-                        }
-                        break;
-                    }
-                    case "Customisation": {
-                        pet = snapshot.toObject(Pet.class); break;
-                    }
-                    case "Name": {
-                        String tmp = snapshot.get("name", String.class);
-                        if (tmp == null) {
-                            tmp = "";
-                            ref.document("Name").update("name", tmp);
-                        }
-                        petName.setText(tmp);
-                        break;
-                    }
-                }
+            if (petCanvas.getParent() != null) {
+                ((ViewGroup) petCanvas.getParent()).removeView(petCanvas);
             }
-
-            if (pet == null) {
-                pet = Pet.defaultPet();
-                ref.document("Customisation").set(pet);
-            }
-            RelativeLayout relativeLayout = view.findViewById(R.id.pet_area);
-            PetCanvas petCanvas = new PetCanvas(main, pet);
             relativeLayout.addView(petCanvas);
             petCanvas.setOnClickListener(v -> Log.e("pet", "PET TOUCHED"));
+
+            if (wallpaper != null && wallpaper != -1) {
+                Drawable drawable;
+                try {
+                    drawable = AppCompatResources.getDrawable(main, wallpaper);
+                } catch (Exception e) { return; }
+                wallpaperBG.setImageDrawable(drawable);
+            }
         });
+
 
 
         // room button

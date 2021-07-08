@@ -2,6 +2,7 @@ package com.example.tamagodowork.bottomNav.todoList;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,9 +54,13 @@ public class ScheduleFrag extends Fragment {
     private final HashMap<Integer, ArrayList<Todo>> monthTodoMap = new HashMap<>();
 
     private Context context;
-    private MainActivity main;
+    private final MainActivity main;
     private int gridSelectedPos = 0;
 
+
+    public ScheduleFrag(@NonNull MainActivity main) {
+        this.main = main;
+    }
 
     @Override
     public void onStart() {
@@ -73,8 +78,6 @@ public class ScheduleFrag extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        this.main = (MainActivity) getActivity();
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.frag_schedule, container, false);
