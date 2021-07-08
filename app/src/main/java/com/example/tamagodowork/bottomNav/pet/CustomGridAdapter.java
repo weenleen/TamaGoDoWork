@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,6 @@ public class CustomGridAdapter extends BaseAdapter {
         this.arr = model.getContent();
         this.custom = model.getCustom();
         this.userLevel = userXP / 100 + 1;
-        Log.e("custom grid adapter", "Level " + userLevel + ", " + userXP + " xp");
     }
 
     @Override
