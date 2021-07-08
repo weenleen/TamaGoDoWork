@@ -2,5 +2,7 @@
     <item android:drawable="@color/peach"/>
     <item
             android:drawable="@mipmap/logo"
+            android:width="250dp"
+            android:height="175dp"
             android:gravity="center"/>
 </layer-list>
