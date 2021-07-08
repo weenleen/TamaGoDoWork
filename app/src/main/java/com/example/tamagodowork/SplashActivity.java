@@ -17,6 +17,6 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(() -> MainActivity.backToMain(SplashActivity.this), 500);
+        handler.postDelayed(() -> MainActivity.backToMain(SplashActivity.this), 200);
     }
 }

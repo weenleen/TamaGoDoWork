@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         // Check if there is a user
         String userId = getIntent().getStringExtra("userId");
         if (userId == null) {
