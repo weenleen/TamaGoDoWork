@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.google.firebase.auth.FirebaseAuth;
+
 
 public class LoginAct extends AppCompatActivity {
 
@@ -51,7 +53,10 @@ public class LoginAct extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
                         MainActivity.backToMain(getApplicationContext());
                     })
-                    .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
+                        Log.e("this", "Exception: "+ Log.getStackTraceString(e));
+                    });
 
         });
 
@@ -71,7 +76,6 @@ public class LoginAct extends AppCompatActivity {
                 String email = reset.getText().toString();
 
                 firebaseAuth.sendPasswordResetEmail(email).addOnSuccessListener(unused -> Toast.makeText(LoginAct.this, "Reset Link has been sent to your email", Toast.LENGTH_SHORT).show()).addOnFailureListener(e -> Toast.makeText(LoginAct.this, "Reset attempt unsuccessful.", Toast.LENGTH_SHORT).show());
-
                 dialog.dismiss();
             });
 

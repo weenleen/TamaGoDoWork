@@ -188,10 +188,20 @@ public class MainActivity extends AppCompatActivity {
      * @param context Context from which we are going back to MainActivity.
      */
     public static void backToMain(Context context) {
-        MainActivity.userDoc.get().addOnSuccessListener(documentSnapshot -> {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        // check if logged in
+        if (firebaseAuth.getCurrentUser() == null) {
+            context.startActivity(new Intent(context, RegisterAct.class));
+            ((Activity) context).finish();
+        }
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference userDoc = db.collection("Users").document(firebaseAuth.getCurrentUser().getUid());
+
+        userDoc.get().addOnSuccessListener(documentSnapshot -> {
             Intent intent = new Intent(context, MainActivity.class);
             intent.putExtra("selectedFrag", documentSnapshot.get("selectedFrag", Integer.class));
             intent.putExtra("XP", documentSnapshot.get("XP", Integer.class));
+            // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
             ((Activity) context).finish();
         });
