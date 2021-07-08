@@ -51,13 +51,9 @@ public class LoginAct extends AppCompatActivity {
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnSuccessListener(authResult -> {
                         Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-                        MainActivity.backToMain(getApplicationContext());
+                        MainActivity.backToMain(LoginAct.this);
                     })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
-                        Log.e("this", "Exception: "+ Log.getStackTraceString(e));
-                    });
-
+                    .addOnFailureListener(e -> Toast.makeText(LoginAct.this, "Login Failed", Toast.LENGTH_SHORT).show());
         });
 
         registerLink = findViewById(R.id.register_link);

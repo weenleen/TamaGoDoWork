@@ -28,14 +28,14 @@ public class SettingsAct extends AppCompatActivity {
         Button logoutBtn = findViewById(R.id.btn_logout);
         logoutBtn.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(getApplicationContext(), LoginAct.class));
+            startActivity(new Intent(SettingsAct.this, LoginAct.class));
             finish();
         });
 
         // change pwd button
         Button chgPwdBtn = findViewById(R.id.change_pwd);
         chgPwdBtn.setOnClickListener(v -> {
-            startActivity(new Intent(getApplicationContext(), ChangePasswordAct.class));
+            startActivity(new Intent(SettingsAct.this, ChangePasswordAct.class));
             finish();
         });
 
@@ -43,7 +43,7 @@ public class SettingsAct extends AppCompatActivity {
         //change pet name button
         Button changeNameBtn = findViewById(R.id.change_pet_name);
         changeNameBtn.setOnClickListener(v -> {
-            startActivity(new Intent(getApplicationContext(), ChangeName.class));
+            startActivity(new Intent(SettingsAct.this, ChangeName.class));
             finish();
         });
 

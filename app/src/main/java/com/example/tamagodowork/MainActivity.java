@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -187,12 +188,12 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param context Context from which we are going back to MainActivity.
      */
-    public static void backToMain(Context context) {
+    public static void backToMain(Activity context) {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         // check if logged in
         if (firebaseAuth.getCurrentUser() == null) {
             context.startActivity(new Intent(context, RegisterAct.class));
-            ((Activity) context).finish();
+            context.finish();
         }
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference userDoc = db.collection("Users").document(firebaseAuth.getCurrentUser().getUid());
@@ -201,9 +202,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(context, MainActivity.class);
             intent.putExtra("selectedFrag", documentSnapshot.get("selectedFrag", Integer.class));
             intent.putExtra("XP", documentSnapshot.get("XP", Integer.class));
-            // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
-            ((Activity) context).finish();
+            context.finish();
         });
     }
 }

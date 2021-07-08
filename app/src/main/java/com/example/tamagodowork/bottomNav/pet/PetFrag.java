@@ -72,16 +72,7 @@ public class PetFrag extends Fragment {
                         break;
                     }
                     case "Customisation": {
-                        RelativeLayout relativeLayout = view.findViewById(R.id.pet_area);
-                        pet = snapshot.toObject(Pet.class);
-                        if (pet == null) {
-                            pet = Pet.defaultPet();
-                            ref.document("Customisation").set(pet);
-                        }
-                        PetCanvas petCanvas = new PetCanvas(main, pet);
-                        relativeLayout.addView(petCanvas);
-                        petCanvas.setOnClickListener(v -> Log.e("pet", "PET TOUCHED"));
-                        break;
+                        pet = snapshot.toObject(Pet.class); break;
                     }
                     case "Name": {
                         String tmp = snapshot.get("name", String.class);
@@ -94,6 +85,15 @@ public class PetFrag extends Fragment {
                     }
                 }
             }
+
+            if (pet == null) {
+                pet = Pet.defaultPet();
+                ref.document("Customisation").set(pet);
+            }
+            RelativeLayout relativeLayout = view.findViewById(R.id.pet_area);
+            PetCanvas petCanvas = new PetCanvas(main, pet);
+            relativeLayout.addView(petCanvas);
+            petCanvas.setOnClickListener(v -> Log.e("pet", "PET TOUCHED"));
         });
 
 
