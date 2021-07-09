@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -71,7 +70,9 @@ public class LoginAct extends AppCompatActivity {
             passwordResetDialog.setPositiveButton("Reset", (dialog, which) -> {
                 String email = reset.getText().toString();
 
-                firebaseAuth.sendPasswordResetEmail(email).addOnSuccessListener(unused -> Toast.makeText(LoginAct.this, "Reset Link has been sent to your email", Toast.LENGTH_SHORT).show()).addOnFailureListener(e -> Toast.makeText(LoginAct.this, "Reset attempt unsuccessful.", Toast.LENGTH_SHORT).show());
+                firebaseAuth.sendPasswordResetEmail(email)
+                        .addOnSuccessListener(unused -> Toast.makeText(LoginAct.this, "Reset Link has been sent to your email", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> Toast.makeText(LoginAct.this, "Reset attempt unsuccessful.", Toast.LENGTH_SHORT).show());
                 dialog.dismiss();
             });
 

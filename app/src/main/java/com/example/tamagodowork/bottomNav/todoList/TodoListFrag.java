@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +21,28 @@ import java.util.Collections;
 
 public class TodoListFrag extends Fragment {
 
-    private TodoAdapter adapter;
-    private ArrayList<Todo> list;
+    private final TodoAdapter adapter;
+    private final ArrayList<Todo> list;
+
+    public TodoListFrag(@NonNull MainActivity main) {
+        this.list = new ArrayList<>();
+        this.adapter = new TodoAdapter(main, this.list, TodoAdapter.AdapterType.TASK_LIST);
+
+        // Read data from Firestore
+        MainActivity.userDoc.collection("Todos")
+                .addSnapshotListener((value, error) -> {
+                    if (error != null || value == null) return;
+
+                    list.clear();
+                    for (QueryDocumentSnapshot doc : value) {
+                        list.add(doc.toObject(Todo.class));
+                    }
+
+                    // might want to change to SortedList for more efficiency
+                    Collections.sort(list);
+                    adapter.notifyDataSetChanged();
+                });
+    }
 
     @Nullable
     @Override
@@ -34,30 +53,7 @@ public class TodoListFrag extends Fragment {
         RecyclerView taskListView = view.findViewById(R.id.taskListView);
         taskListView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        list = new ArrayList<>();
-        adapter = new TodoAdapter((MainActivity) getActivity(), this.list, TodoAdapter.AdapterType.TASK_LIST);
-        taskListView.setAdapter(adapter);
-
-        // Read data from Firestore
-        MainActivity.userDoc.collection("Todos")
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        // error
-                        Toast.makeText(view.getContext(), "No Data", Toast.LENGTH_SHORT).show();
-                    }
-
-                    list.clear();
-
-                    if (value == null) return;
-                    for (QueryDocumentSnapshot doc : value) {
-                        list.add(doc.toObject(Todo.class));
-                    }
-
-                    // might want to change to SortedList for more efficiency
-                    Collections.sort(list);
-
-                    adapter.notifyDataSetChanged();
-                });
+        taskListView.setAdapter(this.adapter);
 
         return view;
     }

@@ -37,15 +37,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int FRAG_TODO_LIST = 0;
-    public static final int FRAG_SCHEDULE = 1;
-    public static final int FRAG_PET = 2;
+    private static final int FRAG_TODO_LIST = 0;
+    private static final int FRAG_SCHEDULE = 1;
+    private static final int FRAG_PET = 2;
 
-    private static Fragment getFrag(Integer num) {
+    private Fragment getFrag(Integer num) {
         switch (num) {
-            case FRAG_PET: return new PetFrag();
-            case FRAG_SCHEDULE: return new ScheduleFrag();
-            default: return new TodoListFrag();
+            case FRAG_PET: return petFrag;
+            case FRAG_SCHEDULE: return scheduleFrag;
+            default: return todoListFrag;
         }
     }
 
@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static DocumentReference userDoc;
 
-
     private int xp;
     public ProgressBar xpBar;
     private TextView levelView;
@@ -67,39 +66,35 @@ public class MainActivity extends AppCompatActivity {
 
     private int selectedFrag;
 
+    private final TodoListFrag todoListFrag = new TodoListFrag(this);
+    private final PetFrag petFrag = new PetFrag(this);
+    private final ScheduleFrag scheduleFrag = new ScheduleFrag(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-        // Store xp values in firebase
-        xpBar = findViewById(R.id.xpBar);
-        this.levelView = findViewById(R.id.levelDisplay);
+        // Check if there is a user
+        String userId = getIntent().getStringExtra("userId");
+        if (userId == null) {
+            startActivity(new Intent(MainActivity.this, RegisterAct.class));
+            finish(); return;
+        }
+
 
         // fab
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
-            startActivity(new Intent(getApplicationContext(), AddTodoActivity.class));
+            startActivity(new Intent(MainActivity.this, AddTodoActivity.class));
             finish();
         });
 
 
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        // check if logged in
-        if (firebaseAuth.getCurrentUser() == null) {
-            startActivity(new Intent(getApplicationContext(), RegisterAct.class));
-            finish();
-        }
-
-        // Firestore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        userDoc = db.collection("Users").document(firebaseAuth.getCurrentUser().getUid());
-
-
         // NAVIGATION
         BottomNavigationView bottomNav = findViewById(R.id.nav_view);
-        bottomNav.setOnNavigationItemSelectedListener(navListener);
+        bottomNav.setOnItemSelectedListener(navListener);
 
         selectedFrag = getIntent().getIntExtra("selectedFrag", FRAG_TODO_LIST);
         if (selectedFrag == FRAG_PET) fab.setVisibility(View.GONE);
@@ -108,7 +103,10 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setSelectedItemId(getFragId(selectedFrag));
 
 
+
         // XP stuff
+        xpBar = findViewById(R.id.xpBar);
+        this.levelView = findViewById(R.id.levelDisplay);
         this.xp = getIntent().getIntExtra("XP", 0);
         levelView.setText(getString(R.string.level, (xp/100 + 1)));
         xpBar.setProgress(xp % 100);
@@ -117,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         // Settings
         ImageButton settings = findViewById(R.id.settings_icon);
         settings.setOnClickListener(v -> {
-            startActivity(new Intent(getApplicationContext(), SettingsAct.class));
+            startActivity(new Intent(MainActivity.this, SettingsAct.class));
             finish();
         });
 
@@ -156,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /** Bottom Navigation Bar */
-    private final BottomNavigationView.OnNavigationItemSelectedListener navListener = item -> {
+    private final BottomNavigationView.OnItemSelectedListener navListener = item -> {
         int tmp = item.getItemId();
 
         if (tmp == R.id.navigation_pet) {
@@ -175,6 +173,9 @@ public class MainActivity extends AppCompatActivity {
                 getFrag(selectedFrag)).commit();
         return true;
     };
+
+
+
 
     public int getXP() { return xp; }
 
@@ -210,24 +211,26 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Use this to go back to MainActivity.
      *
-     * @param context Context from which we are going back to MainActivity.
+     * @param activity Context from which we are going back to MainActivity.
      */
-    public static void backToMain(Activity context) {
+    public static void backToMain(Activity activity) {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         // check if logged in
         if (firebaseAuth.getCurrentUser() == null) {
-            context.startActivity(new Intent(context, RegisterAct.class));
-            context.finish();
+            activity.startActivity(new Intent(activity, RegisterAct.class));
+            activity.finish(); return;
         }
+        String userId = firebaseAuth.getCurrentUser().getUid();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference userDoc = db.collection("Users").document(firebaseAuth.getCurrentUser().getUid());
+        userDoc = db.collection("Users").document(userId);
 
         userDoc.get().addOnSuccessListener(documentSnapshot -> {
-            Intent intent = new Intent(context, MainActivity.class);
+            Intent intent = new Intent(activity, MainActivity.class);
             intent.putExtra("selectedFrag", documentSnapshot.get("selectedFrag", Integer.class));
             intent.putExtra("XP", documentSnapshot.get("XP", Integer.class));
-            context.startActivity(intent);
-            context.finish();
+            intent.putExtra("userId", userId);
+            activity.startActivity(intent);
+            activity.finish();
         });
 
 

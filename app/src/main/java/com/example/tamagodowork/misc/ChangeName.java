@@ -28,9 +28,6 @@ public class ChangeName extends AppCompatActivity{
         Button cancelChanges = findViewById(R.id.cancel_name_button);
         saveChanges.setOnClickListener(v -> saveName(editPetName));
         cancelChanges.setOnClickListener(v -> goBack());
-
-
-
     }
 
     public void saveName(EditText editPetName) {
@@ -40,7 +37,6 @@ public class ChangeName extends AppCompatActivity{
             ref.set(Map.of("name", name));
         }
         goBack();
-        finish();
     }
 
     public void goBack() {
