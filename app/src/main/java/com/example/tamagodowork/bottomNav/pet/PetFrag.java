@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
+import com.example.tamagodowork.bottomNav.pet.online.OnlineActivity;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -122,7 +123,7 @@ public class PetFrag extends Fragment {
         // edit pet button
         Button editButton = view.findViewById(R.id.pet_edit_button);
         editButton.setOnClickListener(v -> {
-            Intent intent = new Intent(main, EditPetActivity.class);
+            Intent intent = new Intent(this.main, EditPetActivity.class);
             intent.putExtra(Pet.parcelKey, pet);
             intent.putExtra("XP", main.getXP());
             startActivity(intent);
@@ -131,9 +132,7 @@ public class PetFrag extends Fragment {
 
         // online Button
         Button onlineButton = view.findViewById(R.id.pet_online_button);
-        onlineButton.setOnClickListener(v -> {
-
-        });
+        onlineButton.setOnClickListener(v -> startActivity(new Intent(this.main, OnlineActivity.class)));
 
         return view;
     }

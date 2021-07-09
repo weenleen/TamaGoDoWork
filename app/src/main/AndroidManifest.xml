@@ -7,13 +7,15 @@
 
     <application
         android:allowBackup="true"
-        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TamaGoDoWork">
-        <activity android:name=".bottomNav.pet.OnlineActivity"></activity>
+        android:theme="@style/Theme.TamaGoDoWork"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".bottomNav.pet.online.VisitFriend"></activity>
+        <activity android:name=".bottomNav.pet.online.AddFriendActivity" />
+        <activity android:name=".bottomNav.pet.online.OnlineActivity" />
         <activity android:name=".bottomNav.pet.RoomActivity" />
         <activity android:name=".bottomNav.pet.EditPetActivity" />
         <activity android:name=".SettingsAct" />

@@ -40,4 +40,6 @@
 
     <string name="reminders">Reminders</string>
     <string name="colorPicker">Choose a Colour:</string>
+
+    <string name="add_friend">Send %1$s a Friend Request!</string>
 </resources>
