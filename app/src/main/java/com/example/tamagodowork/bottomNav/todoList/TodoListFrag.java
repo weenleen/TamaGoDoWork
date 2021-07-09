@@ -18,6 +18,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Collections;
 
+
 public class TodoListFrag extends Fragment {
 
     private final TodoAdapter adapter;

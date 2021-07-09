@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+
 import com.example.tamagodowork.authentication.RegisterAct;
 import com.example.tamagodowork.bottomNav.pet.PetFrag;
 import com.example.tamagodowork.bottomNav.todoList.AddTodoActivity;
@@ -26,6 +27,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+
+//import uk.co.samuelwall.materialtaptargetprompt.*;
+
+
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -124,6 +132,24 @@ public class MainActivity extends AppCompatActivity {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+
+        /*
+        // testing a new library
+        new MaterialTapTargetPrompt.Builder(MainActivity.this)
+            .setTarget(fab)
+            .setPrimaryText("Input your first to do")
+            .setSecondaryText("Tap the button to create your first task")
+            .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
+                @Override
+                public void onPromptStateChanged(@NonNull @NotNull MaterialTapTargetPrompt prompt, int state) {
+                    if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+                        startActivity(new Intent(getApplicationContext(), AddTodoActivity.class));
+                    }
+                }
+            }).show();
+         */
+
+
     }
 
 
@@ -206,5 +232,9 @@ public class MainActivity extends AppCompatActivity {
             activity.startActivity(intent);
             activity.finish();
         });
+
+
     }
+
+
 }
