@@ -1,5 +1,6 @@
 package com.example.tamagodowork;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -9,8 +10,10 @@ import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -28,11 +31,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.jetbrains.annotations.NotNull;
 
-//import uk.co.samuelwall.materialtaptargetprompt.*;
-
-
-
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -133,25 +134,35 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
 
-        /*
-        // testing a new library
-        new MaterialTapTargetPrompt.Builder(MainActivity.this)
-            .setTarget(fab)
-            .setPrimaryText("Input your first to do")
-            .setSecondaryText("Tap the button to create your first task")
-            .setPromptStateChangeListener(new MaterialTapTargetPrompt.PromptStateChangeListener() {
-                @Override
-                public void onPromptStateChanged(@NonNull @NotNull MaterialTapTargetPrompt prompt, int state) {
-                    if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-                        startActivity(new Intent(getApplicationContext(), AddTodoActivity.class));
-                    }
-                }
-            }).show();
-         */
+
+        // Tap Target Prompt
+        showPrompt();
+
 
 
     }
 
+    /* fab prompt */
+    private void showPrompt() {
+        SharedPreferences prefManager = PreferenceManager.getDefaultSharedPreferences(this);
+        // the fab will only appear if the prompt has only appeared for the first time
+        if (!prefManager.getBoolean("didShowPrompt", false)) {
+            new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                    .setTarget(fab)
+                    .setPrimaryText("Input your first to do")
+                    .setSecondaryText("Tap the button to create your first task")
+                    .setPromptStateChangeListener( (prompt, state) -> {
+                            // if we pressed right into the empty spot
+                            if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+                                // sets the key to true after first launch
+                                startActivity(new Intent(getApplicationContext(), AddTodoActivity.class));
+                                SharedPreferences.Editor prefEditor = prefManager.edit();
+                                prefEditor.putBoolean("didShowPrompt", true);
+                                prefEditor.apply();
+                            }
+                        }).show();
+        }
+    }
 
     /** Bottom Navigation Bar */
     private final BottomNavigationView.OnItemSelectedListener navListener = item -> {
