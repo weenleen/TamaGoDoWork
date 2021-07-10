@@ -2,6 +2,7 @@ package com.example.tamagodowork.bottomNav.pet.online;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,15 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.authentication.RegisterAct;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
@@ -33,9 +36,13 @@ public class OnlineActivity extends AppCompatActivity {
 
     private CollectionReference userData;
 
-    private RecyclerView recyclerView;
     private FriendAdapter friendAdapter;
-    private final List<PetUser> friends = new ArrayList<>();
+
+    private CurrentUser currentUser;
+
+    private final List<PetUser> friendsUserList = new ArrayList<>();
+
+    private final List<Task<DocumentSnapshot>> taskList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,34 +61,31 @@ public class OnlineActivity extends AppCompatActivity {
         DocumentReference userDoc = userData.document(userId);
 
 
-
-        recyclerView = findViewById(R.id.friends_recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.friends_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(OnlineActivity.this));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getApplicationContext(),
                 DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
 
-        friendAdapter = new FriendAdapter();
-        recyclerView.setAdapter(friendAdapter);
-
-
         userDoc.get().addOnSuccessListener(documentSnapshot -> {
-            List<?> friendKeys = documentSnapshot.get("Friends", List.class);
-            if (friendKeys == null) return;
+            currentUser = documentSnapshot.toObject(CurrentUser.class);
+            if (currentUser == null) return;
 
-            for (Object obj : friendKeys) {
-                if (!(obj instanceof String)) continue;
-                String key = (String) obj;
-                userData.document(key).get().addOnSuccessListener(documentSnapshot1 ->
-                        friends.add(new PetUser(
-                                key,
-                                documentSnapshot1.get("Name", String.class),
-                                documentSnapshot1.get("XP", Integer.class))));
-                friendAdapter.notifyDataSetChanged();
+            List<String> keyList = currentUser.getFriendsList();
+            if (keyList == null) return;
+
+            for (String key : keyList) {
+                taskList.add(userData.document(key).get().addOnSuccessListener(documentSnapshot1 -> friendsUserList.add(new PetUser(key,
+                        documentSnapshot1.get("Name", String.class),
+                        documentSnapshot1.get("XP", Integer.class)))));
             }
-        }).addOnFailureListener(e -> MainActivity.backToMain(OnlineActivity.this));
 
+            Tasks.whenAllComplete(taskList).addOnCompleteListener(task -> {
+                friendAdapter = new FriendAdapter(friendsUserList);
+                recyclerView.setAdapter(friendAdapter);
+            });
+        }).addOnFailureListener(e -> MainActivity.backToMain(OnlineActivity.this));
 
 
         Button findFriendsButton = findViewById(R.id.online_find_friends);
@@ -95,23 +99,33 @@ public class OnlineActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Adapter for the recycler view
+     */
     public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder> {
 
-        public FriendAdapter() { }
+        private final List<PetUser> friendsUserList;
+
+        public FriendAdapter(List<PetUser> friendsUserList) {
+            this.friendsUserList = friendsUserList;
+        }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
             TextView nameTextView;
-            LinearLayout expandableLayout;
+            ConstraintLayout expandableLayout;
+            PetUser user;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 nameTextView = itemView.findViewById(R.id.friend_name_text_view);
                 expandableLayout = itemView.findViewById(R.id.friend_expandable_layout);
+                expandableLayout.setVisibility(View.GONE);
 
                 nameTextView.setOnClickListener(v -> {
-                    PetUser currUser = friends.get(getAbsoluteAdapterPosition());
-                    currUser.setExpanded();
+                    if (user == null) return;
+                    user.setExpanded();
+                    FriendAdapter.this.notifyItemChanged(getAbsoluteAdapterPosition());
                 });
             }
         }
@@ -129,17 +143,41 @@ public class OnlineActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NotNull FriendAdapter.ViewHolder holder, int position) {
-            PetUser currUser = friends.get(position);
-            String tmp = OnlineActivity.this.getString(R.string.unlock_level, currUser.getLevel())
-                    + " " + currUser.getName();
+            holder.user = friendsUserList.get(position);
+
+            String tmp = OnlineActivity.this.getString(R.string.unlock_level, holder.user.getLevel())
+                    + " " + holder.user.getName();
             holder.nameTextView.setText(tmp);
-            holder.expandableLayout.setVisibility(
-                    currUser.isExpanded() ? View.VISIBLE : View.GONE);
+            holder.expandableLayout.setVisibility(holder.user.isExpanded() ? View.VISIBLE : View.GONE);
         }
 
         @Override
-        public int getItemCount() {
-            return friends.size();
+        public int getItemCount() { return this.friendsUserList.size(); }
+    }
+
+
+
+    /**
+     * Class for all the friends and requests.
+     */
+    private static final class CurrentUser {
+
+        private List<String> friendsList;
+        private List<String> sentRequests;
+        private List<String> receivedRequests;
+
+        public CurrentUser() {}
+
+        public CurrentUser(List<String> friendsList, List<String> sendRequests, List<String> receivedRequests) {
+            this.friendsList = friendsList;
+            this.sentRequests = sendRequests;
+            this.receivedRequests = receivedRequests;
         }
+
+        public List<String> getFriendsList() { return friendsList; }
+
+        public List<String> getSentRequests() { return sentRequests; }
+
+        public List<String> getReceivedRequests() { return receivedRequests; }
     }
 }

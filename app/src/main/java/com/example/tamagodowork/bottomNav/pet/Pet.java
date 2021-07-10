@@ -63,9 +63,6 @@ public class Pet implements Parcelable {
         this.acc_body = acc_body;
     }
 
-    // for other people's pet
-    public Pet(String userId) {}
-
     // getters
     public Integer getBodyColour() { return bodyColour; }
 
@@ -76,7 +73,6 @@ public class Pet implements Parcelable {
     public Integer getAcc_body() {
         return acc_body;
     }
-
 
 
     @Override

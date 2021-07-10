@@ -19,11 +19,9 @@ import com.example.tamagodowork.R;
 import com.example.tamagodowork.authentication.RegisterAct;
 import com.example.tamagodowork.bottomNav.pet.Pet;
 import com.example.tamagodowork.bottomNav.pet.PetCanvas;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -68,8 +66,10 @@ public class AddFriendActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Failed to send Friend Request", Toast.LENGTH_SHORT).show();
                 return;
             }
-            userData.document(userId).update("Sent Friend Requests",
+            userData.document(userId).update("sentRequests",
                     FieldValue.arrayUnion(friendUser.getId()));
+            userData.document(friendUser.getId()).update("receivedRequests",
+                    FieldValue.arrayUnion(userId));
             Toast.makeText(getApplicationContext(), "Friend Request Sent!", Toast.LENGTH_SHORT).show();
         });
         addFriendButton.setVisibility(View.GONE);
@@ -88,7 +88,6 @@ public class AddFriendActivity extends AppCompatActivity {
                     petArea.removeAllViews();
                     return;
                 }
-
 
                 friendUser = new PetUser(
                         code,

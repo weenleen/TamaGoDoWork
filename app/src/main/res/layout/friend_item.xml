@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:background="?attr/selectableItemBackgroundBorderless"
     android:paddingHorizontal="15dp"
-    android:paddingVertical="20dp">
+    android:paddingVertical="20dp"
+    android:clickable="false"
+    android:focusable="false">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -22,9 +24,12 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textColor="@color/peach"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                android:clickable="false"
+                android:focusable="false"
+                android:background="?attr/selectableItemBackgroundBorderless" />
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/friend_expandable_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -32,19 +37,28 @@
 
                 <Button
                     android:id="@+id/friend_visit_button"
+                    style="@style/ButtonDarkStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/ButtonDarkStyle"
-                    android:text="visit"/>
+                    android:layout_marginStart="3dp"
+                    android:text="visit"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/friend_item_remove_button"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <ImageButton
                     android:id="@+id/friend_item_remove_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_baseline_close_24"
+                    android:layout_marginEnd="352dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="3dp"/>
-            </LinearLayout>
+                    android:padding="3dp"
+                    android:src="@drawable/ic_baseline_close_24"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         </LinearLayout>
