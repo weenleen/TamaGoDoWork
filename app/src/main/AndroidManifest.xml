@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TamaGoDoWork"
         android:usesCleartextTraffic="true">
-        <activity android:name=".bottomNav.pet.online.VisitFriend"></activity>
+        <activity android:name=".bottomNav.pet.online.VisitFriend" />
         <activity android:name=".bottomNav.pet.online.AddFriendActivity" />
         <activity android:name=".bottomNav.pet.online.OnlineActivity" />
         <activity android:name=".bottomNav.pet.RoomActivity" />
@@ -22,6 +22,7 @@
         <activity android:name=".authentication.ChangePasswordAct" />
         <activity android:name=".authentication.LoginAct" />
         <activity android:name=".authentication.RegisterAct" />
+        <activity android:name=".authentication.DeleteAccountAct" />
         <activity android:name=".bottomNav.todoList.AddTodoActivity" />
         <activity android:name=".bottomNav.todoList.EditTodoActivity" />
         <activity android:name=".misc.ChangeName" />

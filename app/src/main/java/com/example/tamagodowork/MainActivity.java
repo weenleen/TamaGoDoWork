@@ -136,14 +136,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Tap Target Prompt
-        showPrompt();
+        showFabPrompt();
 
 
 
     }
 
     /* fab prompt */
-    private void showPrompt() {
+    private void showFabPrompt() {
         SharedPreferences prefManager = PreferenceManager.getDefaultSharedPreferences(this);
         // the fab will only appear if the prompt has only appeared for the first time
         if (!prefManager.getBoolean("didShowPrompt", false)) {
