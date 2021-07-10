@@ -17,6 +17,9 @@ public class SettingsAct extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        Button deleteAccount = findViewById(R.id.btn_delete);
+        deleteAccount.setOnClickListener( v -> startActivity(new Intent(SettingsAct.this, DeleteAccountAct.class)) );
+
         Button resetBtn = findViewById(R.id.btn_reset);
         resetBtn.setOnClickListener(v -> {
             MainActivity.setXP(0);
