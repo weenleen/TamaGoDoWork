@@ -5,12 +5,14 @@ public class PetUser {
 
     private String id;
     private String name;
-    private Integer xp;
+    private final Integer xp;
+    private boolean expanded;
 
     public PetUser(String id, String name, Integer xp) {
         this.id = id;
         this.name = name;
         this.xp = xp;
+        this.expanded = false;
     }
 
     public String getId() {
@@ -21,9 +23,11 @@ public class PetUser {
         return name;
     }
 
-    public int getXp() {
-        return xp;
+    public int getLevel() {
+        return xp / 100 + 1;
     }
+
+    public boolean isExpanded() { return expanded; }
 
     public void setId(String id) {
         this.id = id;
@@ -33,7 +37,5 @@ public class PetUser {
         this.name = name;
     }
 
-    public void setXp(int xp) {
-        this.xp = xp;
-    }
+    public void setExpanded() { this.expanded = !expanded; }
 }

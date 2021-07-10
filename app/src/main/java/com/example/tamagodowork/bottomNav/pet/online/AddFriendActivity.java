@@ -2,6 +2,9 @@ package com.example.tamagodowork.bottomNav.pet.online;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,14 +13,25 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.authentication.RegisterAct;
+import com.example.tamagodowork.bottomNav.pet.Pet;
+import com.example.tamagodowork.bottomNav.pet.PetCanvas;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AddFriendActivity extends AppCompatActivity {
+
+    PetUser friendUser;
+    Pet friendPet;
+    PetCanvas petCanvas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +52,68 @@ public class AddFriendActivity extends AppCompatActivity {
         userFriendCode.setText(userId);
 
         ImageButton copyButton = findViewById(R.id.friend_code_copy_button);
+        copyButton.setOnClickListener(v -> {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("User Friend Code", userId);
+            clipboard.setPrimaryClip(clip);
+        });
 
 
-
-        EditText searchFriend = findViewById(R.id.friend_code_edit_text);
-        ImageButton searchButton = findViewById(R.id.friend_code_search_button);
-
-
-
-        RelativeLayout petArea = findViewById(R.id.online_pet_area);
-
+        RelativeLayout petArea = findViewById(R.id.friend_pet_area);
 
 
         Button addFriendButton = findViewById(R.id.add_friend_button);
+        addFriendButton.setOnClickListener(v -> {
+            if (friendUser == null || friendUser.getId() == null) {
+                Toast.makeText(getApplicationContext(), "Failed to send Friend Request", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            userData.document(userId).update("Sent Friend Requests",
+                    FieldValue.arrayUnion(friendUser.getId()));
+            Toast.makeText(getApplicationContext(), "Friend Request Sent!", Toast.LENGTH_SHORT).show();
+        });
+        addFriendButton.setVisibility(View.GONE);
+
+
+        EditText searchFriendCodeText = findViewById(R.id.friend_code_edit_text);
+        ImageButton searchButton = findViewById(R.id.friend_code_search_button);
+        searchButton.setOnClickListener(v -> {
+            String code = searchFriendCodeText.getText().toString();
+
+            userData.document(code).get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot == null || !documentSnapshot.exists()) {
+                    addFriendButton.setVisibility(View.GONE);
+                    friendPet = null;
+                    friendUser = null;
+                    petArea.removeAllViews();
+                    return;
+                }
+
+
+                friendUser = new PetUser(
+                        code,
+                        documentSnapshot.get("Name", String.class),
+                        documentSnapshot.get("XP", Integer.class));
+
+                addFriendButton.setText(getString(R.string.friend_request_button, friendUser.getName()));
+                addFriendButton.setVisibility(View.VISIBLE);
+            });
+
+
+            DocumentReference ref = userData.document(code).collection("Pet").document("Customisation");
+            ref.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot == null || !documentSnapshot.exists()) return;
+                friendPet = documentSnapshot.toObject(Pet.class);
+
+                if (friendPet == null) {
+                    friendPet = Pet.defaultPet();
+                    ref.set(friendPet);
+                }
+                petCanvas = new PetCanvas(AddFriendActivity.this, friendPet);
+                petArea.addView(petCanvas);
+            });
+        });
+
 
 
         Button cancelButton = findViewById(R.id.friend_back_button);

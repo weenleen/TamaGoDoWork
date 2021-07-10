@@ -2,6 +2,8 @@ package com.example.tamagodowork.bottomNav.pet.online;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -10,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
@@ -52,6 +56,15 @@ public class OnlineActivity extends AppCompatActivity {
 
 
         recyclerView = findViewById(R.id.friends_recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(OnlineActivity.this));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getApplicationContext(),
+                DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
+
+        friendAdapter = new FriendAdapter();
+        recyclerView.setAdapter(friendAdapter);
+
 
         userDoc.get().addOnSuccessListener(documentSnapshot -> {
             List<?> friendKeys = documentSnapshot.get("Friends", List.class);
@@ -65,11 +78,8 @@ public class OnlineActivity extends AppCompatActivity {
                                 key,
                                 documentSnapshot1.get("Name", String.class),
                                 documentSnapshot1.get("XP", Integer.class))));
+                friendAdapter.notifyDataSetChanged();
             }
-
-            friendAdapter = new FriendAdapter(friends);
-            recyclerView.setAdapter(friendAdapter);
-
         }).addOnFailureListener(e -> MainActivity.backToMain(OnlineActivity.this));
 
 
@@ -87,15 +97,22 @@ public class OnlineActivity extends AppCompatActivity {
 
     public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder> {
 
-        List<PetUser> friends;
-
-        public FriendAdapter(List<PetUser> friends) {
-            this.friends = friends;
-        }
+        public FriendAdapter() { }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
+
+            TextView nameTextView;
+            LinearLayout expandableLayout;
+
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
+                nameTextView = itemView.findViewById(R.id.friend_name_text_view);
+                expandableLayout = itemView.findViewById(R.id.friend_expandable_layout);
+
+                nameTextView.setOnClickListener(v -> {
+                    PetUser currUser = friends.get(getAbsoluteAdapterPosition());
+                    currUser.setExpanded();
+                });
             }
         }
 
@@ -112,12 +129,17 @@ public class OnlineActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NotNull FriendAdapter.ViewHolder holder, int position) {
-
+            PetUser currUser = friends.get(position);
+            String tmp = OnlineActivity.this.getString(R.string.unlock_level, currUser.getLevel())
+                    + " " + currUser.getName();
+            holder.nameTextView.setText(tmp);
+            holder.expandableLayout.setVisibility(
+                    currUser.isExpanded() ? View.VISIBLE : View.GONE);
         }
 
         @Override
         public int getItemCount() {
-            return this.friends.size();
+            return friends.size();
         }
     }
 }
