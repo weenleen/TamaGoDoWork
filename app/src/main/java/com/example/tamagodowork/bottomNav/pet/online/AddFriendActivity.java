@@ -79,6 +79,7 @@ public class AddFriendActivity extends AppCompatActivity {
         ImageButton searchButton = findViewById(R.id.friend_code_search_button);
         searchButton.setOnClickListener(v -> {
             String code = searchFriendCodeText.getText().toString();
+            if (code.isEmpty() || code.contentEquals(userId)) return;
 
             userData.document(code).get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot == null || !documentSnapshot.exists()) {
