@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
@@ -48,6 +49,7 @@ public class OnlineActivity extends AppCompatActivity {
     private FriendAdapter sentAdapter = null;
 
     private CurrentUser currentUser;
+    private String currUserId;
 
     private final List<PetUser> friendsUserList = new ArrayList<>();
     private final List<PetUser> receivedUserList = new ArrayList<>();
@@ -88,9 +90,9 @@ public class OnlineActivity extends AppCompatActivity {
             startActivity(new Intent(OnlineActivity.this, RegisterAct.class));
             finish(); return;
         }
-        String userId = firebaseAuth.getCurrentUser().getUid();
+        currUserId = firebaseAuth.getCurrentUser().getUid();
         userData = FirebaseFirestore.getInstance().collection("Users");
-        DocumentReference userDoc = userData.document(userId);
+        DocumentReference userDoc = userData.document(currUserId);
 
 
 
@@ -123,6 +125,9 @@ public class OnlineActivity extends AppCompatActivity {
             currentUser = documentSnapshot.toObject(CurrentUser.class);
             if (currentUser == null) return;
 
+            friendsUserList.clear();
+            receivedUserList.clear();
+            sentUserList.clear();
 
             // friends
             List<String> keyList = currentUser.getFriendsList();
@@ -345,6 +350,7 @@ public class OnlineActivity extends AppCompatActivity {
         public void onBindViewHolder(@NotNull FriendAdapter.ViewHolder holder, int position) {
 
             holder.user = friendsUserList.get(position);
+            String personId = holder.user.getId();
             String tmp = OnlineActivity.this.getString(R.string.unlock_level, holder.user.getLevel())
                     + " " + holder.user.getName();
             holder.nameTextView.setText(tmp);
@@ -364,6 +370,17 @@ public class OnlineActivity extends AppCompatActivity {
                 }
                 case RECEIVED: {
                     ReceivedViewHolder receivedViewHolder = (ReceivedViewHolder) holder;
+                    receivedViewHolder.acceptButton.setOnClickListener(v -> {
+                        userData.document(currUserId).update("receivedRequests",
+                                FieldValue.arrayRemove(personId));
+                        userData.document(currUserId).update("friendsList",
+                                FieldValue.arrayUnion(personId));
+
+                        userData.document(personId).update("sentReqeusts",
+                                FieldValue.arrayRemove(currUserId));
+                        userData.document(personId).update("friendsList",
+                                FieldValue.arrayUnion(currUserId));
+                    });
                     break;
                 }
                 case SENT: {
