@@ -11,6 +11,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -31,9 +32,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.jetbrains.annotations.NotNull;
+
 
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetSequence;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -135,34 +137,107 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        // Tap Target Prompt
-        showFabPrompt();
-
-
-
+        // Tap Target Prompt - function will call a sequence of tap target prompts
+         showFabPrompt();
     }
 
     /* fab prompt */
+
     private void showFabPrompt() {
         SharedPreferences prefManager = PreferenceManager.getDefaultSharedPreferences(this);
-        // the fab will only appear if the prompt has only appeared for the first time
         if (!prefManager.getBoolean("didShowPrompt", false)) {
+            new MaterialTapTargetSequence();
             new MaterialTapTargetPrompt.Builder(MainActivity.this)
                     .setTarget(fab)
                     .setPrimaryText("Input your first to do")
                     .setSecondaryText("Tap the button to create your first task")
+                    .setBackButtonDismissEnabled(true)
+                    .setBackgroundColour(getResources().getColor(R.color.peach))
                     .setPromptStateChangeListener( (prompt, state) -> {
                             // if we pressed right into the empty spot
                             if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
                                 // sets the key to true after first launch
-                                startActivity(new Intent(getApplicationContext(), AddTodoActivity.class));
                                 SharedPreferences.Editor prefEditor = prefManager.edit();
                                 prefEditor.putBoolean("didShowPrompt", true);
                                 prefEditor.apply();
                             }
                         }).show();
+        } else {
+            showSchedule();
         }
     }
+
+    private void showSchedule() {
+        SharedPreferences prefManager = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefManager.getBoolean("didShowSchedulePrompt", false)) {
+            new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                    .setTarget(R.id.navigation_schedule)
+                    .setPrimaryText("View your schedule for the first time!")
+                    .setSecondaryText("Tap the button to view your schedule!")
+                    .setBackButtonDismissEnabled(true)
+                    .setBackgroundColour(getResources().getColor(R.color.peach))
+                    .setPromptStateChangeListener((prompt, state) -> {
+                        // if we pressed right into the empty spot
+                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+                            // sets the key to true after first launch
+                            SharedPreferences.Editor prefEditor = prefManager.edit();
+                            prefEditor.putBoolean("didShowSchedulePrompt", true);
+                            prefEditor.apply();
+                        }
+                    }).show();
+        } else {
+            showPet();
+        }
+    }
+
+    private void showPet() {
+        SharedPreferences prefManager = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefManager.getBoolean("didShowPetPrompt", false)) {
+            new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                    .setTarget(R.id.navigation_pet)
+                    .setPrimaryText("View your pet for the first time!")
+                    .setSecondaryText("Tap the button to view your pet!")
+                    .setBackButtonDismissEnabled(true)
+                    .setBackgroundColour(getResources().getColor(R.color.peach))
+                    .setPromptStateChangeListener((prompt, state) -> {
+                        // if we pressed right into the empty spot
+                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+                            // sets the key to true after first launch
+                            SharedPreferences.Editor prefEditor = prefManager.edit();
+                            prefEditor.putBoolean("didShowPetPrompt", true);
+                            prefEditor.apply();
+                        }
+                    }).show();
+        } else {
+            showToDo();
+        }
+    }
+
+
+    private void showToDo() {
+        SharedPreferences prefManager = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!prefManager.getBoolean("didShowTaskPrompt", false)) {
+            new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                    .setTarget(R.id.navigation_todoList)
+                    .setPrimaryText("View your todoList for the first time!")
+                    .setSecondaryText("Tap the button to view your todoes!")
+                    .setBackButtonDismissEnabled(true)
+                    .setBackgroundColour(getResources().getColor(R.color.peach))
+                    .setPromptStateChangeListener((prompt, state) -> {
+                        // if we pressed right into the empty spot
+                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+                            // sets the key to true after first launch
+                            SharedPreferences.Editor prefEditor = prefManager.edit();
+                            prefEditor.putBoolean("didShowTaskPrompt", true);
+                            prefEditor.apply();
+                        }
+                    }).show();
+        }
+    }
+
+
+
+
 
     /** Bottom Navigation Bar */
     private final BottomNavigationView.OnItemSelectedListener navListener = item -> {
