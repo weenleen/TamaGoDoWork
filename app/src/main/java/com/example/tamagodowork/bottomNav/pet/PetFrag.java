@@ -95,6 +95,8 @@ public class PetFrag extends Fragment {
         this.task.addOnCompleteListener(task -> {
             petName.setText(name);
 
+            if (petCanvas.getParent() == null) return;
+
             if (petCanvas.getParent() != null) {
                 ((ViewGroup) petCanvas.getParent()).removeView(petCanvas);
             }

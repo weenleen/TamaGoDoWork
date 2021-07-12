@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Tap Target Prompt - function will call a sequence of tap target prompts
-        // showFabPrompt();
+         showFabPrompt();
     }
 
     /* fab prompt */
@@ -234,6 +234,8 @@ public class MainActivity extends AppCompatActivity {
                     }).show();
         }
     }
+
+
 
 
 

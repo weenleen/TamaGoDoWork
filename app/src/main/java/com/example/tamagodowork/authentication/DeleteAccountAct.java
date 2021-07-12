@@ -10,14 +10,16 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+//import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.SettingsAct;
-//   import com.google.android.gms.tasks.OnCompleteListener;
-// import com.google.android.gms.tasks.Task;
-// import com.google.firebase.auth.FirebaseAuth;
-// import com.google.firebase.auth.FirebaseUser;
+//import com.google.android.gms.tasks.OnCompleteListener;
+//import com.google.android.gms.tasks.Task;
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.firestore.DocumentReference;
 
-// import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNull;
+
 
 
 public class DeleteAccountAct extends AppCompatActivity {
@@ -40,6 +42,10 @@ public class DeleteAccountAct extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull @NotNull Task<Void> task) {
                     if (task.isSuccessful()) {
+                        String USER_ID = FirebaseAuth.getInstance().getUid();
+                        DocumentReference toDoes = MainActivity.userDoc.collection("Todos").document(USER_ID);
+                        DocumentReference pet = MainActivity.userDoc.collection("Pet").document(USER_ID);
+
                         Toast.makeText(DeleteAccountAct.this,"Account Deleted Successfully",Toast.LENGTH_SHORT).show();
                         // Upon Successful Deletion, redirect the user to the register page
                         startActivity(new Intent(DeleteAccountAct.this, RegisterAct.class));
@@ -49,6 +55,8 @@ public class DeleteAccountAct extends AppCompatActivity {
                 }
             });
         });
+
         */
+
     }
 }
