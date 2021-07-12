@@ -60,11 +60,6 @@ public class PetFrag extends Fragment {
                     }
                     case "Customisation": {
                         this.pet = snapshot.toObject(Pet.class);
-//                        if (this.pet == null) {
-//                            this.pet = Pet.defaultPet();
-//                            ref.document("Customisation").set(pet);
-//                        }
-//                        this.petCanvas = new PetCanvas(main, pet);
                         break;
                     }
                     case "Name": {
