@@ -18,16 +18,28 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/friend_name_text_view"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textColor="@color/peach"
-                android:maxLines="1"
-                android:clickable="false"
-                android:focusable="false"
-                android:background="?attr/selectableItemBackgroundBorderless" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/friend_name_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="20sp"
+                    android:textColor="@color/peach"
+                    android:maxLines="1" />
+
+                <ImageButton
+                    android:id="@+id/friend_expand_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_baseline_expand_more_24"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
+            </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/friend_expandable_layout"

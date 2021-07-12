@@ -2,6 +2,7 @@ package com.example.tamagodowork.bottomNav.pet.online;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.TextViewCompat;
@@ -13,7 +14,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +38,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -122,19 +123,29 @@ public class OnlineActivity extends AppCompatActivity {
         setTextView(tabLayout.getChildAt(2), false);
 
 
-
-
         ViewPager viewPager = findViewById(R.id.friends_viewpager);
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-//                tabLayout.getChildAt(selectedIndex).setLayoutParams(unselectedParams);
                 setTextView(tabLayout.getChildAt(selectedIndex), false);
                 selectedIndex = viewPager.getCurrentItem();
                 setTextView(tabLayout.getChildAt(selectedIndex), true);
-//                tabLayout.getChildAt(selectedIndex).setLayoutParams(selectedParams);
             }
         });
+
+
+        for (int i = 0; i < tabLayout.getChildCount(); i++) {
+            View child = tabLayout.getChildAt(i);
+
+            final int tmpIndex = i;
+
+            child.setOnClickListener(v -> {
+                setTextView(tabLayout.getChildAt(selectedIndex), false);
+                viewPager.setCurrentItem(tmpIndex);
+                setTextView(child, true);
+                selectedIndex = tmpIndex;
+            });
+        }
 
 
 
@@ -161,8 +172,10 @@ public class OnlineActivity extends AppCompatActivity {
                                     documentSnapshot1.get("XP", Integer.class)))));
                 }
 
-                viewpagerTaskList.add(Tasks.whenAllComplete(friendsTaskList).addOnCompleteListener(task ->
-                        friendsAdapter = new FriendAdapter(friendsUserList, AdapterType.FRIENDS)));
+                viewpagerTaskList.add(Tasks.whenAllComplete(friendsTaskList).addOnCompleteListener(task ->{
+                    Collections.sort(friendsUserList);
+                    friendsAdapter = new FriendAdapter(friendsUserList, AdapterType.FRIENDS);
+                }));
             }
 
 
@@ -176,8 +189,10 @@ public class OnlineActivity extends AppCompatActivity {
                                     documentSnapshot1.get("XP", Integer.class)))));
                 }
 
-                viewpagerTaskList.add(Tasks.whenAll(receivedTaskList).addOnCompleteListener(task ->
-                        receivedAdapter = new FriendAdapter(receivedUserList, AdapterType.RECEIVED)));
+                viewpagerTaskList.add(Tasks.whenAll(receivedTaskList).addOnCompleteListener(task ->{
+                    Collections.sort(receivedUserList);
+                    receivedAdapter = new FriendAdapter(receivedUserList, AdapterType.RECEIVED);
+                }));
             }
 
 
@@ -191,8 +206,10 @@ public class OnlineActivity extends AppCompatActivity {
                                     documentSnapshot1.get("XP", Integer.class)))));
                 }
 
-                viewpagerTaskList.add(Tasks.whenAll(sentTaskList).addOnCompleteListener(task ->
-                        sentAdapter = new FriendAdapter(sentUserList, AdapterType.SENT)));
+                viewpagerTaskList.add(Tasks.whenAll(sentTaskList).addOnCompleteListener(task -> {
+                    Collections.sort(sentUserList);
+                    sentAdapter = new FriendAdapter(sentUserList, AdapterType.SENT);
+                }));
             }
 
 
@@ -210,20 +227,7 @@ public class OnlineActivity extends AppCompatActivity {
 
 
 
-        for (int i = 0; i < tabLayout.getChildCount(); i++) {
-            View child = tabLayout.getChildAt(i);
 
-            final int tmpIndex = i;
-
-            child.setOnClickListener(v -> {
-                setTextView(tabLayout.getChildAt(selectedIndex), false);
-//                tabLayout.getChildAt(selectedIndex).setLayoutParams(unselectedParams);
-                viewPager.setCurrentItem(tmpIndex);
-                setTextView(child, true);
-//                child.setLayoutParams(selectedParams);
-                selectedIndex = tmpIndex;
-            });
-        }
 
 
 
@@ -303,15 +307,17 @@ public class OnlineActivity extends AppCompatActivity {
         public class ViewHolder extends RecyclerView.ViewHolder {
             TextView nameTextView;
             PetUser user;
+            ImageButton expandButton;
             ConstraintLayout expandableLayout;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 nameTextView = itemView.findViewById(R.id.friend_name_text_view);
+                expandButton = itemView.findViewById(R.id.friend_expand_button);
                 expandableLayout = itemView.findViewById(R.id.friend_expandable_layout);
                 expandableLayout.setVisibility(View.GONE);
 
-                nameTextView.setOnClickListener(v -> {
+                expandButton.setOnClickListener(v -> {
                     if (user == null) return;
                     user.setExpanded();
                     FriendAdapter.this.notifyItemChanged(getAbsoluteAdapterPosition());
@@ -378,8 +384,15 @@ public class OnlineActivity extends AppCompatActivity {
             String tmp = OnlineActivity.this.getString(R.string.unlock_level, holder.user.getLevel())
                     + " " + holder.user.getName();
             holder.nameTextView.setText(tmp);
-            holder.expandableLayout.setVisibility(
-                    holder.user.isExpanded() ? View.VISIBLE : View.GONE);
+            if (holder.user.isExpanded()) {
+                holder.expandableLayout.setVisibility(View.VISIBLE);
+                holder.expandButton.setImageDrawable(AppCompatResources.getDrawable(OnlineActivity.this,
+                        R.drawable.ic_baseline_expand_less_24));
+            } else {
+                holder.expandableLayout.setVisibility(View.GONE);
+                holder.expandButton.setImageDrawable(AppCompatResources.getDrawable(OnlineActivity.this,
+                        R.drawable.ic_baseline_expand_more_24));
+            }
 
             switch (this.adapterType) {
                 case FRIENDS: {
@@ -404,7 +417,6 @@ public class OnlineActivity extends AppCompatActivity {
                     break;
                 }
                 case RECEIVED: {
-                    holder.user.setExpanded();
                     ReceivedViewHolder receivedViewHolder = (ReceivedViewHolder) holder;
                     receivedViewHolder.acceptButton.setOnClickListener(v -> {
                         userData.document(currUserId).update("receivedRequests",
@@ -417,7 +429,9 @@ public class OnlineActivity extends AppCompatActivity {
                         userData.document(personId).update("friendsList",
                                 FieldValue.arrayUnion(currUserId));
 
+                        receivedViewHolder.user.setExpanded();
                         friendsUserList.add(receivedViewHolder.user);
+                        Collections.sort(friendsUserList);
                         receivedUserList.remove(receivedViewHolder.user);
                         friendsAdapter.notifyDataSetChanged();
                         receivedAdapter.notifyDataSetChanged();

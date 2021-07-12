@@ -1,7 +1,7 @@
 package com.example.tamagodowork.bottomNav.pet.online;
 
 
-public class PetUser {
+public class PetUser implements Comparable<PetUser> {
 
     private String id;
     private String name;
@@ -38,4 +38,10 @@ public class PetUser {
     }
 
     public void setExpanded() { this.expanded = !expanded; }
+
+    @Override
+    public int compareTo(PetUser o) {
+        if (this == o) return 0;
+        else return this.xp.compareTo(o.xp);
+    }
 }
