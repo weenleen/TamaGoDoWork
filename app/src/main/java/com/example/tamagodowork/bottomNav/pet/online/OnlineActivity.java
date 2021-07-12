@@ -3,6 +3,8 @@ package com.example.tamagodowork.bottomNav.pet.online;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +74,23 @@ public class OnlineActivity extends AppCompatActivity {
             LinearLayout.LayoutParams.MATCH_PARENT,
             1f / 3);
 
+    public void setTextView(View view, boolean selected) {
+        if (!(view instanceof TextView)) return;
+
+        TextView textView = (TextView) view;
+        if (selected) {
+            TextViewCompat.setTextAppearance(textView,R.style.selectedTextViewTab);
+            textView.getCompoundDrawables()[1].setTint(
+                    ContextCompat.getColor(OnlineActivity.this, R.color.peach));
+            textView.setLayoutParams(selectedParams);
+        } else {
+            TextViewCompat.setTextAppearance(textView,R.style.unselectedTextViewTab);
+            textView.getCompoundDrawables()[1].setTint(
+                    ContextCompat.getColor(OnlineActivity.this, R.color.grey));
+            textView.setLayoutParams(unselectedParams);
+        }
+    }
+
     static {
         selectedParams.setMargins(0, 0, 0, 0);
         unselectedParams.setMargins(0, 25, 0, 0);
@@ -97,9 +117,9 @@ public class OnlineActivity extends AppCompatActivity {
 
 
         LinearLayout tabLayout = findViewById(R.id.friend_tab_layout);
-        tabLayout.getChildAt(0).setLayoutParams(selectedParams);
-        tabLayout.getChildAt(1).setLayoutParams(unselectedParams);
-        tabLayout.getChildAt(2).setLayoutParams(unselectedParams);
+        setTextView(tabLayout.getChildAt(0), true);
+        setTextView(tabLayout.getChildAt(1), false);
+        setTextView(tabLayout.getChildAt(2), false);
 
 
 
@@ -108,17 +128,19 @@ public class OnlineActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                tabLayout.getChildAt(selectedIndex).setLayoutParams(unselectedParams);
+//                tabLayout.getChildAt(selectedIndex).setLayoutParams(unselectedParams);
+                setTextView(tabLayout.getChildAt(selectedIndex), false);
                 selectedIndex = viewPager.getCurrentItem();
-                tabLayout.getChildAt(selectedIndex).setLayoutParams(selectedParams);
+                setTextView(tabLayout.getChildAt(selectedIndex), true);
+//                tabLayout.getChildAt(selectedIndex).setLayoutParams(selectedParams);
             }
         });
 
 
 
         // get all the data
-        userDoc.addSnapshotListener((documentSnapshot, error) -> {
-            if (error != null || documentSnapshot == null) {
+        userDoc.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot == null) {
                 MainActivity.backToMain(OnlineActivity.this); return;
             }
 
@@ -194,9 +216,11 @@ public class OnlineActivity extends AppCompatActivity {
             final int tmpIndex = i;
 
             child.setOnClickListener(v -> {
-                tabLayout.getChildAt(selectedIndex).setLayoutParams(unselectedParams);
+                setTextView(tabLayout.getChildAt(selectedIndex), false);
+//                tabLayout.getChildAt(selectedIndex).setLayoutParams(unselectedParams);
                 viewPager.setCurrentItem(tmpIndex);
-                child.setLayoutParams(selectedParams);
+                setTextView(child, true);
+//                child.setLayoutParams(selectedParams);
                 selectedIndex = tmpIndex;
             });
         }
@@ -216,7 +240,8 @@ public class OnlineActivity extends AppCompatActivity {
 
 
     /**
-     * For the viewpager. Each fragment has a recyclerview.
+     * Adapter for the viewpager.
+     * Each fragment has a recyclerview.
      */
     private static class ViewpagerAdapter extends PagerAdapter {
 
@@ -263,15 +288,15 @@ public class OnlineActivity extends AppCompatActivity {
 
 
     /**
-     * Adapter for the recycler view
+     * Adapter for the recycler view in the viewpager fragments.
      */
     public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder> {
 
-        private final List<PetUser> friendsUserList;
+        private final List<PetUser> userList;
         private final AdapterType adapterType;
 
-        public FriendAdapter(List<PetUser> friendsUserList, AdapterType adapterType) {
-            this.friendsUserList = friendsUserList;
+        public FriendAdapter(List<PetUser> userList, AdapterType adapterType) {
+            this.userList = userList;
             this.adapterType = adapterType;
         }
 
@@ -295,12 +320,12 @@ public class OnlineActivity extends AppCompatActivity {
         }
 
         public class FriendViewHolder extends ViewHolder {
-            Button visitButton;
-            ImageButton removeButton;
+            Button visitButton, removeButton;
 
             public FriendViewHolder(@NonNull View itemView) {
                 super(itemView);
                 visitButton = itemView.findViewById(R.id.friend_visit_button);
+                removeButton = itemView.findViewById(R.id.friend_item_remove_button);
             }
         }
 
@@ -348,8 +373,7 @@ public class OnlineActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NotNull FriendAdapter.ViewHolder holder, int position) {
-
-            holder.user = friendsUserList.get(position);
+            holder.user = userList.get(position);
             String personId = holder.user.getId();
             String tmp = OnlineActivity.this.getString(R.string.unlock_level, holder.user.getLevel())
                     + " " + holder.user.getName();
@@ -366,9 +390,21 @@ public class OnlineActivity extends AppCompatActivity {
                         OnlineActivity.this.startActivity(intent);
                         OnlineActivity.this.finish();
                     });
+
+                    friendViewHolder.removeButton.setOnClickListener(v -> {
+                        userData.document(currUserId).update("friendsList",
+                                FieldValue.arrayRemove(personId));
+                        userData.document(personId).update("friendsList",
+                                FieldValue.arrayRemove(currUserId));
+
+                        friendsUserList.remove(friendViewHolder.user);
+                        friendsAdapter.notifyDataSetChanged();
+                    });
+
                     break;
                 }
                 case RECEIVED: {
+                    holder.user.setExpanded();
                     ReceivedViewHolder receivedViewHolder = (ReceivedViewHolder) holder;
                     receivedViewHolder.acceptButton.setOnClickListener(v -> {
                         userData.document(currUserId).update("receivedRequests",
@@ -376,28 +412,44 @@ public class OnlineActivity extends AppCompatActivity {
                         userData.document(currUserId).update("friendsList",
                                 FieldValue.arrayUnion(personId));
 
-                        userData.document(personId).update("sentReqeusts",
+                        userData.document(personId).update("sentRequests",
                                 FieldValue.arrayRemove(currUserId));
                         userData.document(personId).update("friendsList",
                                 FieldValue.arrayUnion(currUserId));
+
+                        friendsUserList.add(receivedViewHolder.user);
+                        receivedUserList.remove(receivedViewHolder.user);
+                        friendsAdapter.notifyDataSetChanged();
+                        receivedAdapter.notifyDataSetChanged();
                     });
                     break;
                 }
                 case SENT: {
                     SentViewHolder sentViewHolder = (SentViewHolder) holder;
+                    sentViewHolder.unsendTextView.setOnClickListener(v -> {
+                        userData.document(currUserId).update("sentRequests",
+                                FieldValue.arrayRemove(personId));
+
+                        userData.document(personId).update("receivedRequests",
+                                FieldValue.arrayRemove(currUserId));
+
+                        sentUserList.remove(sentViewHolder.user);
+                        sentAdapter.notifyDataSetChanged();
+                    });
                     break;
                 }
             }
         }
 
         @Override
-        public int getItemCount() { return this.friendsUserList.size(); }
+        public int getItemCount() { return this.userList.size(); }
     }
 
 
 
     /**
      * Class for all the friends and requests.
+     * Used to retrieve data from Firestore.
      */
     private static final class CurrentUser {
 

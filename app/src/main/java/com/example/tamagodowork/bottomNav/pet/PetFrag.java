@@ -60,11 +60,11 @@ public class PetFrag extends Fragment {
                     }
                     case "Customisation": {
                         this.pet = snapshot.toObject(Pet.class);
-                        if (this.pet == null) {
-                            this.pet = Pet.defaultPet();
-                            ref.document("Customisation").set(pet);
-                        }
-                        this.petCanvas = new PetCanvas(main, pet);
+//                        if (this.pet == null) {
+//                            this.pet = Pet.defaultPet();
+//                            ref.document("Customisation").set(pet);
+//                        }
+//                        this.petCanvas = new PetCanvas(main, pet);
                         break;
                     }
                     case "Name": {
@@ -95,11 +95,18 @@ public class PetFrag extends Fragment {
         this.task.addOnCompleteListener(task -> {
             petName.setText(name);
 
+            if (this.pet == null) {
+                this.pet = Pet.defaultPet();
+                ref.document("Customisation").set(pet);
+            }
+            this.petCanvas = new PetCanvas(main, pet);
+
             if (petCanvas.getParent() != null) {
                 ((ViewGroup) petCanvas.getParent()).removeView(petCanvas);
             }
             relativeLayout.addView(petCanvas);
             petCanvas.setOnClickListener(v -> Log.e("pet", "PET TOUCHED"));
+
 
             if (wallpaper != null && wallpaper != -1) {
                 Drawable drawable;

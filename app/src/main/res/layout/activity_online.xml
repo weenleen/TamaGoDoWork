@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_rounded_shape_white"
-        android:text="Friends"
+        android:text="Social"
         android:textAlignment="center"
         android:textSize="25sp"
         android:padding="5dp"
@@ -30,13 +30,14 @@
             android:id="@+id/friend_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:showDividers="middle"
+            android:divider="@drawable/divider_empty">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginTop="15dp"
                 android:paddingVertical="5dp"
                 android:textSize="12sp"
                 android:text="Friends"
@@ -48,9 +49,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginTop="15dp"
                 android:paddingVertical="5dp"
-                android:layout_marginHorizontal="5dp"
                 android:textSize="12sp"
                 android:text="Requests"
                 android:textAlignment="center"
@@ -61,7 +60,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginTop="15dp"
                 android:paddingVertical="5dp"
                 android:textSize="12sp"
                 android:text="Sent"
@@ -75,8 +73,7 @@
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/friends_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="fill_parent"
             android:background="@drawable/bg_rounded_bottom"
             android:padding="20dp" />
     </LinearLayout>

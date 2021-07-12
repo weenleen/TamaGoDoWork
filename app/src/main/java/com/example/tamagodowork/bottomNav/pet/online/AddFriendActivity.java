@@ -62,8 +62,11 @@ public class AddFriendActivity extends AppCompatActivity {
 
         Button addFriendButton = findViewById(R.id.add_friend_button);
         addFriendButton.setOnClickListener(v -> {
-            if (friendUser == null || friendUser.getId() == null) {
+            if (friendUser == null) {
                 Toast.makeText(getApplicationContext(), "Failed to send Friend Request", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (friendUser.getId() == null) {
+                Toast.makeText(getApplicationContext(), "That's your own ID!", Toast.LENGTH_SHORT).show();
                 return;
             }
             userData.document(userId).update("sentRequests",

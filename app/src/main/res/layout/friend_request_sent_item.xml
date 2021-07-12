@@ -43,6 +43,8 @@
                     app:layout_constraintTop_toTopOf="parent"
                     android:text="UNSEND REQUEST"
                     android:textAlignment="center"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:background="?attr/selectableItemBackgroundBorderless"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

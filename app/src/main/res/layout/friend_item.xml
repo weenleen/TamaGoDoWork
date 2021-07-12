@@ -33,31 +33,26 @@
                 android:id="@+id/friend_expandable_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp">
+                android:layout_marginTop="15dp"
+                android:paddingHorizontal="50dp">
 
                 <Button
                     android:id="@+id/friend_visit_button"
                     style="@style/ButtonDarkStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
                     android:text="visit"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/friend_item_remove_button"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent" />
 
-                <ImageButton
+                <Button
                     android:id="@+id/friend_item_remove_button"
+                    style="@style/ButtonDarkStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="352dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:padding="3dp"
-                    android:src="@drawable/ic_baseline_close_24"
+                    android:text="remove"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
