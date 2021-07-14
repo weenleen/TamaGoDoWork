@@ -43,8 +43,23 @@ public class DeleteAccountAct extends AppCompatActivity {
                 public void onComplete(@NonNull @NotNull Task<Void> task) {
                     if (task.isSuccessful()) {
                         String USER_ID = FirebaseAuth.getInstance().getUid();
-                        DocumentReference toDoes = MainActivity.userDoc.collection("Todos").document(USER_ID);
-                        DocumentReference pet = MainActivity.userDoc.collection("Pet").document(USER_ID);
+                        CollectionReference toDoes = MainActivity.userDoc.collection("Todos");
+                        CollectionReference pet = MainActivity.userDoc.collection("Pet");
+
+                        toDoes.get().then(querySnapshot => {
+                            querySnapshot.docs.forEach(snapshot => {
+                                snapshot.ref.delete();
+                            })
+                         })
+
+                         pet.get().then(querySnapshot => {
+                            querySnapshot.docs.forEach(snapshot => {
+                                snapshot.ref.delete();
+                            })
+                         })
+
+
+
 
                         Toast.makeText(DeleteAccountAct.this,"Account Deleted Successfully",Toast.LENGTH_SHORT).show();
                         // Upon Successful Deletion, redirect the user to the register page
