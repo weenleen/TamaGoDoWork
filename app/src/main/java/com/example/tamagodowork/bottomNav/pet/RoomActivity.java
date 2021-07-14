@@ -91,7 +91,7 @@ public class RoomActivity extends AppCompatActivity {
      */
     private void loadWallpapers() {
         wallpapers = new int[] {
-                -1,
+                R.drawable.wallpaper_default,
                 R.drawable.wallpaper_space,
                 R.drawable.wallpaper_snow,
                 R.drawable.wallpaper_desert,
