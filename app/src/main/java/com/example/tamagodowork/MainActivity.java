@@ -1,6 +1,6 @@
 package com.example.tamagodowork;
 
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -11,7 +11,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -138,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Tap Target Prompt - function will call a sequence of tap target prompts
-         //showFabPrompt();
+        showFabPrompt();
     }
 
     /* fab prompt */
