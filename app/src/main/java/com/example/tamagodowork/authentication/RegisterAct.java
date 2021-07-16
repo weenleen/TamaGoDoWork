@@ -85,7 +85,7 @@ public class RegisterAct extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "User Registered", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(RegisterAct.this, LoginAct.class));
                     })
-                    .addOnFailureListener(e -> Toast.makeText(RegisterAct.this, "Registration failed", Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> Toast.makeText(RegisterAct.this, e.getMessage(), Toast.LENGTH_SHORT).show());
         });
 
         loginLink = findViewById(R.id.login_link);
