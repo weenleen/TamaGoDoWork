@@ -10,10 +10,8 @@ import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -28,13 +26,17 @@ import com.example.tamagodowork.bottomNav.todoList.TodoListFrag;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 
+import java.util.HashMap;
+import java.util.Map;
 
 import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetSequence;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -141,98 +143,115 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* fab prompt */
+    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    CollectionReference userData = FirebaseFirestore.getInstance().collection("Users");
 
     private void showFabPrompt() {
-        SharedPreferences prefManager = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefManager.getBoolean("didShowPrompt", false)) {
-            new MaterialTapTargetSequence();
-            new MaterialTapTargetPrompt.Builder(MainActivity.this)
-                    .setTarget(fab)
-                    .setPrimaryText("Input your first to do")
-                    .setSecondaryText("Tap the button to create your first task")
-                    .setBackButtonDismissEnabled(true)
-                    .setBackgroundColour(getResources().getColor(R.color.peach))
-                    .setPromptStateChangeListener( (prompt, state) -> {
-                            // if we pressed right into the empty spot
-                            if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-                                // sets the key to true after first launch
-                                SharedPreferences.Editor prefEditor = prefManager.edit();
-                                prefEditor.putBoolean("didShowPrompt", true);
-                                prefEditor.apply();
-                            }
-                        }).show();
-        } else {
-            showSchedule();
-        }
+        userData.document(userId).get().addOnSuccessListener(doc -> {
+            if (doc.exists()) {
+                if (doc.getBoolean("didShowPrompt") == null) {
+                    new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                            .setTarget(fab)
+                            .setPrimaryText("Input your first to do")
+                            .setSecondaryText("Tap the button to create your first task")
+                            .setBackButtonDismissEnabled(true)
+                            .setBackgroundColour(getResources().getColor(R.color.peach))
+                            .setPromptStateChangeListener((prompt, state) -> {
+                                // if we pressed right into the empty spot
+                                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+                                    // sets the key to true after first launch
+                                    Map<String, Boolean> data = new HashMap<>();
+                                    data.put("didShowPrompt", true);
+                                    userData.document(userId).set(data, SetOptions.merge());
+                                }
+                            }).show();
+                } else {
+                    showToDo();
+                }
+            }
+        });
     }
 
+    private void showToDo() {
+        userData.document(userId).get().addOnSuccessListener(doc -> {
+            if (doc.exists()) {
+                if (doc.getBoolean("didShowToDoPrompt") == null) {
+                    new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                            .setTarget(R.id.navigation_todoList)
+                            .setPrimaryText("View your ToDos for the first time!")
+                            .setSecondaryText("Tap the button to view your ToDos.")
+                            .setBackButtonDismissEnabled(true)
+                            .setBackgroundColour(getResources().getColor(R.color.peach))
+                            .setPromptStateChangeListener((prompt, state) -> {
+                                // if we pressed right into the empty spot
+                                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED) {
+                                    // sets the key to true after first launch
+                                    Map<String, Boolean> data = new HashMap<>();
+                                    data.put("didShowToDoPrompt", true);
+                                    userData.document(userId).set(data, SetOptions.merge());
+                                }
+                            }).show();
+                } else {
+                    showSchedule();
+                }
+            }
+        });
+    }
+
+
+
+
     private void showSchedule() {
-        SharedPreferences prefManager = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefManager.getBoolean("didShowSchedulePrompt", false)) {
-            new MaterialTapTargetPrompt.Builder(MainActivity.this)
-                    .setTarget(R.id.navigation_schedule)
-                    .setPrimaryText("View your schedule for the first time!")
-                    .setSecondaryText("Tap the button to view your schedule!")
-                    .setBackButtonDismissEnabled(true)
-                    .setBackgroundColour(getResources().getColor(R.color.peach))
-                    .setPromptStateChangeListener((prompt, state) -> {
-                        // if we pressed right into the empty spot
-                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-                            // sets the key to true after first launch
-                            SharedPreferences.Editor prefEditor = prefManager.edit();
-                            prefEditor.putBoolean("didShowSchedulePrompt", true);
-                            prefEditor.apply();
-                        }
-                    }).show();
-        } else {
-            showPet();
-        }
+        userData.document(userId).get().addOnSuccessListener(doc -> {
+            if (doc.exists()) {
+                if (doc.getBoolean("didShowSchedulePrompt") == null) {
+                    new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                            .setTarget(R.id.navigation_schedule)
+                            .setPrimaryText("View your schedule for the first time!")
+                            .setSecondaryText("Tap the button to view your schedule.")
+                            .setBackButtonDismissEnabled(true)
+                            .setBackgroundColour(getResources().getColor(R.color.peach))
+                            .setPromptStateChangeListener((prompt, state) -> {
+                                // if we pressed right into the empty spot
+                                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED) {
+                                    // sets the key to true after first launch
+                                    Map<String, Boolean> data = new HashMap<>();
+                                    data.put("didShowSchedulePrompt", true);
+                                    userData.document(userId).set(data, SetOptions.merge());
+                                }
+                            }).show();
+                } else {
+                    showPet();
+                }
+            }
+        });
     }
 
     private void showPet() {
-        SharedPreferences prefManager = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefManager.getBoolean("didShowPetPrompt", false)) {
-            new MaterialTapTargetPrompt.Builder(MainActivity.this)
-                    .setTarget(R.id.navigation_pet)
-                    .setPrimaryText("View your pet for the first time!")
-                    .setSecondaryText("Tap the button to view your pet!")
-                    .setBackButtonDismissEnabled(true)
-                    .setBackgroundColour(getResources().getColor(R.color.peach))
-                    .setPromptStateChangeListener((prompt, state) -> {
-                        // if we pressed right into the empty spot
-                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-                            // sets the key to true after first launch
-                            SharedPreferences.Editor prefEditor = prefManager.edit();
-                            prefEditor.putBoolean("didShowPetPrompt", true);
-                            prefEditor.apply();
-                        }
-                    }).show();
-        } else {
-            showToDo();
-        }
+        userData.document(userId).get().addOnSuccessListener(doc -> {
+            if (doc.exists()) {
+                if (doc.getBoolean("didShowPetPrompt") == null) {
+                    new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                            .setTarget(R.id.navigation_pet)
+                            .setPrimaryText("View your pet for the first time!")
+                            .setSecondaryText("Tap the button to view your pet.")
+                            .setBackButtonDismissEnabled(true)
+                            .setBackgroundColour(getResources().getColor(R.color.peach))
+                            .setPromptStateChangeListener((prompt, state) -> {
+                                // if we pressed right into the empty spot
+                                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED) {
+                                    // sets the key to true after first launch
+                                    Map<String, Boolean> data = new HashMap<>();
+                                    data.put("didShowPetPrompt", true);
+                                    userData.document(userId).set(data, SetOptions.merge());
+                                }
+                            }).show();
+                }
+            }
+        });
     }
 
 
-    private void showToDo() {
-        SharedPreferences prefManager = PreferenceManager.getDefaultSharedPreferences(this);
-        if (!prefManager.getBoolean("didShowTaskPrompt", false)) {
-            new MaterialTapTargetPrompt.Builder(MainActivity.this)
-                    .setTarget(R.id.navigation_todoList)
-                    .setPrimaryText("View your todoList for the first time!")
-                    .setSecondaryText("Tap the button to view your todoes!")
-                    .setBackButtonDismissEnabled(true)
-                    .setBackgroundColour(getResources().getColor(R.color.peach))
-                    .setPromptStateChangeListener((prompt, state) -> {
-                        // if we pressed right into the empty spot
-                        if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-                            // sets the key to true after first launch
-                            SharedPreferences.Editor prefEditor = prefManager.edit();
-                            prefEditor.putBoolean("didShowTaskPrompt", true);
-                            prefEditor.apply();
-                        }
-                    }).show();
-        }
-    }
 
 
 
