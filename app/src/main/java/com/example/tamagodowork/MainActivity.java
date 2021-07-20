@@ -173,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showToDo() {
-        boolean show = false;
         userData.document(userId).get().addOnSuccessListener(doc -> {
             if (doc.exists()) {
                 if (doc.getBoolean("didShowToDoPrompt") == null) {
