@@ -173,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showToDo() {
+        boolean show = false;
         userData.document(userId).get().addOnSuccessListener(doc -> {
             if (doc.exists()) {
                 if (doc.getBoolean("didShowToDoPrompt") == null) {
@@ -189,10 +190,9 @@ public class MainActivity extends AppCompatActivity {
                                     Map<String, Boolean> data = new HashMap<>();
                                     data.put("didShowToDoPrompt", true);
                                     userData.document(userId).set(data, SetOptions.merge());
+                                    showSchedule();
                                 }
                             }).show();
-                } else {
-                    showSchedule();
                 }
             }
         });
@@ -218,10 +218,9 @@ public class MainActivity extends AppCompatActivity {
                                     Map<String, Boolean> data = new HashMap<>();
                                     data.put("didShowSchedulePrompt", true);
                                     userData.document(userId).set(data, SetOptions.merge());
+                                    showPet();
                                 }
                             }).show();
-                } else {
-                    showPet();
                 }
             }
         });
