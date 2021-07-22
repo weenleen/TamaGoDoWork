@@ -146,7 +146,9 @@ public class MainActivity extends AppCompatActivity {
     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
     CollectionReference userData = FirebaseFirestore.getInstance().collection("Users");
 
+
     private void showFabPrompt() {
+        if (userId == null) return;
         userData.document(userId).get().addOnSuccessListener(doc -> {
             if (doc.exists()) {
                 if (doc.getBoolean("didShowPrompt") == null) {
@@ -166,11 +168,39 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }).show();
                 } else {
+                    showSettings();
+                }
+            }
+        });
+    }
+
+
+    private void showSettings() {
+        userData.document(userId).get().addOnSuccessListener(doc -> {
+            if (doc.exists()) {
+                if (doc.getBoolean("didShowSettingsPrompt") == null) {
+                    new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                            .setTarget(R.id.settings_icon)
+                            .setPrimaryText("View the settings page!")
+                            .setSecondaryText("Click here to view the settings page!")
+                            .setBackButtonDismissEnabled(true)
+                            .setBackgroundColour(getResources().getColor(R.color.peach))
+                            .setPromptStateChangeListener((prompt, state) -> {
+                                // if we pressed right into the empty spot
+                                if (state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED || state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED) {
+                                    // sets the key to true after first launch
+                                    Map<String, Boolean> data = new HashMap<>();
+                                    data.put("didShowSettingsPrompt", true);
+                                    userData.document(userId).set(data, SetOptions.merge());
+                                }
+                            }).show();
+                } else {
                     showToDo();
                 }
             }
         });
     }
+
 
     private void showToDo() {
         userData.document(userId).get().addOnSuccessListener(doc -> {

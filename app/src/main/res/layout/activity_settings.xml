@@ -14,12 +14,29 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Settings"
+        android:text="@string/settings"
         android:textSize="30sp"
         android:textColor="@color/peach"
         android:gravity="center"
         android:layout_marginBottom="30dp">
     </TextView>
+
+
+    <Button
+        android:id="@+id/btn_delete"
+        style="@style/ButtonDarkStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/peach"
+        android:text="@string/action_delete" />
+
+    <Button
+        android:id="@+id/btn_reset"
+        style="@style/ButtonDarkStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/peach"
+        android:text="@string/reset_pet" />
 
     <Button
         android:id="@+id/change_pet_name"
@@ -28,14 +45,6 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/peach"
         android:text="@string/pet_name" />
-
-    <Button
-        android:id="@+id/btn_reset"
-        style="@style/ButtonDarkStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/peach"
-        android:text="Reset Pet" />
 
     <Button
         android:id="@+id/change_pwd"
@@ -53,13 +62,6 @@
         android:backgroundTint="@color/peach"
         android:text="@string/action_logout" />
 
-    <Button
-        android:id="@+id/btn_delete"
-        style="@style/ButtonDarkStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/peach"
-        android:text="@string/action_delete" />
 
     <Button
         android:id="@+id/btn_back"
@@ -67,6 +69,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:backgroundTint="@color/off_white"
-        android:text="back"
+        android:text="@string/back"
         android:textColor="@color/peach" />
 </LinearLayout>

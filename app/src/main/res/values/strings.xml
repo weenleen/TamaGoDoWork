@@ -18,6 +18,7 @@
     <string name="pet_name">"Edit your pet name"</string>
     <string name="room">"Room"</string>
     <string name="Customise">"Customise"</string>
+    <string name="reset_pet">"Reset your pet!"</string>
 
     <string name="level">Level %1$d</string>
     <string name="unlock_level">LV %1$d</string>
@@ -38,6 +39,8 @@
     <string name="description">Description</string>
 
     <string name="overdue">Overdue</string>
+    <string name="back">Back</string>
+    <string name="settings">Settings</string>
 
     <string name="reminders">Reminders</string>
     <string name="colorPicker">Choose a Colour:</string>
