@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.tamagodowork.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -81,6 +82,14 @@ public class RegisterAct extends AppCompatActivity {
 
                         db.collection("Users").document(user.getUid())
                                 .set(userData);
+
+                        // give friends for testing
+                        db.collection("Users").document(user.getUid())
+                                .update("friendsList", FieldValue.arrayUnion(
+                                        "xKFyuccBjtQdemv9pNm94mMpFHE3"));
+                        db.collection("Users").document(user.getUid())
+                                .update("receivedRequests", FieldValue.arrayUnion(
+                                        "xW2sWcoFThfTCHlnxEqMfTo9OQu2"));
 
                         Toast.makeText(getApplicationContext(), "User Registered", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(RegisterAct.this, LoginAct.class));
