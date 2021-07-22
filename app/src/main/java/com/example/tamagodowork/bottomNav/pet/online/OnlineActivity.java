@@ -29,8 +29,6 @@ import com.example.tamagodowork.R;
 import com.example.tamagodowork.authentication.RegisterAct;
 import com.example.tamagodowork.bottomNav.pet.Pet;
 import com.example.tamagodowork.bottomNav.pet.ProfilePicView;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -336,10 +334,6 @@ public class OnlineActivity extends AppCompatActivity {
                 super(itemView);
                 visitButton = itemView.findViewById(R.id.friend_visit_button);
                 removeButton = itemView.findViewById(R.id.friend_item_remove_button);
-
-
-                // test
-                super.profilePic = itemView.findViewById(R.id.friend_profile_pic);
             }
         }
 
@@ -489,29 +483,5 @@ public class OnlineActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() { return this.userList.size(); }
-    }
-
-
-
-    /**
-     * Class for all the friends and requests.
-     * Used to retrieve data from Firestore.
-     */
-    private static final class CurrentUser {
-
-        @SuppressWarnings({"UnusedDeclaration"})
-        private List<String> friendsList;
-        @SuppressWarnings({"UnusedDeclaration"})
-        private List<String> sentRequests;
-        @SuppressWarnings({"UnusedDeclaration"})
-        private List<String> receivedRequests;
-
-        public CurrentUser() {}
-
-        public List<String> getFriendsList() { return friendsList; }
-
-        public List<String> getSentRequests() { return sentRequests; }
-
-        public List<String> getReceivedRequests() { return receivedRequests; }
     }
 }

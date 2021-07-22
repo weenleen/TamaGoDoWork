@@ -1,42 +1,35 @@
 package com.example.tamagodowork.bottomNav.pet.online;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.authentication.RegisterAct;
-import com.example.tamagodowork.bottomNav.pet.Pet;
-import com.example.tamagodowork.bottomNav.pet.PetCanvas;
 import com.example.tamagodowork.bottomNav.pet.ProfilePicView;
-import com.google.android.material.imageview.ShapeableImageView;
-import com.google.android.material.shape.CornerFamily;
-import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 
 public class AddFriendActivity extends AppCompatActivity {
 
     private PetUser friendUser;
-    private Pet friendPet;
-    private PetCanvas petCanvas;
+    private CurrentUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +45,17 @@ public class AddFriendActivity extends AppCompatActivity {
         String userId = firebaseAuth.getCurrentUser().getUid();
         CollectionReference userData = FirebaseFirestore.getInstance().collection("Users");
 
+        userData.document(userId).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot == null) {
+                MainActivity.backToMain(AddFriendActivity.this);
+                return;
+            }
+
+            this.currentUser = documentSnapshot.toObject(CurrentUser.class);
+        });
 
 
+        // user's code id
         TextView userFriendCode = findViewById(R.id.user_friend_code);
         userFriendCode.setText(userId);
 
@@ -65,25 +67,15 @@ public class AddFriendActivity extends AppCompatActivity {
         });
 
 
-        RelativeLayout petArea = findViewById(R.id.friend_pet_area);
 
 
-        Button addFriendButton = findViewById(R.id.add_friend_button);
-        addFriendButton.setOnClickListener(v -> {
-            if (friendUser == null) {
-                Toast.makeText(getApplicationContext(), "Failed to send Friend Request", Toast.LENGTH_SHORT).show();
-                return;
-            } else if (friendUser.getId() == null) {
-                Toast.makeText(getApplicationContext(), "That's your own ID!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            userData.document(userId).update("sentRequests",
-                    FieldValue.arrayUnion(friendUser.getId()));
-            userData.document(friendUser.getId()).update("receivedRequests",
-                    FieldValue.arrayUnion(userId));
-            Toast.makeText(getApplicationContext(), "Friend Request Sent!", Toast.LENGTH_SHORT).show();
-        });
-        addFriendButton.setVisibility(View.GONE);
+        LinearLayout friendLayout = findViewById(R.id.add_friend_layout);
+        friendLayout.setVisibility(View.GONE);
+
+        TextView friendNameText = findViewById(R.id.add_friend_name);
+        TextView friendLevelText = findViewById(R.id.add_friend_level);
+        RelativeLayout profilePic = findViewById(R.id.add_friend_profile_pic);
+        Button addFriendBtn = findViewById(R.id.add_friend_button);
 
 
         EditText searchFriendCodeText = findViewById(R.id.friend_code_edit_text);
@@ -94,10 +86,9 @@ public class AddFriendActivity extends AppCompatActivity {
 
             userData.document(code).get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot == null || !documentSnapshot.exists()) {
-                    addFriendButton.setVisibility(View.GONE);
-                    friendPet = null;
+                    friendLayout.setVisibility(View.GONE);
                     friendUser = null;
-                    petArea.removeAllViews();
+                    Toast.makeText(getApplicationContext(), "User not found :(", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -107,26 +98,41 @@ public class AddFriendActivity extends AppCompatActivity {
                         documentSnapshot.get("XP", Integer.class),
                         userData.document(code));
 
-                addFriendButton.setText(getString(R.string.friend_request_button, friendUser.getName()));
-                addFriendButton.setVisibility(View.VISIBLE);
-            });
+                friendLayout.setVisibility(View.VISIBLE);
 
-
-            DocumentReference ref = userData.document(code).collection("Pet").document("Customisation");
-            ref.get().addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot == null || !documentSnapshot.exists()) return;
-                friendPet = documentSnapshot.toObject(Pet.class);
-
-                if (friendPet == null) {
-                    friendPet = Pet.defaultPet();
-                    ref.set(friendPet);
+                if (currentUser.getFriendsList().contains(code)) {
+                    addFriendBtn.setText(getString(R.string.already_friend, friendUser.getName()));
+                    addFriendBtn.setClickable(false);
+                } else if (currentUser.getSentRequests().contains(code)) {
+                    addFriendBtn.setText(getString(R.string.friend_request_sent));
+                    addFriendBtn.setClickable(false);
+                } else {
+                    addFriendBtn.setText(getString(R.string.friend_request_button));
+                    addFriendBtn.setClickable(true);
                 }
-//                petCanvas = new PetCanvas(AddFriendActivity.this, friendPet);
-                ProfilePicView picView = new ProfilePicView(AddFriendActivity.this, friendPet);
-                petArea.addView(picView);
+
+                friendNameText.setText(friendUser.getName());
+                friendLevelText.setText(getString(R.string.level, friendUser.getLevel()));
+
+                friendUser.getTask().addOnCompleteListener(task -> {
+                    ProfilePicView pfp = new ProfilePicView(AddFriendActivity.this, friendUser.getPet());
+                    profilePic.addView(pfp);
+                });
             });
+
         });
 
+
+        addFriendBtn.setOnClickListener(v -> {
+            userData.document(userId).update("sentRequests",
+                    FieldValue.arrayUnion(friendUser.getId()));
+            userData.document(friendUser.getId()).update("receivedRequests",
+                    FieldValue.arrayUnion(userId));
+            currentUser.getSentRequests().add(friendUser.getId());
+            addFriendBtn.setText(getString(R.string.friend_request_sent));
+            addFriendBtn.setClickable(false);
+            Toast.makeText(getApplicationContext(), "Friend Request Sent!", Toast.LENGTH_SHORT).show();
+        });
 
 
         Button cancelButton = findViewById(R.id.friend_back_button);

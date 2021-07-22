@@ -45,5 +45,7 @@
     <string name="reminders">Reminders</string>
     <string name="colorPicker">Choose a Colour:</string>
 
-    <string name="friend_request_button">Send %1$s a Friend Request!</string>
+    <string name="friend_request_button">Send a Friend Request!</string>
+    <string name="already_friend">%1$s is already your friend!</string>
+    <string name="friend_request_sent">Friend Request Sent!</string>
 </resources>
