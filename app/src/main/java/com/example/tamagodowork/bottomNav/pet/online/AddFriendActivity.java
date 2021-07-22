@@ -1,16 +1,19 @@
 package com.example.tamagodowork.bottomNav.pet.online;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +22,10 @@ import com.example.tamagodowork.R;
 import com.example.tamagodowork.authentication.RegisterAct;
 import com.example.tamagodowork.bottomNav.pet.Pet;
 import com.example.tamagodowork.bottomNav.pet.PetCanvas;
+import com.example.tamagodowork.bottomNav.pet.ProfilePicView;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.shape.CornerFamily;
+import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -27,9 +34,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AddFriendActivity extends AppCompatActivity {
 
-    PetUser friendUser;
-    Pet friendPet;
-    PetCanvas petCanvas;
+    private PetUser friendUser;
+    private Pet friendPet;
+    private PetCanvas petCanvas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +51,7 @@ public class AddFriendActivity extends AppCompatActivity {
         }
         String userId = firebaseAuth.getCurrentUser().getUid();
         CollectionReference userData = FirebaseFirestore.getInstance().collection("Users");
+
 
 
         TextView userFriendCode = findViewById(R.id.user_friend_code);
@@ -96,7 +104,8 @@ public class AddFriendActivity extends AppCompatActivity {
                 friendUser = new PetUser(
                         code,
                         documentSnapshot.get("Name", String.class),
-                        documentSnapshot.get("XP", Integer.class));
+                        documentSnapshot.get("XP", Integer.class),
+                        userData.document(code));
 
                 addFriendButton.setText(getString(R.string.friend_request_button, friendUser.getName()));
                 addFriendButton.setVisibility(View.VISIBLE);
@@ -112,8 +121,9 @@ public class AddFriendActivity extends AppCompatActivity {
                     friendPet = Pet.defaultPet();
                     ref.set(friendPet);
                 }
-                petCanvas = new PetCanvas(AddFriendActivity.this, friendPet);
-                petArea.addView(petCanvas);
+//                petCanvas = new PetCanvas(AddFriendActivity.this, friendPet);
+                ProfilePicView picView = new ProfilePicView(AddFriendActivity.this, friendPet);
+                petArea.addView(picView);
             });
         });
 

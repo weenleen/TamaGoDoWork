@@ -23,4 +23,9 @@
         <item name="android:textAlignment">center</item>
         <item name="background">@drawable/bg_dial_rounded</item>
     </style>
+
+    <style name="roundedImageViewRounded">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

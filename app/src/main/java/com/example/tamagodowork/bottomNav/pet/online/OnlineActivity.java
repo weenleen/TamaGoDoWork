@@ -21,11 +21,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.authentication.RegisterAct;
+import com.example.tamagodowork.bottomNav.pet.Pet;
+import com.example.tamagodowork.bottomNav.pet.ProfilePicView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -169,7 +174,8 @@ public class OnlineActivity extends AppCompatActivity {
                     friendsTaskList.add(userData.document(key).get().addOnSuccessListener(documentSnapshot1 ->
                             friendsUserList.add(new PetUser(key,
                                     documentSnapshot1.get("Name", String.class),
-                                    documentSnapshot1.get("XP", Integer.class)))));
+                                    documentSnapshot1.get("XP", Integer.class),
+                                    userData.document(key)))));
                 }
 
                 viewpagerTaskList.add(Tasks.whenAllComplete(friendsTaskList).addOnCompleteListener(task ->{
@@ -186,7 +192,8 @@ public class OnlineActivity extends AppCompatActivity {
                     receivedTaskList.add(userData.document(key).get().addOnSuccessListener(documentSnapshot1 ->
                             receivedUserList.add(new PetUser(key,
                                     documentSnapshot1.get("Name", String.class),
-                                    documentSnapshot1.get("XP", Integer.class)))));
+                                    documentSnapshot1.get("XP", Integer.class),
+                                    userData.document(key)))));
                 }
 
                 viewpagerTaskList.add(Tasks.whenAll(receivedTaskList).addOnCompleteListener(task ->{
@@ -203,7 +210,8 @@ public class OnlineActivity extends AppCompatActivity {
                     sentTaskList.add(userData.document(key).get().addOnSuccessListener(documentSnapshot1 ->
                             sentUserList.add(new PetUser(key,
                                     documentSnapshot1.get("Name", String.class),
-                                    documentSnapshot1.get("XP", Integer.class)))));
+                                    documentSnapshot1.get("XP", Integer.class),
+                                    userData.document(key)))));
                 }
 
                 viewpagerTaskList.add(Tasks.whenAll(sentTaskList).addOnCompleteListener(task -> {
@@ -223,13 +231,6 @@ public class OnlineActivity extends AppCompatActivity {
                 viewPager.setAdapter(viewpagerAdapter);
             });
         });
-
-
-
-
-
-
-
 
 
         Button findFriendsButton = findViewById(R.id.online_find_friends);
@@ -307,8 +308,10 @@ public class OnlineActivity extends AppCompatActivity {
         public class ViewHolder extends RecyclerView.ViewHolder {
             TextView nameTextView;
             PetUser user;
+            Pet pet;
             ImageButton expandButton;
             ConstraintLayout expandableLayout;
+            RelativeLayout profilePic;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -316,6 +319,7 @@ public class OnlineActivity extends AppCompatActivity {
                 expandButton = itemView.findViewById(R.id.friend_expand_button);
                 expandableLayout = itemView.findViewById(R.id.friend_expandable_layout);
                 expandableLayout.setVisibility(View.GONE);
+                profilePic = itemView.findViewById(R.id.friend_profile_pic);
 
                 expandButton.setOnClickListener(v -> {
                     if (user == null) return;
@@ -332,6 +336,10 @@ public class OnlineActivity extends AppCompatActivity {
                 super(itemView);
                 visitButton = itemView.findViewById(R.id.friend_visit_button);
                 removeButton = itemView.findViewById(R.id.friend_item_remove_button);
+
+
+                // test
+                super.profilePic = itemView.findViewById(R.id.friend_profile_pic);
             }
         }
 
@@ -380,6 +388,30 @@ public class OnlineActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NotNull FriendAdapter.ViewHolder holder, int position) {
             holder.user = userList.get(position);
+
+            Pet pet = holder.user.getPet();
+            if (pet == null) {
+                holder.user.getTask().addOnCompleteListener(task -> {
+                    ProfilePicView pfp = new ProfilePicView(OnlineActivity.this, holder.user.getPet());
+                    holder.profilePic.addView(pfp);
+                });
+            } else {
+                ProfilePicView pfp = new ProfilePicView(OnlineActivity.this, pet);
+                holder.profilePic.addView(pfp);
+            }
+
+            DocumentReference tmpRef = userData.document(holder.user.getId()).collection("Pet").document("Customisation");
+            tmpRef.get().addOnSuccessListener(documentSnapshot -> {
+                holder.pet = documentSnapshot.toObject(Pet.class);
+                if (holder.pet == null) {
+                    holder.pet = Pet.defaultPet();
+                    tmpRef.set(holder.pet);
+                }
+                holder.profilePic.addView(new ProfilePicView(OnlineActivity.this, holder.pet));
+            });
+
+
+
             String personId = holder.user.getId();
             String tmp = OnlineActivity.this.getString(R.string.unlock_level, holder.user.getLevel())
                     + " " + holder.user.getName();

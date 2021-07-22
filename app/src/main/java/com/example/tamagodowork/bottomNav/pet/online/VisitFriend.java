@@ -56,7 +56,8 @@ public class VisitFriend extends AppCompatActivity {
         userRef.get().addOnSuccessListener(documentSnapshot -> {
             user = new PetUser(userId,
                     documentSnapshot.get("Name", String.class),
-                    documentSnapshot.get("XP", Integer.class));
+                    documentSnapshot.get("XP", Integer.class),
+                    userRef);
 
             userNameTextView.setText(user.getName());
             levelTextView.setText(getString(R.string.level, user.getLevel()));
