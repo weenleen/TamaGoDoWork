@@ -39,12 +39,12 @@
         android:text="@string/reset_pet" />
 
     <Button
-        android:id="@+id/change_pet_name"
+        android:id="@+id/change_user_name"
         style="@style/ButtonDarkStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/peach"
-        android:text="@string/pet_name" />
+        android:text="@string/user_name" />
 
     <Button
         android:id="@+id/change_pwd"

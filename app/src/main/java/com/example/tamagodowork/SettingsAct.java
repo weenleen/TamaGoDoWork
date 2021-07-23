@@ -44,7 +44,7 @@ public class SettingsAct extends AppCompatActivity {
 
 
         //change pet name button
-        Button changeNameBtn = findViewById(R.id.change_pet_name);
+        Button changeNameBtn = findViewById(R.id.change_user_name);
         changeNameBtn.setOnClickListener(v -> {
             startActivity(new Intent(SettingsAct.this, ChangeName.class));
             finish();

@@ -15,7 +15,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
 
-    <string name="pet_name">"Edit your pet name"</string>
+    <string name="user_name">"Edit your name"</string>
     <string name="room">"Room"</string>
     <string name="Customise">"Customise"</string>
     <string name="reset_pet">"Reset your pet!"</string>

@@ -1,6 +1,5 @@
 package com.example.tamagodowork.misc;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
@@ -11,8 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
-import com.example.tamagodowork.SettingsAct;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
 
@@ -23,18 +23,19 @@ public class ChangeName extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_name);
         // edit pet name
-        EditText editPetName = findViewById(R.id.edit_pet_name);
+        EditText editUserName = findViewById(R.id.edit_user_name);
         Button saveChanges = findViewById(R.id.name_save_button);
         Button cancelChanges = findViewById(R.id.cancel_name_button);
-        saveChanges.setOnClickListener(v -> saveName(editPetName));
+        saveChanges.setOnClickListener(v -> saveName(editUserName));
         cancelChanges.setOnClickListener(v -> goBack());
     }
 
-    public void saveName(EditText editPetName) {
-        DocumentReference ref = MainActivity.userDoc.collection("Pet").document("Name");
-        String name = editPetName.getText().toString();
+    public void saveName(EditText editUserName) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DocumentReference userData = FirebaseFirestore.getInstance().collection("Users").document(userId);
+        String name = editUserName.getText().toString();
         if (!TextUtils.isEmpty(name)) {
-            ref.set(Map.of("name", name));
+            userData.set(Map.of("Name", name));
         }
         goBack();
     }
