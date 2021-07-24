@@ -35,7 +35,7 @@ public class ChangeName extends AppCompatActivity{
         DocumentReference userData = FirebaseFirestore.getInstance().collection("Users").document(userId);
         String name = editUserName.getText().toString();
         if (!TextUtils.isEmpty(name)) {
-            userData.set(Map.of("Name", name));
+            userData.update(Map.of("Name", name));
         }
         goBack();
     }
