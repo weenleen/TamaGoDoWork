@@ -11,15 +11,31 @@
     android:paddingRight="30dp"
     android:orientation="vertical" >
 
+    <RelativeLayout
+        android:id="@+id/settings_profile_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_gravity="center"/>
+
     <TextView
+        android:id="@+id/settings_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/settings"
-        android:textSize="30sp"
-        android:textColor="@color/peach"
-        android:gravity="center"
-        android:layout_marginBottom="30dp">
-    </TextView>
+        android:layout_marginBottom="30dp"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:maxLines="1"
+        android:textColor="@color/peach"/>
+
+    <Button
+        android:id="@+id/change_pet_name"
+        style="@style/ButtonDarkStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/peach"
+        android:text="Edit Name" />
 
 
     <Button
@@ -38,13 +54,7 @@
         android:backgroundTint="@color/peach"
         android:text="@string/reset_pet" />
 
-    <Button
-        android:id="@+id/change_pet_name"
-        style="@style/ButtonDarkStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/peach"
-        android:text="@string/pet_name" />
+
 
     <Button
         android:id="@+id/change_pwd"
