@@ -84,11 +84,9 @@ public class PetFrag extends Fragment {
 
         //  getting data
         ImageView wallpaperBG = view.findViewById(R.id.pet_frag_wallpaper);
-        TextView petName = view.findViewById(R.id.pet_name);
         RelativeLayout relativeLayout = view.findViewById(R.id.pet_area);
 
         this.task.addOnCompleteListener(task -> {
-            petName.setText(name);
 
             if (this.pet == null) {
                 this.pet = Pet.defaultPet();

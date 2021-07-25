@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int xp;
     public ProgressBar xpBar;
-    private TextView levelView;
+    private TextView levelView, userName;
     private FloatingActionButton fab;
 
     private int selectedFrag;
@@ -94,6 +94,20 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, AddTodoActivity.class));
             finish();
         });
+
+        //user's name
+        userName = findViewById(R.id.user_name);
+        CollectionReference userData = FirebaseFirestore.getInstance().collection("Users");
+        userData.document(userId).get().addOnSuccessListener(doc -> {
+            if (doc.exists()) {
+                if (doc.getString("Name") != null) {
+                    userName.setText(doc.getString("Name"));
+                }
+            }
+        });
+
+
+
 
 
         // NAVIGATION
