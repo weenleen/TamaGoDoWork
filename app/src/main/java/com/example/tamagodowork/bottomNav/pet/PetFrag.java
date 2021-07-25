@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,7 +32,6 @@ import java.util.List;
 public class PetFrag extends Fragment {
 
     private Integer wallpaper;
-    private String name;
     private final MainActivity main;
     private final CollectionReference ref;
 
@@ -60,14 +58,6 @@ public class PetFrag extends Fragment {
                     }
                     case "Customisation": {
                         this.pet = snapshot.toObject(Pet.class);
-                        break;
-                    }
-                    case "Name": {
-                        this.name = snapshot.get("name", String.class);
-                        if (this.name == null) {
-                            this.name = "";
-                            this.ref.document("Name").update("name", this.name);
-                        }
                         break;
                     }
                 }
@@ -100,14 +90,16 @@ public class PetFrag extends Fragment {
             relativeLayout.addView(petCanvas);
             petCanvas.setOnClickListener(v -> Log.e("pet", "PET TOUCHED"));
 
-
-            if (wallpaper != null && wallpaper != -1) {
-                Drawable drawable;
+            Drawable drawable;
+            if (wallpaper != null) {
                 try {
                     drawable = AppCompatResources.getDrawable(main, wallpaper);
                 } catch (Exception e) { return; }
-                wallpaperBG.setImageDrawable(drawable);
+            } else {
+                drawable = AppCompatResources.getDrawable(main, R.drawable.wallpaper_default);
+                ref.document("Room").update("wallpaper", 0);
             }
+            wallpaperBG.setImageDrawable(drawable);
         });
 
 
