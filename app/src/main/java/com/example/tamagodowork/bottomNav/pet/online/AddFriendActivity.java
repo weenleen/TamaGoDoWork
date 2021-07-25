@@ -115,7 +115,7 @@ public class AddFriendActivity extends AppCompatActivity {
                 friendLevelText.setText(getString(R.string.level, friendUser.getLevel()));
 
                 friendUser.getTask().addOnCompleteListener(task -> {
-                    ProfilePicView pfp = new ProfilePicView(AddFriendActivity.this, friendUser.getPet());
+                    ProfilePicView pfp = ProfilePicView.largeInstance(AddFriendActivity.this, friendUser.getPet());
                     profilePic.addView(pfp);
                 });
             });

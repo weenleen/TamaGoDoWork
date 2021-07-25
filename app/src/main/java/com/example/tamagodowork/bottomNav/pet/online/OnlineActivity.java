@@ -386,11 +386,11 @@ public class OnlineActivity extends AppCompatActivity {
             Pet pet = holder.user.getPet();
             if (pet == null) {
                 holder.user.getTask().addOnCompleteListener(task -> {
-                    ProfilePicView pfp = new ProfilePicView(OnlineActivity.this, holder.user.getPet());
+                    ProfilePicView pfp = ProfilePicView.smallInstance(OnlineActivity.this, holder.user.getPet());
                     holder.profilePic.addView(pfp);
                 });
             } else {
-                ProfilePicView pfp = new ProfilePicView(OnlineActivity.this, pet);
+                ProfilePicView pfp = ProfilePicView.smallInstance(OnlineActivity.this, pet);
                 holder.profilePic.addView(pfp);
             }
 
@@ -401,7 +401,7 @@ public class OnlineActivity extends AppCompatActivity {
                     holder.pet = Pet.defaultPet();
                     tmpRef.set(holder.pet);
                 }
-                holder.profilePic.addView(new ProfilePicView(OnlineActivity.this, holder.pet));
+                holder.profilePic.addView(ProfilePicView.smallInstance(OnlineActivity.this, holder.pet));
             });
 
 
