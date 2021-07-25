@@ -29,7 +29,14 @@ import static android.content.ContentValues.TAG;
 
 public class RoomActivity extends AppCompatActivity {
 
-    private int[] wallpapers;
+    public final static int[] wallpapers = new int[] {
+            R.drawable.wallpaper_default,
+            R.drawable.wallpaper_space,
+            R.drawable.wallpaper_snow,
+            R.drawable.wallpaper_desert,
+            R.drawable.wallpaper_exercise,
+            R.drawable.wallpaper_ocean,
+            R.drawable.wallpaper_gym };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +44,6 @@ public class RoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pet_room);
 
         ViewPager viewPager = findViewById(R.id.room_viewpager);
-        loadWallpapers();
 
         Pet pet = getIntent().getParcelableExtra(Pet.parcelKey);
         if (pet == null) pet = Pet.defaultPet();
@@ -70,12 +76,9 @@ public class RoomActivity extends AppCompatActivity {
         // done
         Button doneButton = findViewById(R.id.room_done);
         doneButton.setOnClickListener(v -> {
-            // viewPager.getCurrentItem() will exceed array length if you over scroll the wallpaper length
-            Log.d(TAG, String.valueOf(viewPager.getCurrentItem()));
             MainActivity.userDoc.collection("Pet").document("Room").set(
                     // mod the wallpaper length to prevent array exceeding issues
-                    Map.of("wallpaper", wallpapers[viewPager.getCurrentItem() % wallpapers.length])
-            );
+                    Map.of("wallpaper", viewPager.getCurrentItem() % wallpapers.length));
 
             MainActivity.backToMain(RoomActivity.this);
         });
@@ -83,22 +86,6 @@ public class RoomActivity extends AppCompatActivity {
         // cancel
         Button cancelButton = findViewById(R.id.room_cancel);
         cancelButton.setOnClickListener(v -> MainActivity.backToMain(RoomActivity.this));
-    }
-
-
-    /**
-     * Add all wallpapers here.
-     */
-    private void loadWallpapers() {
-        wallpapers = new int[] {
-                R.drawable.wallpaper_default,
-                R.drawable.wallpaper_space,
-                R.drawable.wallpaper_snow,
-                R.drawable.wallpaper_desert,
-                R.drawable.wallpaper_exercise,
-                R.drawable.wallpaper_ocean,
-                R.drawable.wallpaper_gym
-        };
     }
 
 

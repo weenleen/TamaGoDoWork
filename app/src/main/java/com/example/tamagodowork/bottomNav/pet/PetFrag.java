@@ -91,12 +91,12 @@ public class PetFrag extends Fragment {
             petCanvas.setOnClickListener(v -> Log.e("pet", "PET TOUCHED"));
 
             Drawable drawable;
-            if (wallpaper != null) {
+            if (wallpaper != null && wallpaper >= 0 && wallpaper < RoomActivity.wallpapers.length) {
                 try {
-                    drawable = AppCompatResources.getDrawable(main, wallpaper);
+                    drawable = AppCompatResources.getDrawable(main, RoomActivity.wallpapers[wallpaper]);
                 } catch (Exception e) { return; }
             } else {
-                drawable = AppCompatResources.getDrawable(main, R.drawable.wallpaper_default);
+                drawable = AppCompatResources.getDrawable(main, RoomActivity.wallpapers[0]);
                 ref.document("Room").update("wallpaper", 0);
             }
             wallpaperBG.setImageDrawable(drawable);
