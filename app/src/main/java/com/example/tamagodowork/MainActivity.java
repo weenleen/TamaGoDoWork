@@ -61,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static DocumentReference userDoc;
+    public DocumentReference userDoc;
+    public String userId;
 
     private int xp;
     public ProgressBar xpBar;
@@ -79,13 +80,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        // Check if there is a user
-        String userId = getIntent().getStringExtra("userId");
-        if (userId == null) {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        // check if logged in
+        if (firebaseAuth.getCurrentUser() == null) {
             startActivity(new Intent(MainActivity.this, RegisterAct.class));
             finish(); return;
         }
+        userId = firebaseAuth.getCurrentUser().getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        userDoc = db.collection("Users").document(userId);
 
 
         // fab
@@ -156,14 +159,9 @@ public class MainActivity extends AppCompatActivity {
         showFabPrompt();
     }
 
-    /* fab prompt */
-    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    CollectionReference userData = FirebaseFirestore.getInstance().collection("Users");
-
-
     private void showFabPrompt() {
         if (userId == null) return;
-        userData.document(userId).get().addOnSuccessListener(doc -> {
+        userDoc.get().addOnSuccessListener(doc -> {
             if (doc.exists()) {
                 if (doc.getBoolean("didShowPrompt") == null) {
                     new MaterialTapTargetPrompt.Builder(MainActivity.this)
@@ -178,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                                     // sets the key to true after first launch
                                     Map<String, Boolean> data = new HashMap<>();
                                     data.put("didShowPrompt", true);
-                                    userData.document(userId).set(data, SetOptions.merge());
+                                    userDoc.set(data, SetOptions.merge());
                                 }
                             }).show();
                 } else {
@@ -190,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void showSettings() {
-        userData.document(userId).get().addOnSuccessListener(doc -> {
+        userDoc.get().addOnSuccessListener(doc -> {
             if (doc.exists()) {
                 if (doc.getBoolean("didShowSettingsPrompt") == null) {
                     new MaterialTapTargetPrompt.Builder(MainActivity.this)
@@ -205,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                                     // sets the key to true after first launch
                                     Map<String, Boolean> data = new HashMap<>();
                                     data.put("didShowSettingsPrompt", true);
-                                    userData.document(userId).set(data, SetOptions.merge());
+                                    userDoc.set(data, SetOptions.merge());
                                 }
                             }).show();
                 } else {
@@ -217,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void showToDo() {
-        userData.document(userId).get().addOnSuccessListener(doc -> {
+        userDoc.get().addOnSuccessListener(doc -> {
             if (doc.exists()) {
                 if (doc.getBoolean("didShowToDoPrompt") == null) {
                     new MaterialTapTargetPrompt.Builder(MainActivity.this)
@@ -232,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                                     // sets the key to true after first launch
                                     Map<String, Boolean> data = new HashMap<>();
                                     data.put("didShowToDoPrompt", true);
-                                    userData.document(userId).set(data, SetOptions.merge());
+                                    userDoc.set(data, SetOptions.merge());
                                     showSchedule();
                                 }
                             }).show();
@@ -245,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void showSchedule() {
-        userData.document(userId).get().addOnSuccessListener(doc -> {
+        userDoc.get().addOnSuccessListener(doc -> {
             if (doc.exists()) {
                 if (doc.getBoolean("didShowSchedulePrompt") == null) {
                     new MaterialTapTargetPrompt.Builder(MainActivity.this)
@@ -260,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
                                     // sets the key to true after first launch
                                     Map<String, Boolean> data = new HashMap<>();
                                     data.put("didShowSchedulePrompt", true);
-                                    userData.document(userId).set(data, SetOptions.merge());
+                                    userDoc.set(data, SetOptions.merge());
                                     showPet();
                                 }
                             }).show();
@@ -270,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showPet() {
-        userData.document(userId).get().addOnSuccessListener(doc -> {
+        userDoc.get().addOnSuccessListener(doc -> {
             if (doc.exists()) {
                 if (doc.getBoolean("didShowPetPrompt") == null) {
                     new MaterialTapTargetPrompt.Builder(MainActivity.this)
@@ -285,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
                                     // sets the key to true after first launch
                                     Map<String, Boolean> data = new HashMap<>();
                                     data.put("didShowPetPrompt", true);
-                                    userData.document(userId).set(data, SetOptions.merge());
+                                    userDoc.set(data, SetOptions.merge());
                                 }
                             }).show();
                 }
@@ -346,15 +344,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * A method that updates the amount of xp in Firestore only.
-     *
-     * @param newXP The new value of xp.
-     */
-    public static void setXP(int newXP) {
-        userDoc.update("XP", newXP);
-    }
-
-    /**
      * Use this to go back to MainActivity.
      *
      * @param activity Context from which we are going back to MainActivity.
@@ -368,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
         }
         String userId = firebaseAuth.getCurrentUser().getUid();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        userDoc = db.collection("Users").document(userId);
+        DocumentReference userDoc = db.collection("Users").document(userId);
 
         userDoc.get().addOnSuccessListener(documentSnapshot -> {
             Intent intent = new Intent(activity, MainActivity.class);
@@ -381,6 +370,4 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
 }

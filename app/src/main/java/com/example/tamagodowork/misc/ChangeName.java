@@ -1,5 +1,6 @@
 package com.example.tamagodowork.misc;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
+import com.example.tamagodowork.authentication.RegisterAct;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -31,7 +33,13 @@ public class ChangeName extends AppCompatActivity{
     }
 
     public void saveName(EditText editUserName) {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        // check if logged in
+        if (firebaseAuth.getCurrentUser() == null) {
+            startActivity(new Intent(ChangeName.this, RegisterAct.class));
+            finish(); return;
+        }
+        String userId = firebaseAuth.getCurrentUser().getUid();
         DocumentReference userData = FirebaseFirestore.getInstance().collection("Users").document(userId);
         String name = editUserName.getText().toString();
         if (!TextUtils.isEmpty(name)) {

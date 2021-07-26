@@ -7,6 +7,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -19,7 +20,10 @@ import android.widget.RelativeLayout;
 
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
+import com.example.tamagodowork.authentication.RegisterAct;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -76,9 +80,16 @@ public class RoomActivity extends AppCompatActivity {
         // done
         Button doneButton = findViewById(R.id.room_done);
         doneButton.setOnClickListener(v -> {
-            MainActivity.userDoc.collection("Pet").document("Room").set(
-                    // mod the wallpaper length to prevent array exceeding issues
-                    Map.of("wallpaper", viewPager.getCurrentItem() % wallpapers.length));
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            // check if logged in
+            if (firebaseAuth.getCurrentUser() == null) {
+                startActivity(new Intent(RoomActivity.this, RegisterAct.class));
+                finish(); return;
+            }
+            String userId = firebaseAuth.getCurrentUser().getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("Users").document(userId).collection("Pet").document("Room")
+                    .set(Map.of("wallpaper", viewPager.getCurrentItem() % wallpapers.length));
 
             MainActivity.backToMain(RoomActivity.this);
         });

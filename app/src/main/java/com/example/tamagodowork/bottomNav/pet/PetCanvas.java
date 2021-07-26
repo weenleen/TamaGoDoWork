@@ -18,8 +18,9 @@ import androidx.core.content.ContextCompat;
 
 import android.os.Handler;
 
-import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class PetCanvas extends View {
@@ -251,9 +252,13 @@ public class PetCanvas extends View {
         this.bitmapBody = getResizedBitmap(bitmap, 300, 550);
     }
 
-
     public void save() {
-        MainActivity.userDoc.collection("Pet").document("Customisation")
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        // check if logged in
+        if (firebaseAuth.getCurrentUser() == null) { return; }
+        String userId = firebaseAuth.getCurrentUser().getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Users").document(userId).collection("Pet").document("Customisation")
                 .set(new Pet(this.bodyColour, this.acc_head, this.acc_eyes, this.acc_body));
     }
 

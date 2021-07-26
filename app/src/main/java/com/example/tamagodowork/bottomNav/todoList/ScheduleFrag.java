@@ -2,7 +2,6 @@ package com.example.tamagodowork.bottomNav.todoList;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -158,7 +157,7 @@ public class ScheduleFrag extends Fragment {
      * @param year Year of the calendar.
      */
     private void collectTodosPerMonth(int month, int year) {
-        MainActivity.userDoc.collection("Todos")
+        main.userDoc.collection("Todos")
                 .addSnapshotListener((value, error) -> {
                     if (error != null) return;
 

@@ -1,11 +1,9 @@
 package com.example.tamagodowork.bottomNav.todoList;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,7 +80,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
 
         // dialog
         holder.itemView.setOnClickListener(v -> {
-            DialogTodoDetails dialog = DialogTodoDetails.newInstance(todoList.get(position));
+            DialogTodoDetails dialog = DialogTodoDetails.newInstance(main, todoList.get(position));
             dialog.show(main.getSupportFragmentManager(), DialogTodoDetails.TAG);
         });
 
@@ -112,7 +110,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
             public void onAnimationEnd(Animation animation) {
                 todoList.remove(position);
                 adapter.notifyDataSetChanged();
-                MainActivity.userDoc.collection("Todos")
+                main.userDoc.collection("Todos")
                         .document(String.valueOf(todo.getKey())).delete()
                         .addOnSuccessListener(unused -> {
                             if (holder.status == Todo.Status.ONGOING) main.incrementXP();

@@ -62,7 +62,9 @@ public class SettingsAct extends AppCompatActivity {
 
         Button resetBtn = findViewById(R.id.btn_reset);
         resetBtn.setOnClickListener(v -> {
-            MainActivity.setXP(0);
+            ref.update("XP", 0);
+            ref.collection("Pet").document("Customisation")
+                    .set(Pet.defaultPet());
             MainActivity.backToMain(SettingsAct.this);
         });
 

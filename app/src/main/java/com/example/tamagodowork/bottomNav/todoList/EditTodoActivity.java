@@ -19,6 +19,10 @@ import android.widget.Toast;
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.alarm.AlarmReceiver;
+import com.example.tamagodowork.authentication.RegisterAct;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -139,7 +143,16 @@ public class EditTodoActivity extends AppCompatActivity {
             }
 
             // update todos in Firestore
-            MainActivity.userDoc.collection("Todos").document(String.valueOf(key))
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            // check if logged in
+            if (firebaseAuth.getCurrentUser() == null) {
+                startActivity(new Intent(EditTodoActivity.this, RegisterAct.class));
+                finish(); return;
+            }
+            String userId = firebaseAuth.getCurrentUser().getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference userDoc = db.collection("Users").document(userId);
+            userDoc.collection("Todos").document(String.valueOf(key))
                     .update("name", name,
                             "deadline", deadline,
                             "desc", desc,
@@ -148,6 +161,7 @@ public class EditTodoActivity extends AppCompatActivity {
                     .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Save Failed", Toast.LENGTH_SHORT).show())
                     .addOnSuccessListener(unused -> MainActivity.backToMain(EditTodoActivity.this));
         });
+
 
         // Cancel Button
         Button cancelBtn = findViewById(R.id.cancel_edit_button);

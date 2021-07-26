@@ -2,7 +2,6 @@ package com.example.tamagodowork.bottomNav.pet.online;
 
 
 import com.example.tamagodowork.bottomNav.pet.Pet;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;

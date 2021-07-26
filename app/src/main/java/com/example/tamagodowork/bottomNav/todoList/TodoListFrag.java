@@ -35,7 +35,7 @@ public class TodoListFrag extends Fragment {
         this.main = main;
 
         // Read data from Firestore
-        MainActivity.userDoc.collection("Todos")
+        main.userDoc.collection("Todos")
                 .addSnapshotListener((value, error) -> {
                     if (error != null || value == null) return;
 

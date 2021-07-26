@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,7 @@ public class PetFrag extends Fragment {
     public PetFrag(@NonNull MainActivity main) {
         this.main = main;
 
-        this.ref = MainActivity.userDoc.collection("Pet");
+        this.ref = main.userDoc.collection("Pet");
         this.task = ref.get().addOnCompleteListener(t -> {
             if (!t.isSuccessful()) return;
             else if (t.getResult() == null) return;
@@ -88,7 +87,6 @@ public class PetFrag extends Fragment {
                 ((ViewGroup) petCanvas.getParent()).removeView(petCanvas);
             }
             relativeLayout.addView(petCanvas);
-            petCanvas.setOnClickListener(v -> Log.e("pet", "PET TOUCHED"));
 
             Drawable drawable;
             if (wallpaper != null && wallpaper >= 0 && wallpaper < RoomActivity.wallpapers.length) {

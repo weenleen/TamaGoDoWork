@@ -18,7 +18,10 @@ import androidx.core.content.ContextCompat;
 import com.example.tamagodowork.MainActivity;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.alarm.AlarmReceiver;
+import com.example.tamagodowork.authentication.RegisterAct;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -82,11 +85,20 @@ public class AddTodoActivity extends AppCompatActivity {
             }
 
             // Put todos in Firestore
-            MainActivity.userDoc.get().addOnSuccessListener(documentSnapshot -> {
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            // check if logged in
+            if (firebaseAuth.getCurrentUser() == null) {
+                startActivity(new Intent(AddTodoActivity.this, RegisterAct.class));
+                finish(); return;
+            }
+            String userId = firebaseAuth.getCurrentUser().getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference userDoc = db.collection("Users").document(userId);
+            userDoc.get().addOnSuccessListener(documentSnapshot -> {
                 Integer key = documentSnapshot.get("lastIndex", Integer.class);
                 if (key != null) key += 1;
                 else key = Todo.minBound;
-                MainActivity.userDoc.update("lastIndex", key);
+                userDoc.update("lastIndex", key);
 
                 Todo tmp = new Todo(name, deadline, desc, key, colourKey, null);
                 Boolean[] reminders = new Boolean[remLayout.getChildCount()];
@@ -115,7 +127,7 @@ public class AddTodoActivity extends AppCompatActivity {
                 }
 
                 Todo addedTodo = new Todo(name, deadline, desc, key, colourKey, Arrays.asList(reminders));
-                DocumentReference ref = MainActivity.userDoc.collection("Todos").document(tmp.getKeyStr());
+                DocumentReference ref = userDoc.collection("Todos").document(tmp.getKeyStr());
                 ref.set(addedTodo).addOnSuccessListener(unused -> MainActivity.backToMain(AddTodoActivity.this));
             });
         });

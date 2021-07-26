@@ -73,11 +73,6 @@ public class CustomModel {
 
     public int[] getContent() { return content; }
 
-    public int getIdAt(int position) {
-        if (position < 0 || position >= content.length) return content[0];
-        else return content[position];
-    }
-
     private void setContent() {
         switch (this.custom) {
             case COLOUR: this.content = colour; break;
