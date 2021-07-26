@@ -30,9 +30,11 @@ public class DeleteAccountAct extends AppCompatActivity {
         Button backButton = findViewById(R.id.cancel_delete_button);
         Button confirmButton = findViewById(R.id.confirm_delete_button);
 
-
         // back button
-        backButton.setOnClickListener(v -> startActivity(new Intent(DeleteAccountAct.this, SettingsAct.class)));
+        backButton.setOnClickListener(v -> {
+            startActivity(new Intent(DeleteAccountAct.this, SettingsAct.class));
+            finish();
+        });
 
         // confirm button
         confirmButton.setOnClickListener(v -> {
@@ -52,31 +54,21 @@ public class DeleteAccountAct extends AppCompatActivity {
                 DocumentReference room = userDoc.collection("Pet").document("Room");
                 CollectionReference toDoes = userDoc.collection("Todos");
 
-
                 // delete things for the pet fragment
-                room.delete()
-                        .addOnSuccessListener(success -> Toast.makeText(DeleteAccountAct.this, "Document successfully deleted", Toast.LENGTH_SHORT))
-                        .addOnFailureListener(failure -> Toast.makeText(DeleteAccountAct.this, failure.getMessage(), Toast.LENGTH_SHORT));
+                room.delete();
 
-
-                customisation.delete()
-                        .addOnSuccessListener(success -> Toast.makeText(DeleteAccountAct.this, "Document successfully deleted", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(failure -> Toast.makeText(DeleteAccountAct.this, failure.getMessage(), Toast.LENGTH_SHORT).show());
+                customisation.delete();
 
                 // recursively delete things for the task fragment
-                toDoes.get()
-                        .addOnSuccessListener(queryDocumentSnapshots -> {
-                            List<DocumentSnapshot> tmp = queryDocumentSnapshots.getDocuments();
-                            for (DocumentSnapshot documentSnapshot : tmp) {
-                                documentSnapshot.getReference().delete();
-                            }
-                        })
-                        .addOnFailureListener(failure -> Toast.makeText(DeleteAccountAct.this, failure.getMessage(), Toast.LENGTH_SHORT).show());
+                toDoes.get().addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<DocumentSnapshot> tmp = queryDocumentSnapshots.getDocuments();
+                    for (DocumentSnapshot documentSnapshot : tmp) {
+                        documentSnapshot.getReference().delete();
+                    }
+                });
 
                 // finally delete the user from Firestore
-                userDoc.delete()
-                        .addOnSuccessListener(success -> Toast.makeText(DeleteAccountAct.this, "User successfully deleted", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(failure ->  Toast.makeText(DeleteAccountAct.this, failure.getMessage(), Toast.LENGTH_SHORT).show());
+                userDoc.delete();
 
             } catch (Exception e) {
                 Toast.makeText(DeleteAccountAct.this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -86,11 +78,11 @@ public class DeleteAccountAct extends AppCompatActivity {
                             Toast.makeText(DeleteAccountAct.this, "Account Deleted Successfully", Toast.LENGTH_SHORT).show();
                             // Upon Successful Deletion, redirect the user to the register page
                             startActivity(new Intent(DeleteAccountAct.this, RegisterAct.class));
+                            finish();
                         } else {
                             Toast.makeText(DeleteAccountAct.this, "Account Deletion Unsuccessful", Toast.LENGTH_SHORT).show();
                         }
                     });
-
             }
         });
     }

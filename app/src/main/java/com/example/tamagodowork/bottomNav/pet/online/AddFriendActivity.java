@@ -88,7 +88,7 @@ public class AddFriendActivity extends AppCompatActivity {
                 if (documentSnapshot == null || !documentSnapshot.exists()) {
                     friendLayout.setVisibility(View.GONE);
                     friendUser = null;
-                    Toast.makeText(getApplicationContext(), "User not found :(", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddFriendActivity.this, "User not found :(", Toast.LENGTH_SHORT).show();
                     return;
                 }
 

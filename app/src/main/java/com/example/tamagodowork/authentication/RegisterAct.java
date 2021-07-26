@@ -11,12 +11,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tamagodowork.R;
+import com.example.tamagodowork.bottomNav.pet.Pet;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RegisterAct extends AppCompatActivity {
 
@@ -46,6 +49,9 @@ public class RegisterAct extends AppCompatActivity {
             if (TextUtils.isEmpty(name)) {
                 editName.setError("Please enter your name");
                 return;
+            } else if (name.length() < 6) {
+                editName.setError("Name must be more than 6 characters");
+                return;
             }
 
             if (TextUtils.isEmpty(email)) {
@@ -69,6 +75,12 @@ public class RegisterAct extends AppCompatActivity {
                 return;
             }
 
+            if (password1.length() < 8) {
+                editPassword1.setError("Password must be longer than 8 characters");
+                editPassword2.setError("Password must be longer than 8 characters");
+                return;
+            }
+
             firebaseAuth.createUserWithEmailAndPassword(email, password2)
                     .addOnSuccessListener(authResult -> {
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -79,25 +91,30 @@ public class RegisterAct extends AppCompatActivity {
                         HashMap<String, Object> userData = new HashMap<>();
                         userData.put("Name", name);
                         userData.put("XP", 0);
+                        userData.put("friendsList", List.of("xKFyuccBjtQdemv9pNm94mMpFHE3"));
+                        userData.put("receivedRequests", List.of("xW2sWcoFThfTCHlnxEqMfTo9OQu2"));
+                        userData.put("sentRequests", new ArrayList<String>());
 
                         db.collection("Users").document(user.getUid())
                                 .set(userData);
 
-                        // give friends for testing
-                        db.collection("Users").document(user.getUid())
-                                .update("friendsList", FieldValue.arrayUnion(
-                                        "xKFyuccBjtQdemv9pNm94mMpFHE3"));
-                        db.collection("Users").document(user.getUid())
-                                .update("receivedRequests", FieldValue.arrayUnion(
-                                        "xW2sWcoFThfTCHlnxEqMfTo9OQu2"));
+                        db.collection("Users").document(user.getUid()).collection("Pet").document("Customisation")
+                                .set(Pet.defaultPet());
+
+                        db.collection("Users").document(user.getUid()).collection("Pet").document("Room")
+                                .set(Map.of("wallpaper", 0));
 
                         Toast.makeText(getApplicationContext(), "User Registered", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(RegisterAct.this, LoginAct.class));
+                        finish();
                     })
                     .addOnFailureListener(e -> Toast.makeText(RegisterAct.this, e.getMessage(), Toast.LENGTH_SHORT).show());
         });
 
         loginLink = findViewById(R.id.login_link);
-        loginLink.setOnClickListener(v -> startActivity(new Intent(RegisterAct.this, LoginAct.class)));
+        loginLink.setOnClickListener(v -> {
+            startActivity(new Intent(RegisterAct.this, LoginAct.class));
+            finish();
+        });
     }
 }

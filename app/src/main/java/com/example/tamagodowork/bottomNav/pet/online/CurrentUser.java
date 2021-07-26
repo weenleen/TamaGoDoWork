@@ -1,5 +1,6 @@
 package com.example.tamagodowork.bottomNav.pet.online;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CurrentUser {
@@ -12,9 +13,18 @@ public class CurrentUser {
 
     public CurrentUser() {}
 
-    public List<String> getFriendsList() { return friendsList; }
+    public List<String> getFriendsList() {
+        if (friendsList == null) friendsList = new ArrayList<>();
+        return friendsList;
+    }
 
-    public List<String> getSentRequests() { return sentRequests; }
+    public List<String> getSentRequests() {
+        if (sentRequests == null) sentRequests = new ArrayList<>();
+        return sentRequests;
+    }
 
-    public List<String> getReceivedRequests() { return receivedRequests; }
+    public List<String> getReceivedRequests() {
+        if (receivedRequests == null) receivedRequests = new ArrayList<>();
+        return receivedRequests;
+    }
 }
