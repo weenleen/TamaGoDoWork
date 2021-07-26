@@ -305,6 +305,7 @@ public class OnlineActivity extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             TextView nameTextView;
+            TextView levelTextView;
             PetUser user;
             Pet pet;
             ImageButton expandButton;
@@ -314,6 +315,7 @@ public class OnlineActivity extends AppCompatActivity {
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 nameTextView = itemView.findViewById(R.id.friend_name_text_view);
+                levelTextView = itemView.findViewById(R.id.friend_level_text_view);
                 expandButton = itemView.findViewById(R.id.friend_expand_button);
                 expandableLayout = itemView.findViewById(R.id.friend_expandable_layout);
                 expandableLayout.setVisibility(View.GONE);
@@ -405,11 +407,13 @@ public class OnlineActivity extends AppCompatActivity {
             });
 
 
-
             String personId = holder.user.getId();
-            String tmp = OnlineActivity.this.getString(R.string.unlock_level, holder.user.getLevel())
-                    + " " + holder.user.getName();
-            holder.nameTextView.setText(tmp);
+            String level = OnlineActivity.this.getString(R.string.level, holder.user.getLevel());
+            holder.levelTextView.setText(level);
+
+            String name = holder.user.getName();
+            holder.nameTextView.setText(name);
+
             if (holder.user.isExpanded()) {
                 holder.expandableLayout.setVisibility(View.VISIBLE);
                 holder.expandButton.setImageDrawable(AppCompatResources.getDrawable(OnlineActivity.this,
