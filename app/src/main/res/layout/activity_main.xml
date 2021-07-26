@@ -10,16 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/levelContainer"
-        android:paddingHorizontal="25dp"
-        android:paddingVertical="5dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="15dp"
         android:background="?attr/colorPrimary"
         android:orientation="vertical">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_height="wrap_content">
 
             <!-- text that says your level -->
             <LinearLayout
@@ -43,7 +42,6 @@
                     android:textColor="@android:color/white"
                     android:textSize="15sp"/>
             </LinearLayout>
-
 
             <ImageButton
                 android:id="@+id/settings_icon"
