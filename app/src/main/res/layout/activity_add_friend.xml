@@ -7,7 +7,7 @@
     android:background="@color/off_white"
     android:orientation="vertical"
     android:paddingHorizontal="20dp"
-    android:paddingVertical="40dp"
+    android:paddingVertical="20dp"
     android:gravity="center"
     tools:context=".bottomNav.pet.online.AddFriendActivity">
 
@@ -110,7 +110,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginVertical="30dp">
+        android:layout_marginVertical="20dp">
 
         <ImageView
             android:layout_width="match_parent"
@@ -133,13 +133,14 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:layout_gravity="center"
-                android:layout_margin="20dp"/>
+                android:gravity="center"
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:id="@+id/add_friend_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textColor="@color/peach"
                 android:textAlignment="center"
                 android:maxLines="1"
@@ -149,10 +150,10 @@
                 android:id="@+id/add_friend_level"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textAlignment="center"
                 android:maxLines="1"
-                android:layout_marginBottom="15dp"/>
+                android:layout_marginBottom="10dp"/>
 
             <Button
                 android:id="@+id/add_friend_button"
@@ -160,7 +161,6 @@
                 android:text="@string/friend_request_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-
         </LinearLayout>
     </RelativeLayout>
 
