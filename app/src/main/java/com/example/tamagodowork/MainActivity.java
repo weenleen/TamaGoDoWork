@@ -71,9 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
     private int selectedFrag;
 
-    private final TodoListFrag todoListFrag = new TodoListFrag(this);
-    private final PetFrag petFrag = new PetFrag(this);
-    private final ScheduleFrag scheduleFrag = new ScheduleFrag(this);
+    private TodoListFrag todoListFrag;
+    private PetFrag petFrag;
+    private ScheduleFrag scheduleFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
         userId = firebaseAuth.getCurrentUser().getUid();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         userDoc = db.collection("Users").document(userId);
+
+        todoListFrag = new TodoListFrag(this);
+        petFrag = new PetFrag(this);
+        scheduleFrag = new ScheduleFrag(this);
 
 
         // fab
@@ -290,11 +294,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-
-
 
 
     /** Bottom Navigation Bar */

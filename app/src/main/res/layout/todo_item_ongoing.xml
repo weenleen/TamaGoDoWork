@@ -45,10 +45,13 @@
         </TextView>
     </LinearLayout>
 
-    <CheckBox
+    <ImageButton
+        android:id="@+id/taskAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/ic_baseline_check_24"
+        android:padding="10dp"
         android:layout_gravity="center"
-        android:id="@+id/taskAction" >
-    </CheckBox>
+        android:contentDescription="@string/overdue"
+        android:background="?attr/selectableItemBackgroundBorderless"/>
 </LinearLayout>

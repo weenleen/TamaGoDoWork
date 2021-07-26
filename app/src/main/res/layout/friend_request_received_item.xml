@@ -61,7 +61,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     android:padding="7dp"
-                    android:src="@drawable/ic_baseline_check_circle_24"
+                    android:src="@drawable/ic_baseline_check_24"
                     android:background="?attr/selectableItemBackgroundBorderless" />
 
                 <ImageButton

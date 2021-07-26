@@ -84,7 +84,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="5dp"
-        android:text="Find new Friends!" />
+        android:text="Search for new Friends!" />
 
     <Button
         android:id="@+id/online_home"
@@ -93,6 +93,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="5dp"
-        android:text="Home" />
+        android:text="@string/back" />
 
 </LinearLayout>

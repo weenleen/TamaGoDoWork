@@ -39,6 +39,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         int key = intent.getIntExtra("key", Todo.minBound);
         String taskName = intent.getStringExtra("name");
         int alarmType = intent.getIntExtra("alarmType", 0);
+
+        if (taskName == null || alarmType < 0 || alarmType > 2) return;
+
         String message = alarmMessages.get(alarmType);
 
         Log.e("onReceive", "received");
@@ -59,8 +62,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent contentIntent = PendingIntent.getActivity(
                 context, 0, intent, 0);
-
-        Log.e("notification shown", name);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, "tamagodowork")
                 .setSmallIcon(R.mipmap.ic_launcher)

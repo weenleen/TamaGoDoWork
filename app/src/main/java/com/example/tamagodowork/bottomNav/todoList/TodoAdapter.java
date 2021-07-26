@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.tamagodowork.MainActivity;
@@ -33,7 +34,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView todoName, todoDeadline;
-        private final View todoAction;
+        private final ImageButton todoAction;
         private final Todo.Status status;
 
         public ViewHolder(@NonNull View itemView, Todo.Status status) {

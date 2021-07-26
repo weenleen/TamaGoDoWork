@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.tamagodowork.R;
 import com.example.tamagodowork.bottomNav.pet.Pet;
 import com.example.tamagodowork.bottomNav.pet.PetCanvas;
+import com.example.tamagodowork.bottomNav.pet.RoomActivity;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,7 +47,6 @@ public class VisitFriend extends AppCompatActivity {
         ImageView wallpaperImage = findViewById(R.id.visit_wallpaper_image);
         TextView userNameTextView = findViewById(R.id.visit_name_textView);
         TextView levelTextView = findViewById(R.id.visit_level_textView);
-        TextView petNameTextView = findViewById(R.id.visit_pet_name_textView);
 
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -76,13 +76,16 @@ public class VisitFriend extends AppCompatActivity {
                 switch(id) {
                     case "Room": {
                         this.wallpaper = snapshot.get("wallpaper", Integer.class);
-                        if (wallpaper != null && wallpaper != -1) {
-                            Drawable drawable;
+                        Drawable drawable;
+                        if (wallpaper != null && wallpaper >= 0 && wallpaper < RoomActivity.wallpapers.length) {
                             try {
-                                drawable = AppCompatResources.getDrawable(VisitFriend.this, wallpaper);
+                                drawable = AppCompatResources.getDrawable(VisitFriend.this, RoomActivity.wallpapers[wallpaper]);
                             } catch (Exception e) { return; }
-                            wallpaperImage.setImageDrawable(drawable);
+                        } else {
+                            drawable = AppCompatResources.getDrawable(VisitFriend.this, RoomActivity.wallpapers[0]);
+                            userRef.collection("Pet").document("Room").update("wallpaper", 0);
                         }
+                        wallpaperImage.setImageDrawable(drawable);
                         break;
                     }
                     case "Customisation": {
@@ -97,16 +100,6 @@ public class VisitFriend extends AppCompatActivity {
                             ((ViewGroup) petCanvas.getParent()).removeView(petCanvas);
                         }
                         petArea.addView(petCanvas);
-                        break;
-                    }
-                    case "Name": {
-                        String name = snapshot.get("name", String.class);
-                        if (name == null) {
-                            name = "";
-                            userRef.collection("Pet").document("Name")
-                                    .update("name", name);
-                        }
-                        petNameTextView.setText(name);
                         break;
                     }
                 }
